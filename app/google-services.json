@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "250154778507",
+    "project_id": "makeit-27047",
+    "storage_bucket": "makeit-27047.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250154778507:android:50fc26839d52a8e3bbf98e",
+        "android_client_info": {
+          "package_name": "com.domslab.makeit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250154778507-bb8eh9914k4g8iqc9rqktgvoluvaq3c1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCra-HYXFJ1R4aWAfvfb3Ne3bnc2ilvOXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250154778507-bb8eh9914k4g8iqc9rqktgvoluvaq3c1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
