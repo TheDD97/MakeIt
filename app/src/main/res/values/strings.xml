@@ -8,9 +8,10 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm password</string>
-    <string name="is_businness_account_question">Businnes Account?</string>
-    <string name="is_businness">Yes</string>
-    <string name="is_not_businness">No</string>
+    <string name="is_business_account_question">Business Account?</string>
+    <string name="is_business">Yes</string>
+    <string name="is_not_business">No</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

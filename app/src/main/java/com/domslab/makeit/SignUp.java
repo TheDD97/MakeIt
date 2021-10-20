@@ -90,13 +90,10 @@ public class SignUp extends AppCompatActivity {
                 if (!check)
                     t.show();
                 else {
-                    UserHelperClass user = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), password.getText().toString());
+                    UserHelperClass user = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), password.getText().toString(), yes.isChecked());
                     reference.child(username.getText().toString()).setValue(user);
                 }
-                if (yes.isChecked())
-                    System.out.println("yes");
-                if (no.isChecked())
-                    System.out.println("No");
+
                 check = true;
             }
         });

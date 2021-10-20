@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private Button login, singUp;
@@ -28,6 +28,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            /*JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(new FileReader("./prova.json"));//path to the JSON file.
+            Toast t = new Toast(this.getApplicationContext());
+            t.setDuration(Toast.LENGTH_LONG);
+            t.setText(data.toString());
+            t.show();*/
+            String s = "{\n" +
+                    "  \"1\":[\n" +
+                    "    {\n" +
+                    "      \"text\":\"ciao\",\n" +
+                    "      \"image\":\"154793\"\n" +
+                    "    }\n" +
+                    "  ],\n" +
+                    "  \"2\":[\n" +
+                    "    {\n" +
+                    "      \"text\":\"no\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+            JSONObject object = new JSONObject(s);
+            System.out.println("result" +object.getJSONArray("1").getJSONObject(0).has("ciao"));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            /*String string = jsonObject.getJSONObject("1").getString("text");*/
+
+        }
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         usernameField = findViewById(R.id.login_username);
         passwordField = findViewById(R.id.login_password);
@@ -67,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
                                     t.show();
                                     return;
                                 }
-                                Intent intent = new Intent(v.getContext(), Home.class);
+                                Utilities.setCurrentUsername(username);
+                                Intent intent = new Intent(v.getContext(), HomeContainer.class);
                                 startActivity(intent);
                             } else {
                                 t.setText(Utilities.noUser);
