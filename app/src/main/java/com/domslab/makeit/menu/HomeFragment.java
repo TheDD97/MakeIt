@@ -1,5 +1,8 @@
-package com.domslab.makeit;
+package com.domslab.makeit.menu;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabLayout;
+import com.domslab.makeit.Utilities;
+import com.domslab.makeit.menu.home.PagerAdapter;
+import com.domslab.makeit.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +63,7 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setRetainInstance(true);
     }
 
     @Override
@@ -70,8 +76,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage(Utilities.verifying);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         ViewPager viewPager = view.findViewById(R.id.vpPager);
-        viewPager.setAdapter(new PagerAdapter(getActivity().getSupportFragmentManager()));
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
+        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(),preferences));
         viewPager.setCurrentItem(1);
+        progressDialog.dismiss();
     }
 }

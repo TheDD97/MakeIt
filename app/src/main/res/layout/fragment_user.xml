@@ -1,14 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/userfragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".UserFragment">
+    android:layout_height="wrap_content"
+    tools:context=".menu.UserFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="User Fragment" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/username_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:textSize="24sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_name"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="textNoSuggestions" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/surname_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_surname"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="textNoSuggestions" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_email"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/confirm_password_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_confirm_password"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="157dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="?colorSecondary"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/edit"
+                android:layout_width="157dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Edit" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

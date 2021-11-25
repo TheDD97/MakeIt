@@ -1,16 +1,33 @@
 package com.domslab.makeit;
 
 public class UserHelperClass {
-    private String name, surname, email, password;
-    private Boolean business;
+    private String name, surname, email, password, username;
+    private Boolean advanced;
 
 
-    public UserHelperClass(String name, String surname, String email, String password, Boolean business) {
+    public UserHelperClass(String name, String surname, String email, String password, Boolean business, String username) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.business = business;
+        this.advanced = business;
+        this.username = username;
+    }
+
+    public Boolean getAdvanced() {
+        return advanced;
+    }
+
+    public void setAdvanced(Boolean advanced) {
+        this.advanced = advanced;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -45,11 +62,4 @@ public class UserHelperClass {
         this.password = password;
     }
 
-    public Boolean isBusiness() {
-        return business;
-    }
-
-    public void setBusiness(Boolean business) {
-        this.business = business;
-    }
 }
