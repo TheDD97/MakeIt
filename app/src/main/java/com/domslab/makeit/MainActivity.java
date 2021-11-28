@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText emailField, passwordField;
     private TextInputLayout emaiLayout, passwordLayout;
     private FirebaseDatabase rootNode;
-    private Utilities utilities;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
 
@@ -46,13 +45,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        utilities = Utilities.getInstance();
+        FirebaseAuth auth = Utilities.getAuthorisation();
         preferences = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE);
         editor = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE).edit();
         String user = preferences.getString("currentUser", null);
-        System.out.println("USR1:" + user);
-        if (user != null) {
-            Utilities.getInstance().setCurrentUsername(user, editor);
+        String email = preferences.getString("currentEmail", null);
+        String psw = preferences.getString("currentPassword", null);
+        System.out.println(psw);
+
+        if (user != null && psw != null && email != null) {
+            Utilities.setCurrentUsername(user);
+            auth.signInWithEmailAndPassword(email, psw)
+                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TAG", "signInWithEmail:success");
+                                FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
+                                editor.putString("currentUser", user.getUid());
+                                editor.putString("currentEmail", email);
+                                editor.putString("currentPassword", psw);
+                                editor.apply();
+                                updateUI(user);
+                                Utilities.setCurrentUsername(user.getUid());
+                                finish();
+                                launchHome(getApplicationContext());
+                            } else {
+                                updateUI(null);
+                            }
+                        }
+                    });
             launchHome(getBaseContext());
         }
         try {
@@ -61,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             Toast t = new Toast(this.getApplicationContext());
             t.setDuration(Toast.LENGTH_LONG);
             t.setText(data.toString());
-            t.show();*/
+            t.show();
             String s = "{\n" +
                     "  \"1\":[\n" +
                     "    {\n" +
@@ -75,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     "    }\n" +
                     "  ]\n" +
                     "}";
-            JSONObject object = new JSONObject(s);
+            JSONObject object = new JSONObject(s);*/
             //System.out.println("result" + object.getJSONArray("1").getJSONObject(0).has("ciao"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.login_password);
         emaiLayout = findViewById(R.id.email_layout);
         passwordLayout = findViewById(R.id.password_layout);
-        FirebaseAuth auth = utilities.getAuthorisation();
         login = findViewById(R.id.login);
         singUp = findViewById(R.id.sign_up_login_page);
         singUp.setOnClickListener(new View.OnClickListener() {
@@ -101,11 +123,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog progressDialog = new ProgressDialog(v.getContext());
-                progressDialog.setMessage(Utilities.verifying);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setIndeterminate(true);
-                progressDialog.show();
+                Utilities.showProgressDialog(v.getContext(), false);
                 passwordLayout.setError(null);
                 emaiLayout.setError(null);
                 String email = emailField.getText().toString();
@@ -117,33 +135,36 @@ public class MainActivity extends AppCompatActivity {
                         if (email.isEmpty()) {
                             passwordLayout.setError(null);
                             emaiLayout.setError(Utilities.noUsername);
-                            progressDialog.dismiss();
+                            Utilities.closeProgressDialog();
                             return;
                         } else if (password.isEmpty()) {
                             passwordLayout.setError(Utilities.noPassword);
                             emaiLayout.setError(null);
-                            progressDialog.dismiss();
+                            Utilities.closeProgressDialog();
                             return;
                         }
-
-                        auth.signInWithEmailAndPassword(email, password)
+                        auth.signInWithEmailAndPassword(email.trim(), password)
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             // Sign in success, update UI with the signed-in user's information
                                             Log.d("TAG", "signInWithEmail:success");
-                                            FirebaseUser user = utilities.getAuthorisation().getCurrentUser();
+                                            FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
                                             editor.putString("currentUser", user.getUid());
+                                            editor.putString("currentEmail", email);
+                                            editor.putString("currentPassword", password);
                                             editor.apply();
+                                            Utilities.closeProgressDialog();
+
                                             updateUI(user);
-                                            Utilities.getInstance().setCurrentUsername(user.getUid(), editor);
-                                            progressDialog.dismiss();
+                                            Utilities.setCurrentUsername(user.getUid());
+                                            finish();
                                             launchHome(v.getContext());
                                         } else {
                                             // If sign in fails, display a message to the user.
+                                            Utilities.closeProgressDialog();
                                             Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                            progressDialog.dismiss();
                                             Toast.makeText(v.getContext().getApplicationContext(), "Authentication failed.",
                                                     Toast.LENGTH_SHORT).show();
                                             updateUI(null);
@@ -165,12 +186,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = utilities.getAuthorisation().getCurrentUser();
+        FirebaseUser currentUser = Utilities.getAuthorisation().getCurrentUser();
         if (currentUser != null)
             currentUser.reload();
     }
 
     private void launchHome(Context context) {
+        if (preferences.getFloat("deviceDensity", 0.0f) == 0.0f) {
+            editor.putFloat("deviceDensity", getResources().getDisplayMetrics().density);
+            editor.putInt("screenWidth", getResources().getDisplayMetrics().widthPixels);
+            editor.putInt("screenHeight", getResources().getDisplayMetrics().heightPixels);
+            editor.apply();
+        }
         Intent intent = new Intent(context, HomeContainer.class);
         startActivity(intent);
     }
@@ -178,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to Logout?");
+        builder.setMessage("Do you want to Exit?");
         builder.setCancelable(true);
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -189,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                utilities.clear();
+                Utilities.clear();
                 finish();
                 Process.killProcess(Process.myPid());
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -202,14 +229,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateUI(FirebaseUser user) {
-        user = utilities.getAuthorisation().getCurrentUser();
+        user = Utilities.getAuthorisation().getCurrentUser();
         /*-------- Check if user is already logged in or not--------*/
         if (user != null) {
             Toast.makeText(this.getApplicationContext(), "Login Success.",
                     Toast.LENGTH_SHORT).show();
-            utilities.setCurrentUsername(user.getUid(), editor);
-
-
         }
 
     }

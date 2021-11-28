@@ -1,4 +1,4 @@
-package com.domslab.makeit.menu.home;
+package com.domslab.makeit.home;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

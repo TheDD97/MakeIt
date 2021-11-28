@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.Process;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.domslab.makeit.MainActivity;
@@ -31,6 +32,8 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
     private Utilities utilities;
     private SharedPreferences.Editor editor;
     private UserHelperClass currentUser;
+    private ProgressDialog progressDialog;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +45,36 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         test.setImageBitmap(decodedByte);
        */
-        userFragment = new UserFragment();
-        homeFragment = new HomeFragment();
-        searchFragment = new SearchFragment();
-        addFragment = new AddFragment();
+
+        utilities = Utilities.getInstance();
+
+        editor = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE).edit();
+        preferences = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE);
+        String user = preferences.getString("currentUser", null);
+        System.out.println(user);
+
+
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        loadMenuFragment();
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setOnNavigationItemSelectedListener(this);
         navigationView.setSelectedItemId(R.id.home);
-        SharedPreferences preferences = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE);
-        String user = preferences.getString("currentUser", null);
-        editor = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE).edit();
         // utilities.setCurrentUsername(user, editor);
-        boolean advanced = preferences.getBoolean("advanced",false);
-        System.out.println(advanced);
-        navigationView.getMenu().findItem(R.id.add).setVisible(advanced);
+        System.out.println(preferences.getBoolean("advanced", false));
+        navigationView.getMenu().findItem(R.id.add).setVisible(preferences.getBoolean("advanced", false));
 
+
+    }
+
+    private void loadMenuFragment() {
+        userFragment = UserFragment.newInstance();
+        homeFragment = HomeFragment.newInstance();
+        searchFragment = SearchFragment.newInstance();
+        addFragment = AddFragment.newInstance();
     }
 
     @Override
@@ -66,20 +84,36 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        progressDialog = new ProgressDialog(HomeContainer.this);
+        progressDialog.setMessage(Utilities.verifying);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        if (preferences.getInt("navbarHeight", 0) == 0 || preferences.getInt("contentHeight", 0) == 0) {
+            editor.putInt("navbarHeight", navigationView.getMeasuredHeight());
+            editor.putInt("contentHeight", (int) ((preferences.getInt("screenHeight", 0) - navigationView.getMeasuredHeight()) * preferences.getFloat("deviceDensity", 1.0f)));
+            editor.apply();
+        }
         switch (item.getItemId()) {
             case R.id.profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, userFragment).commit();
+                progressDialog.dismiss();
                 return true;
             case R.id.home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                progressDialog.dismiss();
                 return true;
             case R.id.search:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment).commit();
+                progressDialog.dismiss();
                 return true;
             case R.id.add:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, addFragment).commit();
+                progressDialog.dismiss();
                 return true;
             case R.id.logout:
+                progressDialog.dismiss();
+
                 try {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this);
                     builder.setMessage("Do you want to Logout?");
@@ -95,10 +129,10 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                         public void onClick(DialogInterface dialog, int which) {
                             utilities.clear();
                             editor.putString("currentUser", null);
-                            editor.remove("advanced");
+                            editor.putString("advanced", null);
                             editor.apply();
-                            finish();
                             utilities.getAuthorisation().signOut();
+                            finish();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         }
@@ -111,4 +145,6 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         }
         return false;
     }
+
+
 }

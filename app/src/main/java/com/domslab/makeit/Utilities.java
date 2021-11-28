@@ -1,9 +1,12 @@
 package com.domslab.makeit;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import com.domslab.makeit.menu.HomeContainer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,10 +15,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Utilities {
     private static String currentUID;
-    private static UserHelperClass currentUser;
-    public static final String sharedPreferencesName = "logv2";
+    public static UserHelperClass currentUser;
+    public static final String sharedPreferencesName = "logv3";
     public static final String verifying = "Verifying...";
     public static final String loading = "Loading...";
     public static final String path = "https://makeit-27047-default-rtdb.europe-west1.firebasedatabase.app/";
@@ -34,8 +41,28 @@ public class Utilities {
     private static DatabaseReference reference;
     private static Utilities instance = null;
     private static FirebaseAuth auth = null;
+    private static ProgressDialog progressDialog;
 
     private Utilities() {
+    }
+
+    public static void showProgressDialog(Context context, boolean loading) {
+        progressDialog = new ProgressDialog(context);
+        if (loading)
+            progressDialog.setMessage(Utilities.loading);
+        else
+            progressDialog.setMessage(Utilities.verifying);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public static void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     public static Utilities getInstance() {
@@ -51,19 +78,30 @@ public class Utilities {
         return auth;
     }
 
-    public void setCurrentUsername(String user, SharedPreferences.Editor editor) {
+    public static void setCurrentUsername(String user) {
         currentUID = user;
-        setUser(editor);
+        setUser();
     }
 
-    private void setUser(SharedPreferences.Editor editor) {
+    private static void setUser() {
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
+        readData(new FirebaseCallBack() {
+            @Override
+            public void onCallBack(List<String> list, boolean business) {
+                currentUser = new UserHelperClass(list.get(0), list.get(1), list.get(2), business, list.get(3));
+            }
+        });
+    }
+
+
+    private static void readData(FirebaseCallBack callBack) {
         Query checkUser = reference.orderByChild(currentUID);
+        ArrayList<String> userData = new ArrayList<>();
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = "", surname = "", email = "", password = "", username = "";
+                String name = "", surname = "", email = "", username = "";
                 boolean business = false;
                 UserHelperClass userHelperClass = null;
                 if (dataSnapshot.exists()) {
@@ -72,12 +110,11 @@ public class Utilities {
                             name = o.child("name").getValue().toString();
                             surname = o.child("surname").getValue().toString();
                             email = o.child("email").getValue().toString();
-                            password = o.child("password").getValue().toString();
                             business = (boolean) o.child("advanced").getValue();
                             username = o.child("username").getValue().toString();
-                            editor.putBoolean("advanced", business);
-                            editor.apply();
-                            userHelperClass = new UserHelperClass(name, surname, email, password, business, username);
+                            userData.addAll(Arrays.asList(name, surname, email, username));
+                            callBack.onCallBack(userData, business);
+                            userHelperClass = new UserHelperClass(name, surname, email, business, username);
                             currentUser = userHelperClass;
                         }
                 }
@@ -89,6 +126,7 @@ public class Utilities {
             }
         });
     }
+
 
     public void updateUser(UserHelperClass userHelperClass, String id) {
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
@@ -103,9 +141,6 @@ public class Utilities {
         auth = null;
     }
 
-    public static UserHelperClass getCurrentUser() {
-        return currentUser;
-    }
 
     public static String getCurrentUID() {
         return currentUID;

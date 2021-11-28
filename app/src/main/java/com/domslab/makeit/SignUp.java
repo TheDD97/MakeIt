@@ -1,13 +1,12 @@
 package com.domslab.makeit;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -21,14 +20,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
+
 
 public class SignUp extends AppCompatActivity {
     private EditText name, surname, username, email, password, confirmPassword;
@@ -38,16 +35,14 @@ public class SignUp extends AppCompatActivity {
     private RadioButton yes, no;
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
-    SharedPreferences.Editor editor;
     private Boolean check = true;
-    private Toast t;
     private Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
-        editor = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE).edit();
+        utilities = Utilities.getInstance();
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference().child("users");
         user = new HashMap<>();
@@ -82,29 +77,28 @@ public class SignUp extends AppCompatActivity {
                 checkUsername();
                 checkEmail();
                 checkPassword();
-                utilities = Utilities.getInstance();
                 if (check) {
+                    Utilities.showProgressDialog(v.getContext(), false);
                     clearAllError();
                     FirebaseAuth mAuth = utilities.getAuthorisation();
-                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                            .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("TAG", "createUserWithEmail:success");
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        updateUI(user);
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(v.getContext(), "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
-                                        updateUI(null);
-                                    }
-                                }
-                            });
-                    finish();
+                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TAG", "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                updateUI(user);
+
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(v.getContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
+                        }
+                    });
                 }
 
                 check = true;
@@ -200,6 +194,8 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
+
+
         user = utilities.getAuthorisation().getCurrentUser();
         if (user == null) {
             Toast.makeText(this.getApplicationContext(), "ERROR",
@@ -207,9 +203,13 @@ public class SignUp extends AppCompatActivity {
         } else {
             String id = utilities.getAuthorisation().getCurrentUser().getUid();
             System.out.println(id);
-            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), password.getText().toString(), yes.isChecked(), username.getText().toString());
+            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), yes.isChecked(), username.getText().toString());
             reference.child(id).setValue(nUser);
+            Utilities.closeProgressDialog();
+            Toast.makeText(this.getApplicationContext(), "DONE",
+                    Toast.LENGTH_SHORT).show();
         }
+        finish();
     }
 }
 
