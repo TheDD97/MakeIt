@@ -30,7 +30,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
@@ -46,7 +45,7 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     // bottom menu https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
     implementation 'com.google.android.material:material:1.2.0'
-
-
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.11.0'
 
 }

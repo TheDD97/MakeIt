@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,11 +19,24 @@ import android.os.Process;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.domslab.makeit.FirebaseCallBack;
 import com.domslab.makeit.MainActivity;
 import com.domslab.makeit.R;
 import com.domslab.makeit.UserHelperClass;
 import com.domslab.makeit.Utilities;
+import com.domslab.makeit.home.PagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HomeContainer extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private BottomNavigationView navigationView;
@@ -31,9 +46,11 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
     private AddFragment addFragment;
     private Utilities utilities;
     private SharedPreferences.Editor editor;
-    private UserHelperClass currentUser;
     private ProgressDialog progressDialog;
     private SharedPreferences preferences;
+    private DatabaseReference reference;
+    private FirebaseDatabase rootNode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +63,13 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         test.setImageBitmap(decodedByte);
        */
 
-        utilities = Utilities.getInstance();
-
         editor = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE).edit();
         preferences = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE);
-        String user = preferences.getString("currentUser", null);
-        System.out.println(user);
+        rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        reference = rootNode.getReference("users");
+
+
+        loadMenuFragment();
 
 
     }
@@ -59,14 +77,10 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadMenuFragment();
         navigationView = findViewById(R.id.bottomNavigationView);
         navigationView.setOnNavigationItemSelectedListener(this);
         navigationView.setSelectedItemId(R.id.home);
-        // utilities.setCurrentUsername(user, editor);
-        System.out.println(preferences.getBoolean("advanced", false));
-        navigationView.getMenu().findItem(R.id.add).setVisible(preferences.getBoolean("advanced", false));
-
+        navigationView.getMenu().findItem(R.id.add).setVisible(preferences.getBoolean("advanced",false));
 
     }
 
@@ -127,10 +141,10 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            utilities.clear();
                             editor.putString("currentUser", null);
                             editor.putString("advanced", null);
                             editor.apply();
+                            utilities.clear();
                             utilities.getAuthorisation().signOut();
                             finish();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -144,6 +158,15 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                 }
         }
         return false;
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = Utilities.getAuthorisation().getCurrentUser();
+        if (currentUser != null)
+            currentUser.reload();
     }
 
 

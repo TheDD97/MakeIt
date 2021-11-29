@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase rootNode;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
+    private DatabaseReference reference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 emaiLayout.setError(null);
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
-                DatabaseReference reference = rootNode.getReference().child("users");
+                reference = rootNode.getReference().child("users");
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -156,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
                                             editor.putString("currentPassword", password);
                                             editor.apply();
                                             Utilities.closeProgressDialog();
-
                                             updateUI(user);
-                                            Utilities.setCurrentUsername(user.getUid());
                                             finish();
                                             launchHome(v.getContext());
                                         } else {
@@ -219,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 Utilities.clear();
                 finish();
                 Process.killProcess(Process.myPid());
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
             }
         });
         AlertDialog alertDialog = builder.create();
@@ -234,7 +233,32 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             Toast.makeText(this.getApplicationContext(), "Login Success.",
                     Toast.LENGTH_SHORT).show();
+            Utilities.setCurrentUsername(user.getUid());
+            readUserData();
         }
 
+    }
+
+    private void readUserData() {
+        Query checkUser = reference.orderByChild(Utilities.getCurrentUID());
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean business = false;
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot o : dataSnapshot.getChildren())
+                        if (o.getKey().equals(Utilities.getCurrentUID())) {
+                            business = (boolean) o.child("advanced").getValue();
+                            editor.putBoolean("advanced", business);
+                            editor.apply();
+                        }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -8,13 +8,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.R;
+import com.domslab.makeit.Utilities;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class PagerAdapter extends FragmentPagerAdapter {
     private static int NUM_PAGES = 3;
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
     private LinkedHashMap<String, Fragment> fragments;
+    private ArrayList<String> keys;
 
     public PagerAdapter(@NonNull FragmentManager fm, SharedPreferences preferences) {
         super(fm);
@@ -28,12 +39,14 @@ public class PagerAdapter extends FragmentPagerAdapter {
             fragments.put("My Manual", MyManualFragment.newInstance());
             NUM_PAGES = 3;
         }
+        keys = new ArrayList(fragments.keySet());
+
     }
+
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        ArrayList<String> keys = new ArrayList(fragments.keySet());
         return fragments.get(keys.get(position));
 
 
@@ -47,8 +60,8 @@ public class PagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-
-        ArrayList<String> keys = new ArrayList(fragments.keySet());
         return keys.get(position);
     }
+
+
 }
