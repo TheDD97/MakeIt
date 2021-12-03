@@ -1,16 +1,25 @@
-package com.domslab.makeit;
+package com.domslab.makeit.model;
 
 public class UserHelperClass {
-    private String name, surname, email,  username;
-    private Boolean advanced;
+    private String name, surname, email, username;
+    private Boolean advanced, waiting;
 
 
-    public UserHelperClass(String name, String surname, String email, Boolean business, String username) {
+    public UserHelperClass(String name, String surname, String email, Boolean business, String username,Boolean waiting) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.advanced = business;
         this.username = username;
+        this.waiting = waiting;
+    }
+
+    public Boolean getWaiting() {
+        return waiting;
+    }
+
+    public void setWaiting(Boolean waiting) {
+        this.waiting = waiting;
     }
 
     public Boolean getAdvanced() {

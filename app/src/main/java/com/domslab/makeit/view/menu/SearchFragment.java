@@ -1,4 +1,4 @@
-package com.domslab.makeit.menu;
+package com.domslab.makeit.view.menu;
 
 import android.os.Bundle;
 

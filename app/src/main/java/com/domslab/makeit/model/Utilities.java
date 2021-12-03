@@ -1,12 +1,11 @@
-package com.domslab.makeit;
+package com.domslab.makeit.model;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.domslab.makeit.menu.HomeContainer;
+import com.domslab.makeit.FirebaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Utilities {
+    public static CharSequence noOldEmail = "You have to enter the old email if you want to change it";
     private static String currentUID;
     public static UserHelperClass currentUser;
     public static final String sharedPreferencesName = "logv3";
@@ -37,9 +37,9 @@ public class Utilities {
     public static final String noConfirmPassword = "Empty Confirm Password field";
     public static final String noBothPsw = "The passwords entered are different";
     public static final String passwordFormat = "The password must contain at least 8 characters, an uppercase character, a special character and a number";
+    public static String emailNoMatch = "This email does not match the current one";
     private static FirebaseDatabase rootNode;
     private static DatabaseReference reference;
-    private static Utilities instance = null;
     private static FirebaseAuth auth = null;
     private static ProgressDialog progressDialog;
 
@@ -65,12 +65,6 @@ public class Utilities {
         }
     }
 
-    public static Utilities getInstance() {
-        if (instance == null)
-            instance = new Utilities();
-        return instance;
-    }
-
 
     public static FirebaseAuth getAuthorisation() {
         if (auth == null)
@@ -80,7 +74,7 @@ public class Utilities {
 
     public static void setCurrentUsername(String user) {
         currentUID = user;
-        setUser();
+        //setUser();
     }
 
     private static void setUser() {
@@ -88,8 +82,8 @@ public class Utilities {
         reference = rootNode.getReference("users");
         readData(new FirebaseCallBack() {
             @Override
-            public void onCallBack(List<String> list, boolean business) {
-                currentUser = new UserHelperClass(list.get(0), list.get(1), list.get(2), business, list.get(3));
+            public void onCallBack(List<String> list, boolean business,boolean wait) {
+                currentUser = new UserHelperClass(list.get(0), list.get(1), list.get(2), business, list.get(3),wait);
             }
         });
     }
@@ -102,7 +96,7 @@ public class Utilities {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String name = "", surname = "", email = "", username = "";
-                boolean business = false;
+                boolean business = false, waiting = false;
                 UserHelperClass userHelperClass = null;
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot o : dataSnapshot.getChildren())
@@ -112,9 +106,10 @@ public class Utilities {
                             email = o.child("email").getValue().toString();
                             business = (boolean) o.child("advanced").getValue();
                             username = o.child("username").getValue().toString();
+                            waiting = (boolean) o.child("waiting").getValue();
                             userData.addAll(Arrays.asList(name, surname, email, username));
-                            callBack.onCallBack(userData, business);
-                            userHelperClass = new UserHelperClass(name, surname, email, business, username);
+                            callBack.onCallBack(userData, business,waiting);
+                            userHelperClass = new UserHelperClass(name, surname, email, business, username,waiting);
                             currentUser = userHelperClass;
                         }
                 }

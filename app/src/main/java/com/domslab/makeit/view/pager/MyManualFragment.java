@@ -1,4 +1,4 @@
-package com.domslab.makeit.home;
+package com.domslab.makeit.view.pager;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -12,26 +12,35 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.domslab.makeit.R;
-import com.domslab.makeit.Utilities;
+import com.domslab.makeit.model.Utilities;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NewsFragment#newInstance} factory method to
+ * Use the {@link MyManualFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment {
+public class MyManualFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 
-    public NewsFragment() {
+    // TODO: Rename and change types of parameters
+
+
+    public MyManualFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment MyManualFragment.
+     */
     // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance() {
-        NewsFragment fragment = new NewsFragment();
+    public static MyManualFragment newInstance() {
+        MyManualFragment fragment = new MyManualFragment();
 
         return fragment;
     }
@@ -39,13 +48,14 @@ public class NewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        return inflater.inflate(R.layout.fragment_my_manual, container, false);
     }
 
     @Override

@@ -1,6 +1,5 @@
-package com.domslab.makeit.menu;
+package com.domslab.makeit.view.menu;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,15 +7,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.domslab.makeit.Utilities;
-import com.domslab.makeit.home.PagerAdapter;
+import com.domslab.makeit.model.ManualCard;
+import com.domslab.makeit.model.Utilities;
+import com.domslab.makeit.view.pager.PagerAdapter;
 import com.domslab.makeit.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +27,8 @@ import com.domslab.makeit.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private ArrayList<ManualCard> manualCards;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,6 +57,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //recyclerView = view.findViewById(R.id.song_list_view);
+
     }
 
     @Override

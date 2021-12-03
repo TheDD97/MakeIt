@@ -1,43 +1,23 @@
-package com.domslab.makeit.menu;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+package com.domslab.makeit.view.menu;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.os.Process;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.domslab.makeit.FirebaseCallBack;
-import com.domslab.makeit.MainActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.domslab.makeit.R;
-import com.domslab.makeit.UserHelperClass;
-import com.domslab.makeit.Utilities;
-import com.domslab.makeit.home.PagerAdapter;
+import com.domslab.makeit.model.Utilities;
+import com.domslab.makeit.view.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class HomeContainer extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private BottomNavigationView navigationView;
     private UserFragment userFragment;
@@ -85,10 +65,10 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
     }
 
     private void loadMenuFragment() {
-        userFragment = UserFragment.newInstance();
-        homeFragment = HomeFragment.newInstance();
-        searchFragment = SearchFragment.newInstance();
-        addFragment = AddFragment.newInstance();
+        userFragment = new UserFragment();
+        homeFragment = new HomeFragment();
+        searchFragment = new SearchFragment();
+        addFragment = new AddFragment();
     }
 
     @Override
@@ -143,9 +123,11 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                         public void onClick(DialogInterface dialog, int which) {
                             editor.putString("currentUser", null);
                             editor.putString("advanced", null);
+                            editor.putString("currentEMail",null);
+                            editor.putString("currentPassword",null);
                             editor.apply();
-                            utilities.clear();
                             utilities.getAuthorisation().signOut();
+                            utilities.clear();
                             finish();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -160,14 +142,14 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         return false;
     }
 
-
+/*
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = Utilities.getAuthorisation().getCurrentUser();
         if (currentUser != null)
             currentUser.reload();
-    }
+    }*/
 
 
 }

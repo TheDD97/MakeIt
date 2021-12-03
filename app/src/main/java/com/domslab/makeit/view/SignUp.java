@@ -1,7 +1,5 @@
-package com.domslab.makeit;
+package com.domslab.makeit.view;
 
-import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -14,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.domslab.makeit.R;
+import com.domslab.makeit.model.UserHelperClass;
+import com.domslab.makeit.model.Utilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,13 +37,11 @@ public class SignUp extends AppCompatActivity {
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
     private Boolean check = true;
-    private Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
-        utilities = Utilities.getInstance();
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference().child("users");
         user = new HashMap<>();
@@ -80,7 +79,7 @@ public class SignUp extends AppCompatActivity {
                 if (check) {
                     Utilities.showProgressDialog(v.getContext(), false);
                     clearAllError();
-                    FirebaseAuth mAuth = utilities.getAuthorisation();
+                    FirebaseAuth mAuth = Utilities.getAuthorisation();
                     mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -125,7 +124,6 @@ public class SignUp extends AppCompatActivity {
             if (password.getText().toString().isEmpty() || password.getText() == null) {
                 check = false;
                 passwordLayout.setError(Utilities.noPassword);
-
             } else if (confirmPassword.getText().toString().isEmpty() || confirmPassword.getText() == null) {
                 check = false;
                 confirmPasswordLayout.setError(Utilities.noConfirmPassword);
@@ -196,14 +194,13 @@ public class SignUp extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
 
 
-        user = utilities.getAuthorisation().getCurrentUser();
+        user = Utilities.getAuthorisation().getCurrentUser();
         if (user == null) {
             Toast.makeText(this.getApplicationContext(), "ERROR",
                     Toast.LENGTH_SHORT).show();
         } else {
-            String id = utilities.getAuthorisation().getCurrentUser().getUid();
-            System.out.println(id);
-            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), yes.isChecked(), username.getText().toString());
+            String id = Utilities.getAuthorisation().getCurrentUser().getUid();
+            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(),yes.isChecked());
             reference.child(id).setValue(nUser);
             Utilities.closeProgressDialog();
             Toast.makeText(this.getApplicationContext(), "DONE",

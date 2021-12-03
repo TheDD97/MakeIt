@@ -1,4 +1,4 @@
-package com.domslab.makeit;
+package com.domslab.makeit.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Process;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.domslab.makeit.menu.HomeContainer;
+import com.domslab.makeit.R;
+import com.domslab.makeit.model.Utilities;
+import com.domslab.makeit.view.menu.HomeContainer;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
@@ -32,12 +38,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONObject;
-
 public class MainActivity extends AppCompatActivity {
     private Button login, singUp;
     private EditText emailField, passwordField;
     private TextInputLayout emaiLayout, passwordLayout;
+    private TextView resetPassword;
     private FirebaseDatabase rootNode;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
@@ -71,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                                 editor.putString("currentPassword", psw);
                                 editor.apply();
                                 updateUI(user);
-                                Utilities.setCurrentUsername(user.getUid());
                                 finish();
                                 launchHome(getApplicationContext());
                             } else {
@@ -81,35 +85,10 @@ public class MainActivity extends AppCompatActivity {
                     });
             launchHome(getBaseContext());
         }
-        try {
-            /*JSONParser parser = new JSONParser();
-            JSONObject data = (JSONObject) parser.parse(new FileReader("./prova.json"));//path to the JSON file.
-            Toast t = new Toast(this.getApplicationContext());
-            t.setDuration(Toast.LENGTH_LONG);
-            t.setText(data.toString());
-            t.show();
-            String s = "{\n" +
-                    "  \"1\":[\n" +
-                    "    {\n" +
-                    "      \"text\":\"ciao\",\n" +
-                    "      \"image\":\"154793\"\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"2\":[\n" +
-                    "    {\n" +
-                    "      \"text\":\"no\"\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}";
-            JSONObject object = new JSONObject(s);*/
-            //System.out.println("result" + object.getJSONArray("1").getJSONObject(0).has("ciao"));
-        } catch (Exception e) {
-            e.printStackTrace();
 
-            /*String string = jsonObject.getJSONObject("1").getString("text");*/
 
-        }
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        reference = rootNode.getReference().child("users");
         emailField = findViewById(R.id.login_email);
         passwordField = findViewById(R.id.login_password);
         emaiLayout = findViewById(R.id.email_layout);
@@ -123,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 emaiLayout.setError(null);
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
-                reference = rootNode.getReference().child("users");
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -158,8 +137,10 @@ public class MainActivity extends AppCompatActivity {
                                             editor.putString("currentEmail", email);
                                             editor.putString("currentPassword", password);
                                             editor.apply();
-                                            Utilities.closeProgressDialog();
+
                                             updateUI(user);
+
+                                            Utilities.closeProgressDialog();
                                             finish();
                                             launchHome(v.getContext());
                                         } else {
@@ -181,8 +162,79 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
+        resetPassword = findViewById(R.id.reset_password);
+        resetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRecoverPasswordDialog();
+            }
+        });
     }
+
+    private void showRecoverPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Recover Password");
+        LinearLayout linearLayout = new LinearLayout(this);
+        final EditText emailet = new EditText(this);
+
+        // write the email using which you registered
+        emailet.setText("Email");
+        emailet.setMinEms(16);
+        emailet.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        linearLayout.addView(emailet);
+        linearLayout.setPadding(10, 10, 10, 10);
+        builder.setView(linearLayout);
+
+        // Click on Recover and a email will be sent to your registered email id
+        builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String email = emailet.getText().toString().trim();
+                beginRecovery(email);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void beginRecovery(String email) {
+        ProgressDialog loadingBar = new ProgressDialog(this);
+        loadingBar.setMessage("Sending Email....");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+
+        // calling sendPasswordResetEmail
+        // open your email and write the new
+        // password and then you can login
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                loadingBar.dismiss();
+                if (task.isSuccessful()) {
+                    // if isSuccessful then done message will be shown
+                    // and you can change the password
+                    Toast.makeText(MainActivity.this, "Done sent", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Error Occured", Toast.LENGTH_LONG).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                loadingBar.dismiss();
+                Toast.makeText(MainActivity.this, "Error Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
 
     @Override
     protected void onStart() {
@@ -234,13 +286,13 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this.getApplicationContext(), "Login Success.",
                     Toast.LENGTH_SHORT).show();
             Utilities.setCurrentUsername(user.getUid());
-            readUserData();
+            readUserData(user.getUid());
         }
 
     }
 
-    private void readUserData() {
-        Query checkUser = reference.orderByChild(Utilities.getCurrentUID());
+    private void readUserData(String user) {
+        Query checkUser = reference.orderByChild(user);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
