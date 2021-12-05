@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.Utilities;
-import com.domslab.makeit.view.pager.PagerAdapter;
+import com.domslab.makeit.adapters.PagerAdapter;
 import com.domslab.makeit.R;
 
 import java.util.ArrayList;
@@ -58,13 +58,13 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //recyclerView = view.findViewById(R.id.song_list_view);
+        Utilities.showProgressDialog(getContext(), true);
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Utilities.showProgressDialog(getContext(), true);
         ViewPager viewPager = this.getView().findViewById(R.id.vpPager);
         SharedPreferences preferences = this.getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
         viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), preferences));

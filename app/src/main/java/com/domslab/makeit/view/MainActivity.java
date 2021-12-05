@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-            launchHome(getBaseContext());
+            //launchHome(getBaseContext());
         }
 
 
@@ -137,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                             editor.putString("currentEmail", email);
                                             editor.putString("currentPassword", password);
                                             editor.apply();
-
                                             updateUI(user);
-
                                             Utilities.closeProgressDialog();
                                             finish();
                                             launchHome(v.getContext());
@@ -232,8 +230,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     @Override

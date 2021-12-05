@@ -50,7 +50,20 @@ public class Manual {
     public void setDate(String date) {
         this.date = date;
     }
-    public void addPage(String key, ManualPage content){
-        this.content.put(key,content);
+
+    public void addPage(String key, ManualPage content) {
+        this.content.put(key, content);
+    }
+
+    public ManualPage getPage(String number) {
+        if (content.containsKey(number))
+            return content.get(number);
+        return null;
+    }
+
+    public int size() {
+
+        System.out.println(content.size());
+        return content.size();
     }
 }

@@ -1,4 +1,4 @@
-package com.domslab.makeit.view.pager;
+package com.domslab.makeit.view.pagerFragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

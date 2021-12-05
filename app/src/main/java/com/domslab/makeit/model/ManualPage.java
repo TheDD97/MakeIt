@@ -5,17 +5,17 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 public class ManualPage {
-    private HashMap<String, Object> pageContent;
+    private HashMap<String, String> pageContent;
 
     public ManualPage() {
         pageContent = new HashMap<>();
     }
 
-    public ManualPage(HashMap<String, Object> pageContent) {
+    public ManualPage(HashMap<String, String> pageContent) {
         this.pageContent = pageContent;
     }
 
-    public HashMap<String, Object> getPageContent() {
+    public HashMap<String, String> getPageContent() {
         return pageContent;
     }
 
@@ -23,10 +23,15 @@ public class ManualPage {
         pageContent.put(key, value);
     }
 
-    public void setPageContent(HashMap<String, Object> pageContent) {
+    public void setPageContent(HashMap<String, String> pageContent) {
         this.pageContent = pageContent;
     }
-
+    public boolean hasItem(String item){
+        return pageContent.containsKey(item);
+    }
+    public String getItem(String item){
+        return pageContent.get(item);
+    }
     @NonNull
     @Override
     public String toString() {

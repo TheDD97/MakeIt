@@ -1,4 +1,4 @@
-package com.domslab.makeit.view.pager;
+package com.domslab.makeit.adapters;
 
 import android.content.SharedPreferences;
 
@@ -7,6 +7,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
+import com.domslab.makeit.view.pagerFragment.MyManualFragment;
+import com.domslab.makeit.view.pagerFragment.NewsFragment;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

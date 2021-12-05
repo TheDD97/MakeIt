@@ -38,6 +38,7 @@ public class Utilities {
     public static final String noBothPsw = "The passwords entered are different";
     public static final String passwordFormat = "The password must contain at least 8 characters, an uppercase character, a special character and a number";
     public static String emailNoMatch = "This email does not match the current one";
+    public static String currentPage = "Page: ";
     private static FirebaseDatabase rootNode;
     private static DatabaseReference reference;
     private static FirebaseAuth auth = null;

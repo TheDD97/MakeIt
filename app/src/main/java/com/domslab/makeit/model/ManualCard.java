@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 public class ManualCard {
     private Bitmap cover;
     private String name;
+    private String key;
 
     public ManualCard() {
     }
@@ -28,5 +29,13 @@ public class ManualCard {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 }
