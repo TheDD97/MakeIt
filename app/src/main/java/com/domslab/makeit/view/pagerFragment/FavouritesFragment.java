@@ -21,7 +21,7 @@ import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.Utilities;
-import com.domslab.makeit.view.ManualActivity;
+import com.domslab.makeit.view.HomeManual;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +41,8 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
     private RecyclerView recyclerView;
     private ArrayList<ManualCard> manualCards;
     private ManualAdapter manualAdapter;
+    private String description;
+    private String date;
     // TODO: Rename and change types of parameters
 
     public FavouritesFragment() {
@@ -102,7 +104,10 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
                         card.setKey(o.getKey());
                         if (o.hasChild("name"))
                             card.setName(o.child("name").getValue().toString());
-
+                        if (o.hasChild("description"))
+                            description = o.child("description").getValue().toString();
+                        if (o.hasChild("date"))
+                            date = o.child("date").getValue().toString();
                         if (o.hasChild("cover")) {
                             byte[] decodedString = Base64.getDecoder().decode(o.child("cover").getValue().toString());
                             card.setCover(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
@@ -127,8 +132,12 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
 
     @Override
     public void onManualClick(int position) {
-        Intent intent = new Intent(getContext(), ManualActivity.class);
-        intent.putExtra("manualId",manualCards.get(position).getKey());
+        Intent intent = new Intent(getContext(), HomeManual.class);
+        intent.putExtra("manualId", manualCards.get(position).getKey());/*
+        intent.putExtra("manualDescription", description);
+        intent.putExtra("manualDate", date);
+        intent.putExtra("manualCover", manualCards.get(position).getCover());*/
+
         startActivity(intent);
     }
 }

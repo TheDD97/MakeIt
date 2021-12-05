@@ -21,4 +21,6 @@
     <string name="title_activity_manual">ManualActivity</string>
     <string name="reset_password"><u>forgot your password?</u></string>
     <string name="hint_new_email">New email</string>
+    <string name="description_label">Description</string>
+    <string name="start">Start</string>
 </resources>

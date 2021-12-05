@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.domslab.makeit.R;
@@ -45,7 +44,7 @@ public class ManualActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manual);
+        setContentView(R.layout.activity_manual_page);
         Utilities.showProgressDialog(ManualActivity.this, true);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
@@ -151,7 +150,7 @@ public class ManualActivity extends AppCompatActivity {
                 next.setVisibility(View.INVISIBLE);
             if (currentManualPage.hasItem("text")) {
                 pageText.setVisibility(View.VISIBLE);
-                pageText.setText((String) currentManualPage.getItem("text"));
+                pageText.setText( currentManualPage.getItem("text"));
             }
             if (currentManualPage.hasItem("image")) {
                 pageImage.setVisibility(View.VISIBLE);
@@ -159,6 +158,7 @@ public class ManualActivity extends AppCompatActivity {
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 pageImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
             }
+
         }
 
 
