@@ -6,6 +6,9 @@ public class ManualCard {
     private Bitmap cover;
     private String name;
 
+    public ManualCard() {
+    }
+
     public ManualCard(Bitmap cover, String name) {
         this.cover = cover;
         this.name = name;
