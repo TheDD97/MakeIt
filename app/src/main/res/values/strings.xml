@@ -23,4 +23,8 @@
     <string name="hint_new_email">New email</string>
     <string name="description_label">Description</string>
     <string name="start">Start</string>
+    <string name="no_name">No name available</string>
+    <string name="no_description">No description available</string>
+    <string name="available_from">"Available from: "</string>
+    <string name="no_date">not available</string>
 </resources>

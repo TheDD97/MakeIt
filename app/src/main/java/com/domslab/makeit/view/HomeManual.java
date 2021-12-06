@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,8 @@ public class HomeManual extends AppCompatActivity {
     private TextView name;
     private TextView descriptionContent;
     private ImageView cover;
+    private ImageButton exit;
+    private TextView date;
     private Button start;
     private String id;
 
@@ -43,6 +46,14 @@ public class HomeManual extends AppCompatActivity {
         descriptionContent = findViewById(R.id.description);
         cover = findViewById(R.id.cover);
         start = findViewById(R.id.start);
+        date = findViewById(R.id.date);
+        exit = findViewById(R.id.home_exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("manualId");
@@ -51,11 +62,12 @@ public class HomeManual extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeManual.this,ManualActivity.class);
-                intent.putExtra("manualId",id);
+                Intent intent = new Intent(HomeManual.this, ManualActivity.class);
+                intent.putExtra("manualId", id);
                 startActivity(intent);
             }
         });
+
     }
 
 
@@ -78,8 +90,8 @@ public class HomeManual extends AppCompatActivity {
                             name.setText(o.child("name").getValue().toString());
                         if (o.hasChild("description"))
                             descriptionContent.setText(o.child("description").getValue().toString());
-                        /*if (o.hasChild("date"))
-                            date = o.child("date").getValue().toString();*/
+                        if (o.hasChild("date"))
+                            date.setText(o.child("date").getValue().toString());
                         if (o.hasChild("cover")) {
                             byte[] decodedString = Base64.getDecoder().decode(o.child("cover").getValue().toString());
                             cover.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
