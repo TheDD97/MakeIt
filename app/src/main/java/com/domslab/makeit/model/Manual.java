@@ -5,7 +5,8 @@ import java.util.HashMap;
 public class Manual {
 
     private HashMap<String, ManualPage> content;
-    private String name, description, cover, date;
+    private String name, description, cover, date, category;
+
 
     public Manual() {
         content = new HashMap<>();
@@ -49,6 +50,14 @@ public class Manual {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void addPage(String key, ManualPage content) {

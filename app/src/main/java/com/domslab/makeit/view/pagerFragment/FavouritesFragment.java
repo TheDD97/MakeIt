@@ -115,10 +115,11 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
                         manualCards.add(card);
                     }
                     Utilities.closeProgressDialog();
+                    manualAdapter = new ManualAdapter(getContext(), manualCards, FavouritesFragment.this::onManualClick);
+                    recyclerView.setAdapter(manualAdapter);
+                }else
+                    Utilities.closeProgressDialog();
 
-                }
-                manualAdapter = new ManualAdapter(getContext(), manualCards, FavouritesFragment.this::onManualClick);
-                recyclerView.setAdapter(manualAdapter);
             }
 
             @Override
