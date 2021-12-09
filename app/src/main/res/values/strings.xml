@@ -27,4 +27,8 @@
     <string name="no_description">No description available</string>
     <string name="available_from">"Available from: "</string>
     <string name="no_date">not available</string>
+    <string name="select_file">Search</string>
+    <string name="select_category">Select the category of your manual</string>
+    <string name="location_hint">Your file name will be shown here</string>
+    <string name="upload_file">Confirm</string>
 </resources>

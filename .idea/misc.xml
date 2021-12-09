@@ -3,25 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/activity_home_manual.xml" value="0.22" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/activity_manual.xml" value="0.22" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.22" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.1" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/fragment_favourites.xml" value="0.10989583333333333" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/fragment_user.xml" value="0.22" />
-        <entry key="..\:/Users/panet/AndroidStudioProjects/MakeIt/app/src/main/res/layout/sign_up.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_home.xml" value="0.17527173913043478" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_home_manual.xml" value="0.22" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.1" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.18342391304347827" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.12" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_dashboard.xml" value="0.17255434782608695" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_favourites.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_home.xml" value="0.16" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_my_manual.xml" value="0.18" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_news.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_notifications.xml" value="0.17255434782608695" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_search.xml" value="0.17255434782608695" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_second.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_user.xml" value="0.22" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/new_fragment.xml" value="0.10989583333333333" />

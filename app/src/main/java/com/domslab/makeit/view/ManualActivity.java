@@ -28,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Base64;
 
 public class ManualActivity extends AppCompatActivity {
-    //manuali = hashmap <String,Arraylist>
     private Manual manual;
     private SharedPreferences preferences;
     private int currentPage = 1;
@@ -90,7 +89,6 @@ public class ManualActivity extends AppCompatActivity {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     int counter = 1;
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot o : dataSnapshot.getChildren()) {
@@ -134,7 +132,6 @@ public class ManualActivity extends AppCompatActivity {
 
                 }
             });
-
         }
     }
 
@@ -150,7 +147,7 @@ public class ManualActivity extends AppCompatActivity {
                 next.setVisibility(View.INVISIBLE);
             if (currentManualPage.hasItem("text")) {
                 pageText.setVisibility(View.VISIBLE);
-                pageText.setText( currentManualPage.getItem("text"));
+                pageText.setText(currentManualPage.getItem("text"));
             }
             if (currentManualPage.hasItem("image")) {
                 pageImage.setVisibility(View.VISIBLE);
@@ -158,10 +155,7 @@ public class ManualActivity extends AppCompatActivity {
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 pageImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
             }
-
         }
-
-
     }
 
     private void reset() {
@@ -169,5 +163,10 @@ public class ManualActivity extends AppCompatActivity {
         next.setVisibility(View.VISIBLE);
         pageImage.setVisibility(View.INVISIBLE);
         pageText.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

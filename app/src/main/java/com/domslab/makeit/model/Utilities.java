@@ -20,6 +20,8 @@ import java.util.List;
 
 public class Utilities {
     public static CharSequence noOldEmail = "You have to enter the old email if you want to change it";
+    public static String locationLabel="Location: ";
+    public static String checkUpload = "Are you sure to upload this file?";
     private static String currentUID;
     public static UserHelperClass currentUser;
     public static final String sharedPreferencesName = "logv3";

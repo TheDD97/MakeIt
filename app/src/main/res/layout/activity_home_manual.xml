@@ -36,8 +36,7 @@
         android:layout_weight="0"
         android:maxWidth="200dp"
         android:maxHeight="100dp"
-        android:scaleType="center"
-        app:srcCompat="@drawable/baseline_construction_black_48" />
+        android:scaleType="center" />
 
 
     <LinearLayout

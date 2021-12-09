@@ -54,7 +54,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
 
         public ViewHolder(@NonNull View itemView, OnManualListener onSongListener) {
             super(itemView);
-            //assing variable
             imageView = itemView.findViewById(R.id.image);
             textView = itemView.findViewById(R.id.manual_name);
             this.onManualListener = onSongListener;

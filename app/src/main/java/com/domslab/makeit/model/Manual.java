@@ -5,7 +5,12 @@ import java.util.HashMap;
 public class Manual {
 
     private HashMap<String, ManualPage> content;
-    private String name, description, cover, date, category;
+    private String name;
+    private String description;
+    private String cover;
+    private String date;
+    private String category;
+    private String owner;
 
 
     public Manual() {
@@ -60,6 +65,14 @@ public class Manual {
         this.category = category;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     public void addPage(String key, ManualPage content) {
         this.content.put(key, content);
     }
@@ -75,4 +88,5 @@ public class Manual {
         System.out.println(content.size());
         return content.size();
     }
+
 }

@@ -76,8 +76,8 @@ public class HomeManual extends AppCompatActivity {
         Utilities.showProgressDialog(HomeManual.this, true);
 
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
-        DatabaseReference reference = rootNode.getReference();
-        Query checkUser = reference.child("manual");
+        DatabaseReference reference = rootNode.getReference("manual");
+        Query checkUser = reference;
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -85,16 +85,17 @@ public class HomeManual extends AppCompatActivity {
 
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot o : dataSnapshot.getChildren()) {
-
-                        if (o.hasChild("name"))
-                            name.setText(o.child("name").getValue().toString());
-                        if (o.hasChild("description"))
-                            descriptionContent.setText(o.child("description").getValue().toString());
-                        if (o.hasChild("date"))
-                            date.setText(o.child("date").getValue().toString());
-                        if (o.hasChild("cover")) {
-                            byte[] decodedString = Base64.getDecoder().decode(o.child("cover").getValue().toString());
-                            cover.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                        if (o.getKey().equals(id)) {
+                            if (o.hasChild("name"))
+                                name.setText(o.child("name").getValue().toString());
+                            if (o.hasChild("description"))
+                                descriptionContent.setText(o.child("description").getValue().toString());
+                            if (o.hasChild("date"))
+                                date.setText(o.child("date").getValue().toString());
+                            if (o.hasChild("cover")) {
+                                byte[] decodedString = Base64.getDecoder().decode(o.child("cover").getValue().toString());
+                                cover.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                            }
                         }
                     }
                     Utilities.closeProgressDialog();
@@ -111,5 +112,8 @@ public class HomeManual extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }

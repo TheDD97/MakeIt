@@ -87,14 +87,18 @@ public class SignUp extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                updateUI(user);
-
+                                String id = Utilities.getAuthorisation().getCurrentUser().getUid();
+                                UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(), yes.isChecked());
+                                reference.child(id).setValue(nUser);
+                                Utilities.closeProgressDialog();
+                                Toast.makeText(SignUp.this, "DONE",
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("TAG", "createUserWithEmail:failure", task.getException());
                                 Toast.makeText(v.getContext(), "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                updateUI(null);
                             }
                         }
                     });
@@ -200,7 +204,7 @@ public class SignUp extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else {
             String id = Utilities.getAuthorisation().getCurrentUser().getUid();
-            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(),yes.isChecked());
+            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(), yes.isChecked());
             reference.child(id).setValue(nUser);
             Utilities.closeProgressDialog();
             Toast.makeText(this.getApplicationContext(), "DONE",

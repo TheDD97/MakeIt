@@ -2,6 +2,8 @@ package com.domslab.makeit.view.menu;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -16,14 +18,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.domslab.makeit.model.Manual;
 import com.domslab.makeit.model.ManualPage;
 import com.domslab.makeit.model.Utilities;
-import com.domslab.makeit.view.ManualActivity;
 import com.domslab.makeit.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,13 +41,15 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddFragment extends Fragment {
 
-    private Button btn;
-    private TextView textView;
+    private Button load, upload;
+    private TextView info;
     private Manual manual;
+    private Spinner spinner;
 
     public AddFragment() {
         // Required empty public constructor
@@ -71,9 +75,35 @@ public class AddFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btn = this.getView().findViewById(R.id.permission);
-        textView = this.getView().findViewById(R.id.info);
-        btn.setOnClickListener(new View.OnClickListener() {
+        spinner = getView().findViewById(R.id.categories_spinner);
+        load = this.getView().findViewById(R.id.search_file);
+        info = this.getView().findViewById(R.id.info);
+        upload = getView().findViewById(R.id.upload_file);
+        upload.setVisibility(View.INVISIBLE);
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                alertDialog.setMessage(Utilities.checkUpload);
+                alertDialog.setCancelable(false);
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        uploadManual(manual);
+                    }
+                });
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.create().show();
+            }
+        });
+        loadCategories();
+        load.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
@@ -103,22 +133,49 @@ public class AddFragment extends Fragment {
     */
     }
 
+    private void loadCategories() {
+        Utilities.showProgressDialog(getContext(), true);
+        ArrayList<String> categories = new ArrayList<>();
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        DatabaseReference reference = rootNode.getReference();
+        Query query = reference.child("categories");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot o : snapshot.getChildren()) {
+                        categories.add(o.getValue().toString());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_activated_1, categories);
+                    spinner.setAdapter(adapter);
+                    Utilities.closeProgressDialog();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-
                 Uri uri = data.getData();
+                info.setText(Utilities.locationLabel + uri.getLastPathSegment());
                 String fileContent = readTextFile(uri);
                 Integer page = 1;
                 manual = new Manual();
                 try {
                     JSONObject object = new JSONObject(fileContent);
+                    manual.setOwner(Utilities.getAuthorisation().getCurrentUser().getUid());
                     if (object.has("name"))
                         manual.setName(object.getString("name"));
-                    if (object.has("category"))
-                        manual.setCategory(object.getString("category"));
+                    manual.setCategory(spinner.getSelectedItem().toString());
                     if (object.has("cover"))
                         manual.setCover(object.getString("cover"));
                     if (object.has("description"))
@@ -139,10 +196,9 @@ public class AddFragment extends Fragment {
                         manual.addPage(page.toString(), manualPage);
                         ++page;
                     }
-                    uploadManual(manual);
+                    upload.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    // Toast.makeText(getContext(), fileContent, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -163,7 +219,7 @@ public class AddFragment extends Fragment {
                     lastId.append(Integer.toString(0));
                 }
                 System.out.println(lastId.toString());
-                Integer id = Integer.parseInt(lastId.toString())+1;
+                Integer id = Integer.parseInt(lastId.toString()) + 1;
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 manual.setDate(sdf.format(calendar.getTime()));
