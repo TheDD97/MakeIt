@@ -143,10 +143,10 @@ public class UserFragment extends Fragment {
                         if (!noEmail) {
                             if (firebaseUser.getEmail().equals(email.getText().toString().trim())) {
                                 firebaseUser.updateEmail(nEmail.getText().toString().trim());
-                                userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(),false);
+                                userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(), false);
                             }
                         } else
-                            userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(),false);
+                            userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), false);
                         updateUser(userUpdate, t);
                         editing = false;
                         cancel.setBackgroundColor(Color.BLUE);
@@ -201,7 +201,6 @@ public class UserFragment extends Fragment {
             public void onCallBack(List<String> list, boolean business, boolean wait) {
                 name.setText(list.get(0));
                 surname.setText(list.get(1));
-                //email.setText(list.get(2));
                 username.setText(list.get(2));
                 usernameLabel.setText("Hi " + list.get(2) + "!");
                 user = new UserHelperClass(list.get(0), list.get(1), preferences.getString("currentEmail", null), business, list.get(2), wait);
@@ -216,7 +215,7 @@ public class UserFragment extends Fragment {
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = "", surname = "", email = "", username = "";
+                String name = "", surname = "", username = "";
                 boolean business = false, wait = false;
                 UserHelperClass userHelperClass = null;
                 if (dataSnapshot.exists()) {
@@ -224,7 +223,6 @@ public class UserFragment extends Fragment {
                         if (o.getKey().equals(Utilities.getCurrentUID())) {
                             name = o.child("name").getValue().toString();
                             surname = o.child("surname").getValue().toString();
-                            //email = o.child("email").getValue().toString();
                             business = (boolean) o.child("advanced").getValue();
                             username = o.child("username").getValue().toString();
                             wait = (boolean) o.child("waiting").getValue();
@@ -244,7 +242,6 @@ public class UserFragment extends Fragment {
     private void fillField() {
         name.setText(user.getName());
         surname.setText(user.getSurname());
-//        email.setText(user.getEmail());
         username.setText(user.getUsername());
     }
 

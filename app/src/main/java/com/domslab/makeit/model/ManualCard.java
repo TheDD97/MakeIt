@@ -40,6 +40,4 @@ public class ManualCard {
     public String getKey() {
         return key;
     }
-
-
 }

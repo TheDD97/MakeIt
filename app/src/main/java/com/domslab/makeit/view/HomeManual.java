@@ -62,8 +62,7 @@ public class HomeManual extends AppCompatActivity {
                 Intent intent = new Intent(HomeManual.this, HomeContainer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
-
-                //finish();
+                finish();
 
             }
         });
@@ -71,10 +70,6 @@ public class HomeManual extends AppCompatActivity {
         if (extras != null) {
             id = extras.getString("manualId");
             loadInfo(id);
-            /*if (extras.containsKey("manualCover")) {
-             //   byte[] codedCover = (byte[]) extras.get("manualCover");
-                cover.setImageBitmap((Bitmap) extras.get("manualCover"));
-            }*/
         }
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +86,6 @@ public class HomeManual extends AppCompatActivity {
     private void loadInfo(String manualId) {
         id = manualId;
         Utilities.showProgressDialog(HomeManual.this, true);
-
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference("manual");
         Query checkUser = reference;

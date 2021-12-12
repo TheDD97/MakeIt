@@ -60,8 +60,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //recyclerView = view.findViewById(R.id.song_list_view);
-        // Utilities.showProgressDialog(getContext(), true);
         ViewPager2 viewPager = view.findViewById(R.id.vPager);
         SharedPreferences preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
         PagerAdapter pagerAdapter = new PagerAdapter(getActivity(), preferences);
@@ -83,11 +81,5 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        /*ViewPager viewPager = this.getView().findViewById(R.id.vpPager);
-        SharedPreferences preferences = this.getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
-        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), preferences));
-        viewPager.setCurrentItem(1);
-        Utilities.closeProgressDialog();*/
-
     }
 }

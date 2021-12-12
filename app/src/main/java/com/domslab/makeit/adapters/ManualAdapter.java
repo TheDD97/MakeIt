@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.ManualCard;
+import com.domslab.makeit.view.pagerFragment.MyManualFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder> {
     ArrayList<ManualCard> manualCards;
@@ -24,6 +26,14 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         this.manualCards = manualCards;
         this.context = context;
         mOnManualListener = onManualListener;
+    }
+
+    public ManualAdapter(Context context, HashMap<String, ManualCard> manualCards, OnManualListener onManualListener) {
+        this.context = context;
+        mOnManualListener = onManualListener;
+        this.manualCards = new ArrayList<>();
+        for (String key : manualCards.keySet())
+            this.manualCards.add(manualCards.get(key));
     }
 
     @NonNull
@@ -49,7 +59,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
         TextView textView;
-
         OnManualListener onManualListener;
 
         public ViewHolder(@NonNull View itemView, OnManualListener onSongListener) {

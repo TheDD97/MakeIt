@@ -112,7 +112,7 @@ public class AddFragment extends Fragment {
                             @Override
                             public void onCallBack(List<String> list, boolean business, boolean wait) {
                                 if (noError)
-                                    Toast.makeText(getContext(),Utilities.RESTART_NEEDED,Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), Utilities.RESTART_NEEDED, Toast.LENGTH_LONG).show();
                             }
                         }, manual);
                     }
@@ -141,20 +141,6 @@ public class AddFragment extends Fragment {
 
             }
         });
-    /*    FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
-        DatabaseReference reference = rootNode.getReference("manual");
-        HashMap<String,Object> p = new HashMap();
-        p.put("text","ciao");
-        ManualPage manualPage = new ManualPage(p);
-        HashMap<String,Object> p2= new HashMap<>();
-        p2.put("image","ciao.jfif");
-        ManualPage m2 = new ManualPage(p2);
-        Manual m = new Manual();
-        m.setName("nome di prova");
-        m.addPage("1",manualPage);
-        m.addPage("2",m2);
-        reference.child("provaC").setValue(m);
-    */
     }
 
     private void loadCategories() {

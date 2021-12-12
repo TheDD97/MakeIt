@@ -36,7 +36,6 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
             NUM_PAGES = 3;
         }
         keys = new ArrayList(fragments.keySet());
-
     }
 
     @NonNull
@@ -55,41 +54,4 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
             return keys.get(position);
         return "";
     }
-    /*public PagerAdapter(@NonNull FragmentManager fm, SharedPreferences preferences) {
-        super(fm);
-        fragments = new LinkedHashMap<>();
-        this.preferences = preferences;
-        fragments.put("favourites", FavouritesFragment.newInstance());
-        fragments.put("news", NewsFragment.newInstance());
-        if (!preferences.getBoolean("advanced", false))
-            NUM_PAGES = 2;
-        else {
-            fragments.put("My Manual", MyManualFragment.newInstance());
-            NUM_PAGES = 3;
-        }
-        keys = new ArrayList(fragments.keySet());
-
-    }
-
-
-    @NonNull
-    @Override
-    public Fragment getItem(int position) {
-        return fragments.get(keys.get(position));
-
-
-    }
-
-    @Override
-    public int getCount() {
-        return NUM_PAGES;
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return keys.get(position);
-    }
-*/
-
 }

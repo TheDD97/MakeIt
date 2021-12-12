@@ -35,7 +35,6 @@ import java.util.Base64;
 
 public class ManualActivity extends AppCompatActivity {
     private Manual manual;
-    private SharedPreferences preferences;
     private int currentPage = 1;
     private ImageButton exit;
     private ImageButton next;
@@ -50,7 +49,6 @@ public class ManualActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_page);
-        //Utilities.showProgressDialog(ManualActivity.this, true);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
         pageImage = findViewById(R.id.page_image);
@@ -77,7 +75,6 @@ public class ManualActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(ManualActivity.this, HomeContainer.class));
             }
         });
     }
@@ -102,30 +99,19 @@ public class ManualActivity extends AppCompatActivity {
                         for (DataSnapshot o : dataSnapshot.getChildren()) {
                             if (o.hasChild("name"))
                                 manual.setName(o.child("name").getValue().toString());
-                            /*if (o.hasChild("date"))
-                                manual.setDate(o.child("date").getValue().toString());
-                            if (o.hasChild("description"))
-                                manual.setDescription(o.child("description").getValue().toString());
-                            if (o.hasChild("cover"))
-                            manual.setCover(o.child("cover").getValue().toString());*/
                             if (o.hasChild("content")) {
                                 DataSnapshot content = o.child("content");
-
                                 while (true) {
                                     ManualPage manualPage = new ManualPage();
                                     if (content.hasChild(Integer.toString(counter))) {
                                         DataSnapshot snapshot = content.child(Integer.toString(counter)).child("pageContent");
-
                                         if (snapshot.hasChild("image"))
-                                            //    manualPage.add("image", snapshot.child("image").getValue().toString().trim());
                                             loadImage(currentManual, Integer.toString(counter), manualPage);
                                         if (snapshot.hasChild("text"))
                                             manualPage.add("text", snapshot.child("text").getValue().toString());
-                                        System.out.println("Pagina " + Integer.toString(counter) + " \n" + manualPage.toString());
                                         manual.addPage(Integer.toString(counter), manualPage);
                                         counter++;
                                     } else {
-                                        System.out.println("else");
                                         break;
                                     }
                                 }
@@ -144,7 +130,7 @@ public class ManualActivity extends AppCompatActivity {
     }
 
     private void loadImage(String currentManual, String id, ManualPage manualPage) {
-        Utilities.showProgressDialog(ManualActivity.this,true);
+        Utilities.showProgressDialog(ManualActivity.this, true);
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
         gsReference.child(currentManual + "/image" + id).getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

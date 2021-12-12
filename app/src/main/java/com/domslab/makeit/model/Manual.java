@@ -13,7 +13,6 @@ public class Manual {
     private String category;
     private String owner;
 
-
     public Manual() {
         content = new HashMap<>();
     }
@@ -97,5 +96,4 @@ public class Manual {
         System.out.println(content.size());
         return content.size();
     }
-
 }

@@ -33,7 +33,6 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
     private DatabaseReference reference;
     private FirebaseDatabase rootNode;
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -77,11 +76,6 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        /*if (preferences.getInt("navbarHeight", 0) == 0 || preferences.getInt("contentHeight", 0) == 0) {
-            editor.putInt("navbarHeight", navigationView.getMeasuredHeight());
-            editor.putInt("contentHeight", (int) ((preferences.getInt("screenHeight", 0) - navigationView.getMeasuredHeight()) * preferences.getFloat("deviceDensity", 1.0f)));
-            editor.apply();
-        }*/
         switch (item.getItemId()) {
             case R.id.profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, userFragment).commit();
@@ -130,15 +124,5 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         }
         return false;
     }
-
-/*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = Utilities.getAuthorisation().getCurrentUser();
-        if (currentUser != null)
-            currentUser.reload();
-    }*/
-
 
 }
