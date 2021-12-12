@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
 import com.domslab.makeit.view.pagerFragment.MyManualFragment;
@@ -15,18 +17,50 @@ import com.domslab.makeit.view.pagerFragment.NewsFragment;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentStateAdapter {
     private static int NUM_PAGES = 3;
     private SharedPreferences preferences;
     private LinkedHashMap<String, Fragment> fragments;
     private ArrayList<String> keys;
 
-    public PagerAdapter(@NonNull FragmentManager fm, SharedPreferences preferences) {
+    public PagerAdapter(@NonNull FragmentActivity fragmentActivity, SharedPreferences preferences) {
+        super(fragmentActivity);
+        fragments = new LinkedHashMap<>();
+        this.preferences = preferences;
+        fragments.put("favourites", FavouritesFragment.newInstance());
+        fragments.put("news", NewsFragment.newInstance());
+        if (!preferences.getBoolean("advanced", false))
+            NUM_PAGES = 2;
+        else {
+            fragments.put("My Manual", MyManualFragment.newInstance());
+            NUM_PAGES = 3;
+        }
+        keys = new ArrayList(fragments.keySet());
+
+    }
+
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        return fragments.get(keys.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return NUM_PAGES;
+    }
+
+    public String getTitle(int position) {
+        if (position < keys.size())
+            return keys.get(position);
+        return "";
+    }
+    /*public PagerAdapter(@NonNull FragmentManager fm, SharedPreferences preferences) {
         super(fm);
         fragments = new LinkedHashMap<>();
         this.preferences = preferences;
-        fragments.put("news", NewsFragment.newInstance());
         fragments.put("favourites", FavouritesFragment.newInstance());
+        fragments.put("news", NewsFragment.newInstance());
         if (!preferences.getBoolean("advanced", false))
             NUM_PAGES = 2;
         else {
@@ -56,6 +90,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return keys.get(position);
     }
-
+*/
 
 }

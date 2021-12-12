@@ -19,8 +19,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Utilities {
+    public static final long MAX_FILE_SIZE = 1024 * 1024;
+    public static final long MAX_IMAGE_SIZE = 1024 * 20;
+    public static final String COVER_SIZE_EXCEEDED = "The size of the cover is too large, it must be 20KB or less";
+    public static final String IMAGE_SIZE_EXCEEDED = "The size of the image is too large, it must be 20KB or less";
+    public static final String NO_COVER = "Cover doesn't exists, check your file";
+    public static final String NO_DESCRIPTION = "Description not found check your file";
+    public static final String PAGE_EMPTY = "Page content not found, check page: ";
+    public static final String RESTART_NEEDED = "To see your manual on your device you must restart the application";
     public static CharSequence noOldEmail = "You have to enter the old email if you want to change it";
-    public static String locationLabel="Location: ";
+    public static String locationLabel = "Location: ";
     public static String checkUpload = "Are you sure to upload this file?";
     private static String currentUID;
     public static UserHelperClass currentUser;
@@ -50,15 +58,17 @@ public class Utilities {
     }
 
     public static void showProgressDialog(Context context, boolean loading) {
-        progressDialog = new ProgressDialog(context);
-        if (loading)
-            progressDialog.setMessage(Utilities.loading);
-        else
-            progressDialog.setMessage(Utilities.verifying);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(context);
+            if (loading)
+                progressDialog.setMessage(Utilities.loading);
+            else
+                progressDialog.setMessage(Utilities.verifying);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
     }
 
     public static void closeProgressDialog() {
@@ -85,8 +95,8 @@ public class Utilities {
         reference = rootNode.getReference("users");
         readData(new FirebaseCallBack() {
             @Override
-            public void onCallBack(List<String> list, boolean business,boolean wait) {
-                currentUser = new UserHelperClass(list.get(0), list.get(1), list.get(2), business, list.get(3),wait);
+            public void onCallBack(List<String> list, boolean business, boolean wait) {
+                currentUser = new UserHelperClass(list.get(0), list.get(1), list.get(2), business, list.get(3), wait);
             }
         });
     }
@@ -111,8 +121,8 @@ public class Utilities {
                             username = o.child("username").getValue().toString();
                             waiting = (boolean) o.child("waiting").getValue();
                             userData.addAll(Arrays.asList(name, surname, email, username));
-                            callBack.onCallBack(userData, business,waiting);
-                            userHelperClass = new UserHelperClass(name, surname, email, business, username,waiting);
+                            callBack.onCallBack(userData, business, waiting);
+                            userHelperClass = new UserHelperClass(name, surname, email, business, username, waiting);
                             currentUser = userHelperClass;
                         }
                 }

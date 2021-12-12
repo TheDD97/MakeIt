@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.adapters.PagerAdapter;
 import com.domslab.makeit.R;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
@@ -58,17 +61,33 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //recyclerView = view.findViewById(R.id.song_list_view);
-        Utilities.showProgressDialog(getContext(), true);
-
+        // Utilities.showProgressDialog(getContext(), true);
+        ViewPager2 viewPager = view.findViewById(R.id.vPager);
+        SharedPreferences preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
+        PagerAdapter pagerAdapter = new PagerAdapter(getActivity(), preferences);
+        if (!preferences.getBoolean("advanced", false))
+            viewPager.setOffscreenPageLimit(2);
+        else viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(pagerAdapter.getTitle(position));
+            }
+        }).attach();
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
-        ViewPager viewPager = this.getView().findViewById(R.id.vpPager);
+        /*ViewPager viewPager = this.getView().findViewById(R.id.vpPager);
         SharedPreferences preferences = this.getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
         viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), preferences));
         viewPager.setCurrentItem(1);
-        Utilities.closeProgressDialog();
+        Utilities.closeProgressDialog();*/
+
     }
 }

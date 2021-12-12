@@ -1,6 +1,8 @@
 package com.domslab.makeit.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 public class ManualCard {
     private Bitmap cover;
@@ -38,4 +40,6 @@ public class ManualCard {
     public String getKey() {
         return key;
     }
+
+
 }

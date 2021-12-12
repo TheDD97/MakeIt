@@ -1,5 +1,6 @@
 package com.domslab.makeit.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -18,12 +19,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.domslab.makeit.view.menu.HomeContainer;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Base64;
 
@@ -44,7 +50,7 @@ public class ManualActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_page);
-        Utilities.showProgressDialog(ManualActivity.this, true);
+        //Utilities.showProgressDialog(ManualActivity.this, true);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
         pageImage = findViewById(R.id.page_image);
@@ -71,11 +77,13 @@ public class ManualActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                startActivity(new Intent(ManualActivity.this, HomeContainer.class));
             }
         });
     }
 
     private void readManual() {
+        Utilities.showProgressDialog(ManualActivity.this, true);
         String currentManual;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -94,12 +102,12 @@ public class ManualActivity extends AppCompatActivity {
                         for (DataSnapshot o : dataSnapshot.getChildren()) {
                             if (o.hasChild("name"))
                                 manual.setName(o.child("name").getValue().toString());
-                            if (o.hasChild("date"))
+                            /*if (o.hasChild("date"))
                                 manual.setDate(o.child("date").getValue().toString());
                             if (o.hasChild("description"))
                                 manual.setDescription(o.child("description").getValue().toString());
                             if (o.hasChild("cover"))
-                                manual.setCover(o.child("cover").getValue().toString());
+                            manual.setCover(o.child("cover").getValue().toString());*/
                             if (o.hasChild("content")) {
                                 DataSnapshot content = o.child("content");
 
@@ -107,8 +115,10 @@ public class ManualActivity extends AppCompatActivity {
                                     ManualPage manualPage = new ManualPage();
                                     if (content.hasChild(Integer.toString(counter))) {
                                         DataSnapshot snapshot = content.child(Integer.toString(counter)).child("pageContent");
+
                                         if (snapshot.hasChild("image"))
-                                            manualPage.add("image", snapshot.child("image").getValue().toString().trim());
+                                            //    manualPage.add("image", snapshot.child("image").getValue().toString().trim());
+                                            loadImage(currentManual, Integer.toString(counter), manualPage);
                                         if (snapshot.hasChild("text"))
                                             manualPage.add("text", snapshot.child("text").getValue().toString());
                                         System.out.println("Pagina " + Integer.toString(counter) + " \n" + manualPage.toString());
@@ -120,11 +130,9 @@ public class ManualActivity extends AppCompatActivity {
                                     }
                                 }
                                 manualName.setText(manual.getName());
-                                setCurrentPage(currentPage);
                             }
                         }
                     }
-                    Utilities.closeProgressDialog();
                 }
 
                 @Override
@@ -133,6 +141,25 @@ public class ManualActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void loadImage(String currentManual, String id, ManualPage manualPage) {
+        Utilities.showProgressDialog(ManualActivity.this,true);
+        StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
+        gsReference.child(currentManual + "/image" + id).getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                String decodedString = new String(bytes);
+                manualPage.add("image", decodedString);
+                Utilities.closeProgressDialog();
+                setCurrentPage(currentPage);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Utilities.closeProgressDialog();
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

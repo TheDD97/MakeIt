@@ -9,6 +9,7 @@ public class Manual {
     private String description;
     private String cover;
     private String date;
+    private String time;
     private String category;
     private String owner;
 
@@ -71,6 +72,14 @@ public class Manual {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public void addPage(String key, ManualPage content) {

@@ -5,10 +5,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,15 +22,19 @@ import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.Utilities;
+import com.domslab.makeit.view.menu.HomeContainer;
 import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
+import com.domslab.makeit.view.pagerFragment.MyManualFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Base64;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class HomeManual extends AppCompatActivity {
     private TextView name;
@@ -38,6 +45,7 @@ public class HomeManual extends AppCompatActivity {
     private Button start;
     private String id;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +59,22 @@ public class HomeManual extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(HomeManual.this, HomeContainer.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+
+                //finish();
+
             }
         });
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("manualId");
             loadInfo(id);
+            /*if (extras.containsKey("manualCover")) {
+             //   byte[] codedCover = (byte[]) extras.get("manualCover");
+                cover.setImageBitmap((Bitmap) extras.get("manualCover"));
+            }*/
         }
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +109,10 @@ public class HomeManual extends AppCompatActivity {
                                 descriptionContent.setText(o.child("description").getValue().toString());
                             if (o.hasChild("date"))
                                 date.setText(o.child("date").getValue().toString());
-                            if (o.hasChild("cover")) {
-                                byte[] decodedString = Base64.getDecoder().decode(o.child("cover").getValue().toString());
-                                cover.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
-                            }
                         }
                     }
                     Utilities.closeProgressDialog();
-
+                    loadCover(id);
                 }
 
             }
@@ -112,8 +125,24 @@ public class HomeManual extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-
+    private void loadCover(String id) {
+        Utilities.showProgressDialog(HomeManual.this, true);
+        StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
+        gsReference.child(id + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                String decodedString = new String(bytes);
+                System.out.println(decodedString);
+                byte[] coded = android.util.Base64.decode(decodedString, Base64.DEFAULT);
+                cover.setImageBitmap(BitmapFactory.decodeByteArray(coded, 0, coded.length));
+                Utilities.closeProgressDialog();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Utilities.closeProgressDialog();
+            }
+        });
     }
+
 }

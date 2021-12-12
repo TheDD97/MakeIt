@@ -26,18 +26,22 @@ public class ManualPage {
     public void setPageContent(HashMap<String, String> pageContent) {
         this.pageContent = pageContent;
     }
-    public boolean hasItem(String item){
+
+    public boolean hasItem(String item) {
         return pageContent.containsKey(item);
     }
-    public String getItem(String item){
+
+    public String getItem(String item) {
         return pageContent.get(item);
     }
+
     @NonNull
     @Override
     public String toString() {
         StringBuilder content = new StringBuilder();
         for (String k : pageContent.keySet())
-            content.append(k +": "+ pageContent.get(k)+"\n");
+            content.append(k + ": " + pageContent.get(k) + "\n");
         return content.toString();
     }
+
 }

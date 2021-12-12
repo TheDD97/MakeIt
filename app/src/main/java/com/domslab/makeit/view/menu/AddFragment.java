@@ -1,8 +1,11 @@
 package com.domslab.makeit.view.menu;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -22,17 +25,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.domslab.makeit.FirebaseCallBack;
 import com.domslab.makeit.model.Manual;
 import com.domslab.makeit.model.ManualPage;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,8 +52,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class AddFragment extends Fragment {
 
@@ -50,6 +66,8 @@ public class AddFragment extends Fragment {
     private TextView info;
     private Manual manual;
     private Spinner spinner;
+    private HashMap<String, String> images = new HashMap<>();
+    boolean noError = true;
 
     public AddFragment() {
         // Required empty public constructor
@@ -90,7 +108,13 @@ public class AddFragment extends Fragment {
                 alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        uploadManual(manual);
+                        uploadManual(new FirebaseCallBack() {
+                            @Override
+                            public void onCallBack(List<String> list, boolean business, boolean wait) {
+                                if (noError)
+                                    Toast.makeText(getContext(),Utilities.RESTART_NEEDED,Toast.LENGTH_LONG).show();
+                            }
+                        }, manual);
                     }
                 });
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -175,11 +199,29 @@ public class AddFragment extends Fragment {
                     manual.setOwner(Utilities.getAuthorisation().getCurrentUser().getUid());
                     if (object.has("name"))
                         manual.setName(object.getString("name"));
-                    manual.setCategory(spinner.getSelectedItem().toString());
-                    if (object.has("cover"))
-                        manual.setCover(object.getString("cover"));
+                    if (object.has("cover")) {
+                        if (object.getString("cover").getBytes().length < Utilities.MAX_IMAGE_SIZE) {
+                            images.put("cover", object.getString("cover"));
+                            manual.setCover("y");
+                        } else {
+                            Toast.makeText(getContext(), Utilities.COVER_SIZE_EXCEEDED,
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        Toast.makeText(getContext(), Utilities.NO_COVER,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+
+                    }
                     if (object.has("description"))
                         manual.setDescription(object.getString("description"));
+                    else {
+                        Toast.makeText(getContext(), Utilities.NO_DESCRIPTION,
+                                Toast.LENGTH_LONG).show();
+                        return;
+
+                    }
                     while (page <= object.getInt("numpage")) {
                         JSONArray jsonArray = object.getJSONArray(page.toString());
                         ManualPage manualPage = new ManualPage();
@@ -188,14 +230,24 @@ public class AddFragment extends Fragment {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             if (jsonObject.has("text"))
                                 manualPage.add("text", jsonObject.getString("text"));
-                            if (jsonObject.has("image"))
-                                manualPage.add("image", jsonObject.getString("image"));
+                            if (jsonObject.has("image")) {
+                                //manualPage.add("image", jsonObject.getString("image"));
+                                manualPage.add("image", "y");
+                                images.put("image" + page.toString(), jsonObject.getString("image"));
+                            }
                             if (jsonObject.has("timer"))
                                 System.out.println("timer");
+                        }
+                        if (manualPage.getPageContent().isEmpty()) {
+                            Toast.makeText(getContext(), Utilities.PAGE_EMPTY + page,
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+
                         }
                         manual.addPage(page.toString(), manualPage);
                         ++page;
                     }
+
                     upload.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -204,8 +256,8 @@ public class AddFragment extends Fragment {
         }
     }
 
-    private void uploadManual(Manual manual) {
-        Utilities.showProgressDialog(AddFragment.this.getContext(), false);
+
+    private void uploadManual(FirebaseCallBack callBack, Manual manual) {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference("manual");
         StringBuilder lastId = new StringBuilder();
@@ -213,6 +265,7 @@ public class AddFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Utilities.showProgressDialog(getContext(), false);
                 if (snapshot.exists())
                     lastId.append(snapshot.getChildrenCount());
                 else {
@@ -223,8 +276,32 @@ public class AddFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 manual.setDate(sdf.format(calendar.getTime()));
+                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                for (String key : images.keySet()) {
+                    byte[] b = images.get(key).getBytes(StandardCharsets.UTF_8);
+                    UploadTask uploadTask = firebaseStorage.getReference(id.toString()).child(key).putBytes(b);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            noError = false;
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        }
+                    });
+                }
+                manual.setTime(new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()));
+                manual.setCategory(spinner.getSelectedItem().toString());
                 reference.child(id.toString()).setValue(manual);
                 Utilities.closeProgressDialog();
+
+                if (noError) {
+                    Toast.makeText(getContext(), "Done.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                callBack.onCallBack(null, false, false);
+
             }
 
             @Override
