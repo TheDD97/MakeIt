@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 
@@ -80,7 +81,7 @@ public class SignUp extends AppCompatActivity {
                     Utilities.showProgressDialog(v.getContext(), false);
                     clearAllError();
                     FirebaseAuth mAuth = Utilities.getAuthorisation();
-                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                    mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString()).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -88,7 +89,7 @@ public class SignUp extends AppCompatActivity {
                                 Log.d("TAG", "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String id = Utilities.getAuthorisation().getCurrentUser().getUid();
-                                UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(), yes.isChecked());
+                                UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString().toLowerCase(Locale.ROOT), false, username.getText().toString(), yes.isChecked());
                                 reference.child(id).setValue(nUser);
                                 Utilities.closeProgressDialog();
                                 Toast.makeText(SignUp.this, "DONE",
@@ -204,7 +205,7 @@ public class SignUp extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else {
             String id = Utilities.getAuthorisation().getCurrentUser().getUid();
-            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString(), false, username.getText().toString(), yes.isChecked());
+            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString().toLowerCase(Locale.ROOT), false, username.getText().toString(), yes.isChecked());
             reference.child(id).setValue(nUser);
             Utilities.closeProgressDialog();
             Toast.makeText(this.getApplicationContext(), "DONE",

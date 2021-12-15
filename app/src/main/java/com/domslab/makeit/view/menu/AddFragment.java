@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.domslab.makeit.FirebaseCallBack;
 import com.domslab.makeit.model.Manual;
+import com.domslab.makeit.model.ManualFlyweight;
 import com.domslab.makeit.model.ManualPage;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.R;
@@ -111,8 +112,12 @@ public class AddFragment extends Fragment {
                         uploadManual(new FirebaseCallBack() {
                             @Override
                             public void onCallBack(List<String> list, boolean business, boolean wait) {
-                                if (noError)
-                                    Toast.makeText(getContext(), Utilities.RESTART_NEEDED, Toast.LENGTH_LONG).show();
+                                if (noError) {
+                                    Toast.makeText(getContext(), "Done.",
+                                            Toast.LENGTH_SHORT).show();
+                                }else Toast.makeText(getContext(), "ERROR! TRY AGAIN.",
+                                        Toast.LENGTH_SHORT).show();
+
                             }
                         }, manual);
                     }
@@ -265,6 +270,7 @@ public class AddFragment extends Fragment {
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 for (String key : images.keySet()) {
                     byte[] b = images.get(key).getBytes(StandardCharsets.UTF_8);
+
                     UploadTask uploadTask = firebaseStorage.getReference(id.toString()).child(key).putBytes(b);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -274,6 +280,10 @@ public class AddFragment extends Fragment {
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            if (key.equals("cover")) {
+                                manual.setCover(images.get(key));
+                                ManualFlyweight.getInstance().addManual(id.toString(), manual);
+                            }
                         }
                     });
                 }
@@ -282,10 +292,7 @@ public class AddFragment extends Fragment {
                 reference.child(id.toString()).setValue(manual);
                 Utilities.closeProgressDialog();
 
-                if (noError) {
-                    Toast.makeText(getContext(), "Done.",
-                            Toast.LENGTH_SHORT).show();
-                }
+
                 callBack.onCallBack(null, false, false);
 
             }

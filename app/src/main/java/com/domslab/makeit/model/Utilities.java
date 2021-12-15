@@ -90,7 +90,7 @@ public class Utilities {
         //setUser();
     }
 
-    private static void setUser() {
+    private static void setUser(UserHelperClass user) {
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
         readData(new FirebaseCallBack() {

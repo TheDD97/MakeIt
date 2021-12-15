@@ -38,16 +38,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
     private Button login, singUp;
     private EditText emailField, passwordField;
-    private TextInputLayout emaiLayout, passwordLayout;
+    private TextInputLayout emailLayout, passwordLayout;
     private TextView resetPassword;
     private FirebaseDatabase rootNode;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
     private DatabaseReference reference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +60,13 @@ public class MainActivity extends AppCompatActivity {
         String user = preferences.getString("currentUser", null);
         String email = preferences.getString("currentEmail", null);
         String psw = preferences.getString("currentPassword", null);
-        System.out.println(psw);
-
         if (user != null && psw != null && email != null) {
             Utilities.setCurrentUsername(user);
             auth.signInWithEmailAndPassword(email, psw)
                     .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            Utilities.showProgressDialog(MainActivity.this, false);
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success");
@@ -83,15 +83,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-            //launchHome(getBaseContext());
         }
-
-
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference().child("users");
         emailField = findViewById(R.id.login_email);
         passwordField = findViewById(R.id.login_password);
-        emaiLayout = findViewById(R.id.email_layout);
+        emailLayout = findViewById(R.id.email_layout);
         passwordLayout = findViewById(R.id.password_layout);
         login = findViewById(R.id.login);
         singUp = findViewById(R.id.sign_up_login_page);
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Utilities.showProgressDialog(v.getContext(), false);
                 passwordLayout.setError(null);
-                emaiLayout.setError(null);
+                emailLayout.setError(null);
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
                 reference.addValueEventListener(new ValueEventListener() {
@@ -116,29 +113,31 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (email.isEmpty()) {
                             passwordLayout.setError(null);
-                            emaiLayout.setError(Utilities.noUsername);
+                            emailLayout.setError(Utilities.noUsername);
                             Utilities.closeProgressDialog();
                             return;
                         } else if (password.isEmpty()) {
                             passwordLayout.setError(Utilities.noPassword);
-                            emaiLayout.setError(null);
+                            emailLayout.setError(null);
                             Utilities.closeProgressDialog();
                             return;
                         }
-                        auth.signInWithEmailAndPassword(email.trim(), password)
+                        auth.signInWithEmailAndPassword(email.trim().toLowerCase(Locale.ROOT), password)
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
+                                        Utilities.showProgressDialog(MainActivity.this, false);
+
                                         if (task.isSuccessful()) {
                                             // Sign in success, update UI with the signed-in user's information
                                             Log.d("TAG", "signInWithEmail:success");
                                             FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
+
                                             editor.putString("currentUser", user.getUid());
                                             editor.putString("currentEmail", email);
                                             editor.putString("currentPassword", password);
                                             editor.apply();
                                             updateUI(user);
-                                            Utilities.closeProgressDialog();
                                             finish();
                                             launchHome(v.getContext());
                                         } else {
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        Utilities.closeProgressDialog();
                     }
                 });
             }
@@ -241,12 +240,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchHome(Context context) {
-        if (preferences.getFloat("deviceDensity", 0.0f) == 0.0f) {
-            editor.putFloat("deviceDensity", getResources().getDisplayMetrics().density);
-            editor.putInt("screenWidth", getResources().getDisplayMetrics().widthPixels);
-            editor.putInt("screenHeight", getResources().getDisplayMetrics().heightPixels);
-            editor.apply();
-        }
         Intent intent = new Intent(context, HomeContainer.class);
         startActivity(intent);
     }
@@ -284,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
             Utilities.setCurrentUsername(user.getUid());
             readUserData(user.getUid());
         }
-
     }
 
     private void readUserData(String user) {
@@ -299,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
                             business = (boolean) o.child("advanced").getValue();
                             editor.putBoolean("advanced", business);
                             editor.apply();
+                            Utilities.closeProgressDialog();
                         }
                 }
             }
