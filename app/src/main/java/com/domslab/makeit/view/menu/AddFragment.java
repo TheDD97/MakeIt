@@ -74,8 +74,6 @@ public class AddFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
     public static AddFragment newInstance() {
         AddFragment fragment = new AddFragment();
         return fragment;
@@ -115,7 +113,7 @@ public class AddFragment extends Fragment {
                                 if (noError) {
                                     Toast.makeText(getContext(), "Done.",
                                             Toast.LENGTH_SHORT).show();
-                                }else Toast.makeText(getContext(), "ERROR! TRY AGAIN.",
+                                } else Toast.makeText(getContext(), "ERROR! TRY AGAIN.",
                                         Toast.LENGTH_SHORT).show();
 
                             }

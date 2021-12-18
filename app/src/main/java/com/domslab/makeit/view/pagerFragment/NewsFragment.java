@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
@@ -69,6 +70,7 @@ public class NewsFragment extends Fragment implements ManualAdapter.OnManualList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -86,7 +88,7 @@ public class NewsFragment extends Fragment implements ManualAdapter.OnManualList
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        ManualFlyweight.getInstance().setNewestContent("newest", manualCards, recyclerView, NewsFragment.this::onManualClick, getContext());
+
     }
 
     @Override
@@ -96,5 +98,14 @@ public class NewsFragment extends Fragment implements ManualAdapter.OnManualList
         intent.putExtra("manualId", manualCards.get(position).getKey());
         System.out.println(manualCards.get(position).getKey());
         startActivity(intent);
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+            manualCards.clear();
+            ManualFlyweight.getInstance().setNewestContent("newest", manualCards, recyclerView, NewsFragment.this::onManualClick, getContext());
+        }
     }
 }

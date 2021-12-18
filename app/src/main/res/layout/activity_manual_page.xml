@@ -16,12 +16,12 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/exit"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/exit" />
 
     <ImageButton
         android:id="@+id/exit"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="#00FFFFFF"
         android:scaleType="centerCrop"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/exit">
+        app:layout_constraintTop_toBottomOf="@id/manual_name_label">
 
         <LinearLayout
             android:id="@+id/body"

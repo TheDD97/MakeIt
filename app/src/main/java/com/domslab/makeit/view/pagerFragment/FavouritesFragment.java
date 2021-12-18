@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
@@ -39,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -83,14 +85,12 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
         recyclerView = getView().findViewById(R.id.favourites_manual_list);
         manualCards = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        ManualFlyweight.getInstance().setFavouriteContent("favourite", manualCards, recyclerView, FavouritesFragment.this::onManualClick, getContext());
     }
 
     @Override
@@ -101,4 +101,13 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
         startActivity(intent);
     }
 
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+            manualCards.clear();
+            ManualFlyweight.getInstance().setFavouriteContent("favourite", manualCards, recyclerView, FavouritesFragment.this::onManualClick, getContext());
+        }
+
+    }
 }

@@ -27,8 +27,8 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
         super(fragmentActivity);
         fragments = new LinkedHashMap<>();
         this.preferences = preferences;
-        fragments.put("favourites", FavouritesFragment.newInstance());
         fragments.put("news", NewsFragment.newInstance());
+        fragments.put("favourites", FavouritesFragment.newInstance());
         if (!preferences.getBoolean("advanced", false))
             NUM_PAGES = 2;
         else {

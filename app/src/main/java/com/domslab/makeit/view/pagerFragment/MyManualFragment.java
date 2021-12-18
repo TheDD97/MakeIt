@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +63,6 @@ public class MyManualFragment extends Fragment implements ManualAdapter.OnManual
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -76,13 +77,11 @@ public class MyManualFragment extends Fragment implements ManualAdapter.OnManual
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        System.out.println("MY CREATED");
         recyclerView = getView().findViewById(R.id.my_manual_list);
         manualCards = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        ManualFlyweight.getInstance().setMyManualContent("my manual", manualCards, recyclerView, MyManualFragment.this::onManualClick, getContext());
     }
 
     @Override
@@ -90,9 +89,16 @@ public class MyManualFragment extends Fragment implements ManualAdapter.OnManual
         Intent intent = new Intent(getContext(), HomeManual.class);
         getActivity().finish();
         intent.putExtra("manualId", manualCards.get(position).getKey());
-        // intent.putExtra("manualCover", manualCards.get(position).getCover());
         System.out.println(manualCards.get(position).getKey());
         startActivity(intent);
     }
 
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+            manualCards.clear();
+            ManualFlyweight.getInstance().setMyManualContent("myManual", manualCards, recyclerView, MyManualFragment.this::onManualClick, getContext());
+        }
+    }
 }

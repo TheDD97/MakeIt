@@ -1,17 +1,25 @@
 package com.domslab.makeit.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.domslab.makeit.FavouriteFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.ManualCard;
+import com.domslab.makeit.model.ManualFlyweight;
+import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.pagerFragment.MyManualFragment;
 
 import java.util.ArrayList;
@@ -21,6 +29,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     ArrayList<ManualCard> manualCards;
     Context context;
     private OnManualListener mOnManualListener;
+    private boolean visible = true;
 
     public ManualAdapter(Context context, ArrayList<ManualCard> manualCards, OnManualListener onManualListener) {
         this.manualCards = manualCards;
@@ -28,28 +37,57 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         mOnManualListener = onManualListener;
     }
 
-    public ManualAdapter(Context context, HashMap<String, ManualCard> manualCards, OnManualListener onManualListener) {
+    public ManualAdapter(Context context, ArrayList<ManualCard> manualCards, OnManualListener onManualListener, boolean visible) {
+        this.manualCards = manualCards;
         this.context = context;
         mOnManualListener = onManualListener;
-        this.manualCards = new ArrayList<>();
-        for (String key : manualCards.keySet())
-            this.manualCards.add(manualCards.get(key));
+        this.visible = visible;
     }
+
 
     @NonNull
     @Override
     public ManualAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item, parent, false);
         return new ViewHolder(view, mOnManualListener);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        int currentPosition = position;
         holder.imageView.setImageBitmap(manualCards.get(position).getCover());
-        //set name to textview
         holder.textView.setText(manualCards.get(position).getName());
+        if (visible) {
+            if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
+                holder.favourite.setImageResource(R.drawable.ic_heart_off);
+            } else {
+                holder.favourite.setImageResource(R.drawable.ic_heart_on);
+            }
+            holder.favourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utilities.showProgressDialog(v.getContext(), false);
 
+                    ManualFlyweight.getInstance().updateManual(manualCards.get(currentPosition).getKey(), v.getContext(),
+                            new FavouriteFirebaseCallBack() {
+                                @Override
+                                public void loadFavourite(ArrayList<String> ids) {
+                                    System.out.println(ids.contains(manualCards.get(currentPosition).getKey()));
+                                    if (ids.contains(manualCards.get(currentPosition).getKey())) {
+                                        holder.favourite.setImageResource(R.drawable.ic_heart_on);
+                                    } else {
+                                        holder.favourite.setImageResource(R.drawable.ic_heart_off);
+                                    }
+                                    //ManualFlyweight.getInstance().reloadContent(context);
+                                    Utilities.closeProgressDialog();
+                                }
+                            });
+                }
+            });
+        }else holder.favourite.setVisibility(View.INVISIBLE);
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,14 +95,17 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
-        TextView textView;
-        OnManualListener onManualListener;
+        private ImageView imageView;
+        private TextView textView;
+        private ImageButton favourite;
+        private OnManualListener onManualListener;
 
         public ViewHolder(@NonNull View itemView, OnManualListener onSongListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
             textView = itemView.findViewById(R.id.manual_name);
+            favourite = itemView.findViewById(R.id.fav_btn);
+
             this.onManualListener = onSongListener;
             itemView.setOnClickListener(this);
         }

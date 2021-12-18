@@ -6,9 +6,11 @@ import android.os.Build;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.domslab.makeit.FavouriteFirebaseCallBack;
 import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.view.pagerFragment.MyManualFragment;
@@ -24,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +39,7 @@ public class ManualFactory {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
-        Query checkUser = reference.child("manual").orderByChild("owner").equalTo(Utilities.getAuthorisation().getUid());
+        Query checkUser = reference.child("manual").orderByChild("owner").equalTo(Utilities.getAuthorisation().getCurrentUser().getUid().toString());
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -48,6 +51,8 @@ public class ManualFactory {
                         if (o.hasChild("name"))
                             card.setName(o.child("name").getValue().toString());
                         manualCards.put(o.getKey(), card);
+                        if (ManualFlyweight.getInstance().isFavourite(o.getKey()))
+                            card.setFavourite(true);
                         if (o.hasChild("cover")) {
                             gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
@@ -79,8 +84,9 @@ public class ManualFactory {
                             });
                         }
                     }
-                    callBack.onCallBack(manualCards);
                 }
+                callBack.onCallBack(manualCards);
+
             }
 
             @Override
@@ -91,10 +97,11 @@ public class ManualFactory {
     }
 
     public void createNewestList(HashMap<String, ManualCard> manualCards, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
+        ManualFlyweight manualFlyweight = ManualFlyweight.getInstance();
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
-        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(3);
+        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(20);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -106,6 +113,8 @@ public class ManualFactory {
                         if (o.hasChild("name"))
                             card.setName(o.child("name").getValue().toString());
                         manualCards.put(o.getKey(), card);
+                        if (manualFlyweight.isFavourite(o.getKey()))
+                            card.setFavourite(true);
                         if (o.hasChild("cover")) {
                             gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
@@ -138,8 +147,9 @@ public class ManualFactory {
                             });
                         }
                     }
-                    callBack.onCallBack(manualCards);
                 }
+                callBack.onCallBack(manualCards);
+
             }
 
             @Override
@@ -153,51 +163,92 @@ public class ManualFactory {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
-        Query checkUser = reference.child("manual").limitToLast(1);
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        // Utilities.showProgressDialog(context, true);
+        loadFavourite(new FavouriteFirebaseCallBack() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot o : dataSnapshot.getChildren()) {
-                        ManualCard card = new ManualCard();
-                        card.setKey(o.getKey());
-                        if (o.hasChild("name"))
-                            card.setName(o.child("name").getValue().toString());
-                        manualCards.put(o.getKey(), card);
-                        if (o.hasChild("cover")) {
-                            gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    String decodedString = new String(bytes);
-                                    byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
-                                    card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
-                                    ArrayList<ManualCard> tmpcards = new ArrayList<>();
-                                    for (String k : manualCards.keySet())
-                                        tmpcards.add(manualCards.get(k));
-                                    Collections.sort(tmpcards, new Comparator<ManualCard>() {
-                                        @Override
-                                        public int compare(ManualCard o1, ManualCard o2) {
-                                            if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                                return -1;
-                                            else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
-                                                return 1;
-                                            return 0;
-                                        }
-                                    });
+            public void loadFavourite(ArrayList<String> favouriteIds) {
+                if (!favouriteIds.isEmpty()) {
+                    Utilities.showProgressDialog(context, true);
+                    ArrayList<String> ids = favouriteIds;
+                    Query checkUser = reference.child("manual");
+                    checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            System.out.println(ids.isEmpty());
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot o : dataSnapshot.getChildren()) {
+                                    if (ids.contains(o.getKey())) {
+                                        ManualCard card = new ManualCard();
+                                        card.setKey(o.getKey());
+                                        if (o.hasChild("name"))
+                                            card.setName(o.child("name").getValue().toString());
+                                        manualCards.put(o.getKey(), card);
+                                        if (o.hasChild("cover")) {
+                                            gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    String decodedString = new String(bytes);
+                                                    byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
+                                                    card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
+                                                    ArrayList<ManualCard> tmpcards = new ArrayList<>();
+                                                    for (String k : manualCards.keySet())
+                                                        tmpcards.add(manualCards.get(k));
+                                                    Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                                                        @Override
+                                                        public int compare(ManualCard o1, ManualCard o2) {
+                                                            if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                                                return -1;
+                                                            else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                                                return 1;
+                                                            return 0;
+                                                        }
+                                                    });
 
-                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
-                                    recyclerView.setAdapter(tmp);
+                                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener,false);
+                                                    recyclerView.setAdapter(tmp);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+                                        }
+                                    }
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    e.printStackTrace();
-                                }
-                            });
+
+                                Utilities.closeProgressDialog();
+                            }
+                            callBack.onCallBack(manualCards);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void loadFavourite(FavouriteFirebaseCallBack callBack) {
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        DatabaseReference reference = rootNode.getReference();
+        ArrayList<String> favouriteIds = new ArrayList<>();
+        Query checkUser = reference.child("favourites");
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot o : snapshot.getChildren()) {
+                        if (o.child("uid").getValue().toString().equals(Utilities.getAuthorisation().getCurrentUser().getUid())) {
+                            favouriteIds.add(o.child("idManual").getValue().toString());
                         }
                     }
-                    callBack.onCallBack(manualCards);
+                    callBack.loadFavourite(favouriteIds);
                 }
             }
 
@@ -206,5 +257,55 @@ public class ManualFactory {
 
             }
         });
+    }
+
+    public void updateFavourite(String id, boolean exist, Context context, ArrayList<String> ids, FavouriteFirebaseCallBack callBack) {
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        DatabaseReference reference = rootNode.getReference();
+
+        if (exist) {
+            System.out.println("esiste");
+            Query checkUser = reference.child("favourites");
+            checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //Utilities.showProgressDialog(context, true);
+                        for (DataSnapshot o : snapshot.getChildren()) {
+                            if (o.child("uid").getValue().toString().equals(Utilities.getAuthorisation().getUid()))
+                                if (o.child("idManual").getValue().toString().equals(id)) {
+                                    o.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                            ids.remove(o.child("idManual").getValue().toString());
+
+                                            callBack.loadFavourite(ids);
+                                        }
+                                    });
+                                }
+                        }
+                        // Utilities.closeProgressDialog();
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        } else {
+            //Utilities.showProgressDialog(context, true);
+            UidManualPair uidManualPair = new UidManualPair(Utilities.getAuthorisation().getUid(), id);
+            String key = reference.child("favourites").push().getKey();
+
+            System.out.println(uidManualPair.getIdManual());
+            ids.add(uidManualPair.getIdManual());
+            reference.child("favourites").child(key).setValue(uidManualPair);
+            callBack.loadFavourite(ids);
+
+            // Utilities.closeProgressDialog();
+        }
     }
 }

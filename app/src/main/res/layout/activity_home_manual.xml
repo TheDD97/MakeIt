@@ -7,6 +7,15 @@
     android:orientation="vertical"
     tools:context=".view.HomeManual">
 
+    <ImageButton
+        android:id="@+id/home_exit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/exit_2" />
+
     <TextView
         android:id="@+id/home_manual_name"
         android:layout_width="wrap_content"
@@ -15,15 +24,6 @@
         android:text="@string/no_name"
         android:textSize="16sp"
         android:textStyle="bold" />
-
-    <ImageButton
-        android:id="@+id/home_exit"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
-        android:background="#00FFFFFF"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/exit_2" />
 
     <ImageView
         android:id="@+id/cover"

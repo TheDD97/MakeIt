@@ -8,13 +8,10 @@ public class ManualCard {
     private Bitmap cover;
     private String name;
     private String key;
+    private Boolean isFavourite;
 
     public ManualCard() {
-    }
-
-    public ManualCard(Bitmap cover, String name) {
-        this.cover = cover;
-        this.name = name;
+        isFavourite = false;
     }
 
     public Bitmap getCover() {
@@ -33,11 +30,19 @@ public class ManualCard {
         this.name = name;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public void setKey(String key) {
         this.key = key;
     }
 
-    public String getKey() {
-        return key;
+    public Boolean getFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(Boolean favourite) {
+        isFavourite = favourite;
     }
 }
