@@ -66,6 +66,8 @@ public class ManualFlyweight {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, myManual, false);
+                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener);
+                    recyclerView.setAdapter(tmp);
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
