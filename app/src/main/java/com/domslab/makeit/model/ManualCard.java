@@ -9,6 +9,15 @@ public class ManualCard {
     private String name;
     private String key;
     private Boolean isFavourite;
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public ManualCard() {
         isFavourite = false;

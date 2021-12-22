@@ -34,7 +34,7 @@ import java.util.HashMap;
 
 public class ManualFactory {
 
-    public void createMyManualList(HashMap<String, ManualCard> manualCards, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
+    public void createMyManualList(HashMap<String, ManualCard> manualCards, HashMap<String, ManualCard> loaded, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
 
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
@@ -46,43 +46,66 @@ public class ManualFactory {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot o : dataSnapshot.getChildren()) {
-                        ManualCard card = new ManualCard();
-                        card.setKey(o.getKey());
-                        if (o.hasChild("name"))
-                            card.setName(o.child("name").getValue().toString());
-                        manualCards.put(o.getKey(), card);
-                        if (ManualFlyweight.getInstance().isFavourite(o.getKey()))
-                            card.setFavourite(true);
-                        if (o.hasChild("cover")) {
-                            gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    String decodedString = new String(bytes);
-                                    byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
-                                    card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
-                                    ArrayList<ManualCard> tmpCard = new ArrayList<>();
-                                    for (String k : manualCards.keySet())
-                                        tmpCard.add(manualCards.get(k));
-                                    Collections.sort(tmpCard, new Comparator<ManualCard>() {
+                        if (!loaded.isEmpty())
+                            if (loaded.containsKey(o.getKey())) {
+                                manualCards.put(o.getKey(), loaded.get(o.getKey()));
+                                ArrayList<ManualCard> tmpCard = new ArrayList<>();
+                                for (String k : manualCards.keySet())
+                                    tmpCard.add(manualCards.get(k));
+                                Collections.sort(tmpCard, new Comparator<ManualCard>() {
+                                    @Override
+                                    public int compare(ManualCard o1, ManualCard o2) {
+                                        if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                            return 0;
+                                        else if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                            return 1;
+                                        return -1;
+                                    }
+                                });
+                                ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
+                                recyclerView.setAdapter(tmp);
+
+                            } else {
+                                ManualCard card = new ManualCard();
+                                card.setKey(o.getKey());
+                                if (o.hasChild("name"))
+                                    card.setName(o.child("name").getValue().toString());
+                                manualCards.put(o.getKey(), card);
+                                if (o.hasChild("category"))
+                                    card.setCategory(o.child("category").getValue().toString());
+                                if (ManualFlyweight.getInstance().isFavourite(o.getKey()))
+                                    card.setFavourite(true);
+                                if (o.hasChild("cover")) {
+                                    gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
-                                        public int compare(ManualCard o1, ManualCard o2) {
-                                            if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
-                                                return 0;
-                                            else if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                                return 1;
-                                            return -1;
+                                        public void onSuccess(byte[] bytes) {
+                                            String decodedString = new String(bytes);
+                                            byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
+                                            card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
+                                            ArrayList<ManualCard> tmpCard = new ArrayList<>();
+                                            for (String k : manualCards.keySet())
+                                                tmpCard.add(manualCards.get(k));
+                                            Collections.sort(tmpCard, new Comparator<ManualCard>() {
+                                                @Override
+                                                public int compare(ManualCard o1, ManualCard o2) {
+                                                    if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                                        return 0;
+                                                    else if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                                        return 1;
+                                                    return -1;
+                                                }
+                                            });
+                                            ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
+                                            recyclerView.setAdapter(tmp);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            e.printStackTrace();
                                         }
                                     });
-                                    ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
-                                    recyclerView.setAdapter(tmp);
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
+                            }
                     }
                 }
                 callBack.onCallBack(manualCards);
@@ -96,56 +119,79 @@ public class ManualFactory {
         });
     }
 
-    public void createNewestList(HashMap<String, ManualCard> manualCards, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
+    public void createNewestList(HashMap<String, ManualCard> manualCards, HashMap<String, ManualCard> loaded, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
         ManualFlyweight manualFlyweight = ManualFlyweight.getInstance();
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
-        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(20);
+        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(1);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot o : dataSnapshot.getChildren()) {
-                        ManualCard card = new ManualCard();
-                        card.setKey(o.getKey());
-                        if (o.hasChild("name"))
-                            card.setName(o.child("name").getValue().toString());
-                        manualCards.put(o.getKey(), card);
-                        if (manualFlyweight.isFavourite(o.getKey()))
-                            card.setFavourite(true);
-                        if (o.hasChild("cover")) {
-                            gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    String decodedString = new String(bytes);
-                                    byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
-                                    card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
-                                    ArrayList<ManualCard> tmpcards = new ArrayList<>();
-                                    for (String k : manualCards.keySet())
-                                        tmpcards.add(manualCards.get(k));
-                                    Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                        if (!loaded.isEmpty())
+                            if (loaded.containsKey(o.getKey())) {
+                                manualCards.put(o.getKey(), loaded.get(o.getKey()));
+                                ArrayList<ManualCard> tmpcards = new ArrayList<>();
+                                for (String k : manualCards.keySet())
+                                    tmpcards.add(manualCards.get(k));
+                                Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                                    @Override
+                                    public int compare(ManualCard o1, ManualCard o2) {
+                                        if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                            return -1;
+                                        else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                            return 1;
+                                        return 0;
+                                    }
+                                });
+
+                                ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
+                                recyclerView.setAdapter(tmp);
+                            } else {
+                                ManualCard card = new ManualCard();
+                                card.setKey(o.getKey());
+                                if (o.hasChild("name"))
+                                    card.setName(o.child("name").getValue().toString());
+                                if (o.hasChild("category"))
+                                    card.setCategory(o.child("category").getValue().toString());
+                                manualCards.put(o.getKey(), card);
+                                if (manualFlyweight.isFavourite(o.getKey()))
+                                    card.setFavourite(true);
+                                if (o.hasChild("cover")) {
+                                    gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
-                                        public int compare(ManualCard o1, ManualCard o2) {
-                                            if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                                return -1;
-                                            else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
-                                                return 1;
-                                            return 0;
+                                        public void onSuccess(byte[] bytes) {
+                                            String decodedString = new String(bytes);
+                                            byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
+                                            card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
+                                            ArrayList<ManualCard> tmpcards = new ArrayList<>();
+                                            for (String k : manualCards.keySet())
+                                                tmpcards.add(manualCards.get(k));
+                                            Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                                                @Override
+                                                public int compare(ManualCard o1, ManualCard o2) {
+                                                    if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                                        return -1;
+                                                    else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                                        return 1;
+                                                    return 0;
+                                                }
+                                            });
+
+                                            ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
+                                            recyclerView.setAdapter(tmp);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            e.printStackTrace();
                                         }
                                     });
-
-                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
-                                    recyclerView.setAdapter(tmp);
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
+                            }
                     }
                 }
                 callBack.onCallBack(manualCards);
@@ -183,6 +229,8 @@ public class ManualFactory {
                                         card.setKey(o.getKey());
                                         if (o.hasChild("name"))
                                             card.setName(o.child("name").getValue().toString());
+                                        if (o.hasChild("category"))
+                                            card.setCategory(o.child("category").getValue().toString());
                                         manualCards.put(o.getKey(), card);
                                         if (o.hasChild("cover")) {
                                             gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -205,7 +253,7 @@ public class ManualFactory {
                                                         }
                                                     });
 
-                                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener,false);
+                                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener, false);
                                                     recyclerView.setAdapter(tmp);
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -307,5 +355,72 @@ public class ManualFactory {
 
             // Utilities.closeProgressDialog();
         }
+    }
+
+    public void loadAllManual(HashMap<String, ManualCard> loaded, Context context, ManualAdapter.OnManualListener onManualListener, RecyclerView recyclerView, ManualFirebaseCallBack manualFirebaseCallBack) {
+        ManualFlyweight manualFlyweight = ManualFlyweight.getInstance();
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        DatabaseReference reference = rootNode.getReference();
+        StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
+        Query checkUser = reference.child("manual");
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot o : dataSnapshot.getChildren()) {
+                        if (!loaded.containsKey(o.getKey())) {
+                            ManualCard card = new ManualCard();
+                            card.setKey(o.getKey());
+                            if (o.hasChild("name"))
+                                card.setName(o.child("name").getValue().toString());
+                            if (o.hasChild("category"))
+                                card.setCategory(o.child("category").getValue().toString());
+                            loaded.put(o.getKey(), card);
+                            if (manualFlyweight.isFavourite(o.getKey()))
+                                card.setFavourite(true);
+                            if (o.hasChild("cover")) {
+                                gsReference.child(o.getKey() + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        String decodedString = new String(bytes);
+                                        byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
+                                        card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
+                                        ArrayList<ManualCard> tmpcards = new ArrayList<>();
+                                        for (String k : loaded.keySet())
+                                            tmpcards.add(loaded.get(k));
+                                        Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                                            @Override
+                                            public int compare(ManualCard o1, ManualCard o2) {
+                                                if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
+                                                    return -1;
+                                                else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
+                                                    return 1;
+                                                return 0;
+                                            }
+                                        });
+
+                                        ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
+                                        recyclerView.setAdapter(tmp);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+                manualFirebaseCallBack.onCallBack(loaded);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

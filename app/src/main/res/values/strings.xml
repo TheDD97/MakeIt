@@ -31,4 +31,5 @@
     <string name="select_category">Select the category of your manual</string>
     <string name="location_hint">Your file name will be shown here</string>
     <string name="upload_file">Confirm</string>
+    <string name="filter_category_label">"Select category: "</string>
 </resources>

@@ -35,6 +35,7 @@ public class ManualFlyweight {
     private static HashMap<String, ManualCard> myManual;
     private static HashMap<String, ManualCard> favourite;
     private static HashMap<String, ManualCard> newest;
+    private static HashMap<String, ManualCard> loaded;
     private static ManualFactory manualFactory;
     private Context context;
     private static HashMap<String, RecyclerListener> recyclerListener;
@@ -43,6 +44,7 @@ public class ManualFlyweight {
         myManual = new HashMap<>();
         favourite = new HashMap<>();
         newest = new HashMap<>();
+        loaded = new HashMap<>();
         manualFactory = new ManualFactory();
         recyclerListener = new HashMap<>();
     }
@@ -60,7 +62,7 @@ public class ManualFlyweight {
         RecyclerListener recyclerListener = new RecyclerListener(recyclerView, onManualListener);
         this.recyclerListener.put("myManual", recyclerListener);
         if (s.equals("myManual") && myManual.isEmpty())
-            manualFactory.createMyManualList(myManual, new ManualFirebaseCallBack() {
+            manualFactory.createMyManualList(myManual, loaded, new ManualFirebaseCallBack() {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, myManual, false);
@@ -87,7 +89,7 @@ public class ManualFlyweight {
         this.recyclerListener.put("newest", recyclerListener);
         manualCards.clear();
         if (s.equals("newest") && newest.isEmpty())
-            manualFactory.createNewestList(newest, new ManualFirebaseCallBack() {
+            manualFactory.createNewestList(newest, loaded, new ManualFirebaseCallBack() {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, newest, true);
@@ -223,13 +225,6 @@ public class ManualFlyweight {
             manualFactory.updateFavourite(id, true, context, tmpId, new FavouriteFirebaseCallBack() {
                 @Override
                 public void loadFavourite(ArrayList<String> ids) {
-            /*        for (String key : favourite.keySet()) {
-                        if (!ids.contains(favourite.get(key)))
-                            favourite.remove(favourite.get(key));
-                    }
-
-            */
-                    //reloadContent(context);
                     callBack.loadFavourite(ids);
                 }
             });
@@ -263,5 +258,26 @@ public class ManualFlyweight {
                 recyclerListener.get("newest").getRecyclerView().setAdapter(tmp);
             }
         }
+    }
+
+    public void getLoaded(Context c, ManualAdapter.OnManualListener listener, RecyclerView recyclerView, ManualFirebaseCallBack callBack) {
+        Utilities.showProgressDialog(c, true);
+        for (String k : myManual.keySet())
+            if (!loaded.containsKey(k))
+                loaded.put(k, myManual.get(k));
+        for (String k : favourite.keySet())
+            if (!loaded.containsKey(k))
+                loaded.put(k, favourite.get(k));
+        for (String k : newest.keySet())
+            if (!loaded.containsKey(k))
+                loaded.put(k, newest.get(k));
+        manualFactory.loadAllManual(loaded, c, listener, recyclerView, new ManualFirebaseCallBack() {
+            @Override
+            public void onCallBack(HashMap<String, ManualCard> manual) {
+                callBack.onCallBack(loaded);
+                Utilities.closeProgressDialog();
+
+            }
+        });
     }
 }
