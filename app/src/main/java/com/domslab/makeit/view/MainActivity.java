@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        Utilities.showProgressDialog(MainActivity.this, false);
+                                        Utilities.showProgressDialog(getApplicationContext(), false);
 
                                         if (task.isSuccessful()) {
                                             // Sign in success, update UI with the signed-in user's information

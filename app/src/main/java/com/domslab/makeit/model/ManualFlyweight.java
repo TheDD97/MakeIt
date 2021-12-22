@@ -168,17 +168,20 @@ public class ManualFlyweight {
             myManual.put(id, card);
             ArrayList<ManualCard> manualCards = new ArrayList<>();
             setContent(manualCards, myManual, false);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener());
-            recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
+            if (recyclerListener.containsKey("myManual")) {
+                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener());
+                recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
+            }
 
         }
         if (!newest.containsKey(id)) {
             newest.put(id, card);
             ArrayList<ManualCard> manualCards = new ArrayList<>();
             setContent(manualCards, newest, true);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("newest").getListener());
-            recyclerListener.get("newest").getRecyclerView().setAdapter(tmp);
-
+            if (recyclerListener.containsKey("newest")) {
+                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("newest").getListener());
+                recyclerListener.get("newest").getRecyclerView().setAdapter(tmp);
+            }
         }
 
     }
@@ -199,8 +202,8 @@ public class ManualFlyweight {
                                 favourite.put(k, myManual.get(k));
                             else if (newest.containsKey(k))
                                 favourite.put(k, newest.get(k));
-                            else if(loaded.containsKey(k))
-                                favourite.put(k,loaded.get(k));
+                            else if (loaded.containsKey(k))
+                                favourite.put(k, loaded.get(k));
                         }
                     }
 
