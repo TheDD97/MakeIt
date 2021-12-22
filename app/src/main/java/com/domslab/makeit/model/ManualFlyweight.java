@@ -199,6 +199,8 @@ public class ManualFlyweight {
                                 favourite.put(k, myManual.get(k));
                             else if (newest.containsKey(k))
                                 favourite.put(k, newest.get(k));
+                            else if(loaded.containsKey(k))
+                                favourite.put(k,loaded.get(k));
                         }
                     }
 

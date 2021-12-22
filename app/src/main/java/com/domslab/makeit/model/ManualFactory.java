@@ -318,7 +318,7 @@ public class ManualFactory {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        //Utilities.showProgressDialog(context, true);
+                        Utilities.showProgressDialog(context, true);
                         for (DataSnapshot o : snapshot.getChildren()) {
                             if (o.child("uid").getValue().toString().equals(Utilities.getAuthorisation().getUid()))
                                 if (o.child("idManual").getValue().toString().equals(id)) {
@@ -326,7 +326,7 @@ public class ManualFactory {
                                         @Override
                                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                             ids.remove(o.child("idManual").getValue().toString());
-
+                                            Utilities.closeProgressDialog();
                                             callBack.loadFavourite(ids);
                                         }
                                     });
@@ -344,16 +344,16 @@ public class ManualFactory {
                 }
             });
         } else {
-            //Utilities.showProgressDialog(context, true);
+            Utilities.showProgressDialog(context, true);
             UidManualPair uidManualPair = new UidManualPair(Utilities.getAuthorisation().getUid(), id);
             String key = reference.child("favourites").push().getKey();
-
             System.out.println(uidManualPair.getIdManual());
             ids.add(uidManualPair.getIdManual());
             reference.child("favourites").child(key).setValue(uidManualPair);
+            Utilities.closeProgressDialog();
             callBack.loadFavourite(ids);
 
-            // Utilities.closeProgressDialog();
+
         }
     }
 
