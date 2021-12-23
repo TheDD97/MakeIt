@@ -63,7 +63,6 @@ public class HomeManual extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();
-
             }
         });
         Bundle extras = getIntent().getExtras();
@@ -75,7 +74,8 @@ public class HomeManual extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeManual.this, ManualActivity.class);
-                intent.putExtra("manualId", id);
+                System.out.println("MAN " + id);
+                intent.putExtra("manualId", extras.getString("manualId"));
                 startActivity(intent);
             }
         });
@@ -126,7 +126,6 @@ public class HomeManual extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 String decodedString = new String(bytes);
-                System.out.println(decodedString);
                 byte[] coded = android.util.Base64.decode(decodedString, Base64.DEFAULT);
                 cover.setImageBitmap(BitmapFactory.decodeByteArray(coded, 0, coded.length));
                 Utilities.closeProgressDialog();

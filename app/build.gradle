@@ -57,4 +57,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.11.0'
+//imageview for zoom in and out
+    implementation 'com.github.mikeOrtiz:touchImageView:1.4.1'
 }

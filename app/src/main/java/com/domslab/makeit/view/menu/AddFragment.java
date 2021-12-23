@@ -225,7 +225,7 @@ public class AddFragment extends Fragment {
                                 images.put("image" + page.toString(), jsonObject.getString("image"));
                             }
                             if (jsonObject.has("timer"))
-                                System.out.println("timer");
+                                manualPage.add("timer", jsonObject.getString("timer"));
                         }
                         if (manualPage.getPageContent().isEmpty()) {
                             Toast.makeText(getContext(), Utilities.PAGE_EMPTY + page,

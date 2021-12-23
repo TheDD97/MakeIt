@@ -11,10 +11,11 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center"
         android:layout_weight="0"
-        app:srcCompat="@drawable/baseline_construction_black_48" />
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/logo_home" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,13 +89,13 @@
 
         <Button
             android:id="@+id/sign_up_login_page"
-            android:layout_width="157dp"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:text="@string/signUp" />
 
         <Button
             android:id="@+id/login"
-            android:layout_width="157dp"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:text="@string/login" />
     </LinearLayout>

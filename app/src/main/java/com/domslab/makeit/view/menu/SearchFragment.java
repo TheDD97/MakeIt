@@ -43,6 +43,7 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
     private RecyclerView.LayoutManager layoutManager;
     private RadioButton allFilter, foodFilter, toyFilter, homeFilter;
     private SearchView searchView;
+    private RadioGroup group;
     private String filter = null;
     private String search = "";
 
@@ -86,7 +87,7 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
         toyFilter = getView().findViewById(R.id.toys_filter);
         foodFilter = getView().findViewById(R.id.food_filter);
         homeFilter = getView().findViewById(R.id.home_filter);
-        RadioGroup group = getView().findViewById(R.id.group);
+        group = getView().findViewById(R.id.group);
         allFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,21 +112,14 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
                 foodFilter();
             }
         });
-        group.check(R.id.no_filter);
 
         ManualFlyweight.getInstance().getLoaded(getContext(), SearchFragment.this::onManualClick, recyclerView, new ManualFirebaseCallBack() {
             @Override
             public void onCallBack(HashMap<String, ManualCard> manual) {
                 for (String key : manual.keySet())
                     allCard.add(manual.get(key));
-               Collections.sort(allCard, new Comparator<ManualCard>() {
-                   @Override
-                   public int compare(ManualCard o1, ManualCard o2) {
-                       return o1.getName().compareTo(o2.getName());
-                   }
-               });
-                ManualAdapter adapter = new ManualAdapter(getContext(), allCard, SearchFragment.this::onManualClick);
-                recyclerView.setAdapter(adapter);
+                group.check(R.id.no_filter);
+
                 initSearch();
                 filter();
             }
@@ -136,13 +130,16 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     @Override
     public void onManualClick(int position) {
+        System.out.print(position);
         Intent intent = new Intent(getContext(), HomeManual.class);
         intent.putExtra("manualId", filteredCard.get(position).getKey());
-        System.out.println(filteredCard.get(position).getKey());
+        System.out.println("SEr " + filteredCard.get(position).getKey());
         startActivity(intent);
     }
 
     private void initSearch() {
+        ManualAdapter adapter = new ManualAdapter(getContext(), allCard, SearchFragment.this::onManualClick);
+        recyclerView.setAdapter(adapter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -217,4 +214,28 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     }
 
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+            ManualFlyweight.getInstance().getLoaded(getContext(), SearchFragment.this::onManualClick, recyclerView, new ManualFirebaseCallBack() {
+                @Override
+                public void onCallBack(HashMap<String, ManualCard> manual) {
+                    for (String key : manual.keySet())
+                        allCard.add(manual.get(key));
+                    Collections.sort(allCard, new Comparator<ManualCard>() {
+                        @Override
+                        public int compare(ManualCard o1, ManualCard o2) {
+                            return o1.getName().compareTo(o2.getName());
+                        }
+                    });
+                    group.check(R.id.no_filter);
+                    ManualAdapter adapter = new ManualAdapter(getContext(), allCard, SearchFragment.this::onManualClick);
+                    recyclerView.setAdapter(adapter);
+                    initSearch();
+                    filter();
+                }
+            });
+        }
+    }
 }

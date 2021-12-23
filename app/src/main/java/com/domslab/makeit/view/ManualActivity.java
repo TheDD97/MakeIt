@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.domslab.makeit.R;
@@ -30,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ortiz.touchview.TouchImageView;
 
 import java.util.Base64;
 
@@ -39,11 +42,14 @@ public class ManualActivity extends AppCompatActivity {
     private ImageButton exit;
     private ImageButton next;
     private ImageButton previous;
-    private ImageView pageImage;
-    private TextView pageText;
     private TextView pageNum;
     private TextView manualName;
     private ManualPage currentManualPage;
+    private LinearLayout body;
+    private Timer timer;
+    private TouchImageView img;
+    private TextView pageText;
+    private float density;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +57,12 @@ public class ManualActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manual_page);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
-        pageImage = findViewById(R.id.page_image);
-        pageText = findViewById(R.id.page_text);
+        //pageImage = findViewById(R.id.page_image);
+
+        //pageText = findViewById(R.id.page_text);
         pageNum = findViewById(R.id.current_page);
         manualName = findViewById(R.id.manual_name_label);
+        body = findViewById(R.id.body);
         readManual();
         next.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,6 +85,7 @@ public class ManualActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void readManual() {
@@ -85,7 +94,7 @@ public class ManualActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentManual = extras.getString("manualId");
-            System.out.println(currentManual);
+
             FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
             DatabaseReference reference = rootNode.getReference("manual");
             Query checkUser = reference.orderByChild(currentManual);
@@ -97,22 +106,30 @@ public class ManualActivity extends AppCompatActivity {
                     int counter = 1;
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot o : dataSnapshot.getChildren()) {
-                            if (o.hasChild("name"))
-                                manual.setName(o.child("name").getValue().toString());
-                            if (o.hasChild("content")) {
-                                DataSnapshot content = o.child("content");
-                                while (true) {
-                                    ManualPage manualPage = new ManualPage();
-                                    if (content.hasChild(Integer.toString(counter))) {
-                                        DataSnapshot snapshot = content.child(Integer.toString(counter)).child("pageContent");
-                                        if (snapshot.hasChild("image"))
-                                            loadImage(currentManual, Integer.toString(counter), manualPage);
-                                        if (snapshot.hasChild("text"))
-                                            manualPage.add("text", snapshot.child("text").getValue().toString());
-                                        manual.addPage(Integer.toString(counter), manualPage);
-                                        counter++;
-                                    } else {
-                                        break;
+                            if (o.getKey().equals(currentManual)) {
+                                if (o.hasChild("name"))
+                                    manual.setName(o.child("name").getValue().toString());
+                                if (o.hasChild("content")) {
+                                    DataSnapshot content = o.child("content");
+                                    while (true) {
+                                        ManualPage manualPage = new ManualPage();
+                                        if (content.hasChild(Integer.toString(counter))) {
+                                            DataSnapshot snapshot = content.child(Integer.toString(counter)).child("pageContent");
+                                            System.out.println(snapshot.getValue());
+                                            if (snapshot.hasChild("image"))
+                                                loadImage(currentManual, Integer.toString(counter), manualPage);
+                                            if (snapshot.hasChild("text"))
+                                                manualPage.add("text", snapshot.child("text").getValue().toString());
+                                            if (snapshot.hasChild("timer")) {
+                                                System.out.println("trovato");
+                                                manualPage.add("timer", snapshot.child("timer").getValue().toString());
+                                                System.out.println(snapshot.child("timer").getValue().toString());
+                                            }
+                                            manual.addPage(Integer.toString(counter), manualPage);
+                                            counter++;
+                                        } else {
+                                            break;
+                                        }
                                     }
                                 }
                                 manualName.setText(manual.getName());
@@ -159,14 +176,28 @@ public class ManualActivity extends AppCompatActivity {
             if (currentPage == manual.size())
                 next.setVisibility(View.INVISIBLE);
             if (currentManualPage.hasItem("text")) {
-                pageText.setVisibility(View.VISIBLE);
+                pageText = new TextView(ManualActivity.this);
                 pageText.setText(currentManualPage.getItem("text"));
+                body.addView(pageText);
+
             }
             if (currentManualPage.hasItem("image")) {
-                pageImage.setVisibility(View.VISIBLE);
+                //pageImage.setVisibility(View.VISIBLE);
                 System.out.println(currentManualPage.getItem("image"));
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
-                pageImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                density = getResources().getDisplayMetrics().density;
+                System.out.println("DENS" + density);
+                img = new TouchImageView(ManualActivity.this);
+                img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                img.setMinimumWidth((int) (400 / density));
+                img.setMinimumHeight((int) (900 / density));
+                img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                body.addView(img);
+            }
+            if (currentManualPage.hasItem("timer")) {
+                System.out.println("si timer");
+                timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
+                body.addView(timer);
             }
         }
     }
@@ -174,8 +205,15 @@ public class ManualActivity extends AppCompatActivity {
     private void reset() {
         previous.setVisibility(View.VISIBLE);
         next.setVisibility(View.VISIBLE);
-        pageImage.setVisibility(View.INVISIBLE);
-        pageText.setVisibility(View.INVISIBLE);
+        //pageImage.setVisibility(View.INVISIBLE);
+        //pageText.setVisibility(View.INVISIBLE);
+        if (timer != null) {
+            timer.stop();
+            body.removeView(timer);
+            timer = null;
+        }
+        body.removeView(img);
+        body.removeView(pageText);
     }
 
     @Override

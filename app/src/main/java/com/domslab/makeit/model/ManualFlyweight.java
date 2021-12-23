@@ -73,8 +73,6 @@ public class ManualFlyweight {
             }, recyclerView, context, onManualListener);
         else if (!myManual.isEmpty()) {
             setContent(manualCards, myManual, false);
-            for (ManualCard card : manualCards)
-                System.out.println(card.getKey());
             ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener);
             recyclerView.setAdapter(tmp);
             Utilities.closeProgressDialog();
@@ -183,7 +181,11 @@ public class ManualFlyweight {
                 recyclerListener.get("newest").getRecyclerView().setAdapter(tmp);
             }
         }
+        if (!loaded.containsKey(id)) {
+            loaded.put(id, card);
 
+
+        }
     }
 
     public void updateManual(String id, Context context, FavouriteFirebaseCallBack callBack) {

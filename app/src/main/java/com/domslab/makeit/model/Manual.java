@@ -93,7 +93,7 @@ public class Manual {
 
     public int size() {
 
-        System.out.println(content.size());
+
         return content.size();
     }
 }

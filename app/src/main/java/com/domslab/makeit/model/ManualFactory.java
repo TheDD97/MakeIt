@@ -221,8 +221,7 @@ public class ManualFactory {
                         @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            System.out.println(ids.isEmpty());
-                            if (dataSnapshot.exists()) {
+                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot o : dataSnapshot.getChildren()) {
                                     if (ids.contains(o.getKey())) {
                                         ManualCard card = new ManualCard();
@@ -312,7 +311,6 @@ public class ManualFactory {
         DatabaseReference reference = rootNode.getReference();
 
         if (exist) {
-            System.out.println("esiste");
             Query checkUser = reference.child("favourites");
             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -347,7 +345,6 @@ public class ManualFactory {
             Utilities.showProgressDialog(context, true);
             UidManualPair uidManualPair = new UidManualPair(Utilities.getAuthorisation().getUid(), id);
             String key = reference.child("favourites").push().getKey();
-            System.out.println(uidManualPair.getIdManual());
             ids.add(uidManualPair.getIdManual());
             reference.child("favourites").child(key).setValue(uidManualPair);
             Utilities.closeProgressDialog();
@@ -389,7 +386,7 @@ public class ManualFactory {
                                         ArrayList<ManualCard> tmpcards = new ArrayList<>();
                                         for (String k : loaded.keySet())
                                             tmpcards.add(loaded.get(k));
-                                        Collections.sort(tmpcards, new Comparator<ManualCard>() {
+                                        /*Collections.sort(tmpcards, new Comparator<ManualCard>() {
                                             @Override
                                             public int compare(ManualCard o1, ManualCard o2) {
                                                 if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
@@ -398,7 +395,7 @@ public class ManualFactory {
                                                     return 1;
                                                 return 0;
                                             }
-                                        });
+                                        });*/
 
                                         ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
                                         recyclerView.setAdapter(tmp);

@@ -143,10 +143,10 @@ public class UserFragment extends Fragment {
                         if (!noEmail) {
                             if (firebaseUser.getEmail().equals(email.getText().toString().trim())) {
                                 firebaseUser.updateEmail(nEmail.getText().toString().trim());
-                                userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(), false);
+                                userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(), user.getWaiting());
                             }
                         } else
-                            userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), false);
+                            userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), user.getWaiting());
                         updateUser(userUpdate, t);
                         editing = false;
                         cancel.setBackgroundColor(Color.BLUE);

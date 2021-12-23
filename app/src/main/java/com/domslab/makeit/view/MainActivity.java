@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         String psw = preferences.getString("currentPassword", null);
         if (user != null && psw != null && email != null) {
             Utilities.setCurrentUsername(user);
-            Utilities.showProgressDialog(MainActivity.this, false);
+            Utilities.showProgressDialog(this, false);
             auth.signInWithEmailAndPassword(email, psw)
                     .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
