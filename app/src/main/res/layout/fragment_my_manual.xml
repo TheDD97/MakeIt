@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".view.pagerFragment.MyManualFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_manual_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bkg"
         android:paddingBottom="60dp"></androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>

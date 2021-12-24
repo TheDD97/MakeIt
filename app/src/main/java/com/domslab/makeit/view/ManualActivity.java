@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -178,6 +180,9 @@ public class ManualActivity extends AppCompatActivity {
             if (currentManualPage.hasItem("text")) {
                 pageText = new TextView(ManualActivity.this);
                 pageText.setText(currentManualPage.getItem("text"));
+
+                /*pageText.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+                pageText.setGravity(Gravity.CENTER_HORIZONTAL);*/
                 body.addView(pageText);
 
             }
@@ -189,9 +194,13 @@ public class ManualActivity extends AppCompatActivity {
                 System.out.println("DENS" + density);
                 img = new TouchImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
-                img.setMinimumWidth((int) (400 / density));
-                img.setMinimumHeight((int) (900 / density));
-                img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                /*img.setMinimumWidth((int) (400 * density));
+                img.setMinimumHeight((int) (900 * density));
+*/
+                ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
+                layoutParams.width = 800;
+                layoutParams.height = 800;
+                img.setLayoutParams(layoutParams);
                 body.addView(img);
             }
             if (currentManualPage.hasItem("timer")) {

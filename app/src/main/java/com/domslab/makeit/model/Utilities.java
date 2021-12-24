@@ -20,9 +20,9 @@ import java.util.List;
 
 public class Utilities {
     public static final long MAX_FILE_SIZE = 1024 * 1024;
-    public static final long MAX_IMAGE_SIZE = 1024 * 20;
-    public static final String COVER_SIZE_EXCEEDED = "The size of the cover is too large, it must be 20KB or less";
-    public static final String IMAGE_SIZE_EXCEEDED = "The size of the image is too large, it must be 20KB or less";
+    public static final long MAX_IMAGE_SIZE = 1024 * 30;
+    public static final String COVER_SIZE_EXCEEDED = "The size of the cover is too large, it must be 30KB or less";
+    public static final String IMAGE_SIZE_EXCEEDED = "The size of the image is too large, it must be 30KB or less";
     public static final String NO_COVER = "Cover doesn't exists, check your file";
     public static final String NO_DESCRIPTION = "Description not found check your file";
     public static final String PAGE_EMPTY = "Page content not found, check page: ";

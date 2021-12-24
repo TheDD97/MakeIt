@@ -11,10 +11,10 @@
     android:layout_marginEnd="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
-    android:background="#0A62AF"
+    android:background="@drawable/card_style"
     android:orientation="horizontal"
-    android:paddingLeft="10dp"
 
+    android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
 
