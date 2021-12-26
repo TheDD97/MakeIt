@@ -34,7 +34,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.ortiz.touchview.TouchImageView;
+/*import com.ortiz.touchview.TouchImageView;*/
+import com.zolad.zoominimageview.ZoomInImageView;
 
 import java.util.Base64;
 
@@ -49,7 +50,7 @@ public class ManualActivity extends AppCompatActivity {
     private ManualPage currentManualPage;
     private LinearLayout body;
     private Timer timer;
-    private TouchImageView img;
+    private ZoomInImageView img;
     private TextView pageText;
     private float density;
 
@@ -192,7 +193,7 @@ public class ManualActivity extends AppCompatActivity {
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 density = getResources().getDisplayMetrics().density;
                 System.out.println("DENS" + density);
-                img = new TouchImageView(ManualActivity.this);
+                img = new ZoomInImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                 /*img.setMinimumWidth((int) (400 * density));
                 img.setMinimumHeight((int) (900 * density));

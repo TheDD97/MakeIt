@@ -286,12 +286,13 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean business = false;
                 if (dataSnapshot.exists()) {
+                    Utilities.closeProgressDialog();
                     for (DataSnapshot o : dataSnapshot.getChildren())
                         if (o.getKey().equals(Utilities.getCurrentUID())) {
                             business = (boolean) o.child("advanced").getValue();
                             editor.putBoolean("advanced", business);
                             editor.apply();
-                            Utilities.closeProgressDialog();
+
                         }
                 }
             }

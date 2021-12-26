@@ -45,7 +45,6 @@ public class Timer extends ConstraintLayout {
         this.time = time;
         progressBar.setMax(time);
         currentTime = findViewById(R.id.timer);
-
         start = findViewById(R.id.start);
         reset = findViewById(R.id.reset);
         currentTimeVal = time;
@@ -54,12 +53,13 @@ public class Timer extends ConstraintLayout {
             public void onClick(View v) {
                 if (!countdownStarted) {
                     countdownStarted = true;
+                    start.setText("Stop");
                     handler = new Handler();
                     stop = false;
                     r = new Runnable() {
                         @Override
                         public void run() {
-                            if (!stop)
+                            if (!stop) {
                                 if (currentTimeVal > 0) {
                                     currentTimeVal--;
                                     update();
@@ -67,23 +67,27 @@ public class Timer extends ConstraintLayout {
                                 } else {
                                     stop = true;
                                     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationChannel channel = new NotificationChannel("makeIt","time",NotificationManager.IMPORTANCE_DEFAULT);
+                                    NotificationChannel channel = new NotificationChannel("makeIt", "time", NotificationManager.IMPORTANCE_DEFAULT);
                                     channel.setDescription("time is out");
-
                                     NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
                                     notificationManager.createNotificationChannel(channel);
-                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(),channel.getId())
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channel.getId())
                                             .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                                             .setContentTitle("Hurry up!")
                                             .setContentText("Time is out!!")
                                             .setSound(alarmSound)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                                     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getContext());
-                                    notificationManagerCompat.notify(100,builder.build());
+                                    notificationManagerCompat.notify(100, builder.build());
                                 }
+                            }
                         }
                     };
                     handler.post(r);
+                }else{
+                    countdownStarted = false;
+                    start.setText("start");
+                    stop = true;
                 }
             }
         });
