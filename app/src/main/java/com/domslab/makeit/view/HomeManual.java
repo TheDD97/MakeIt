@@ -74,7 +74,6 @@ public class HomeManual extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeManual.this, ManualActivity.class);
-                System.out.println("MAN " + id);
                 intent.putExtra("manualId", extras.getString("manualId"));
                 startActivity(intent);
             }

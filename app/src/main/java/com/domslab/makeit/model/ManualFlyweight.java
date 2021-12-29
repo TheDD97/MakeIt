@@ -56,12 +56,13 @@ public class ManualFlyweight {
     }
 
     public void setMyManualContent(String s, ArrayList<ManualCard> manualCards, RecyclerView recyclerView, ManualAdapter.OnManualListener onManualListener, Context context) {
-        Utilities.showProgressDialog(context, true);
+
         if (this.context != context)
             this.context = context;
         RecyclerListener recyclerListener = new RecyclerListener(recyclerView, onManualListener);
         this.recyclerListener.put("myManual", recyclerListener);
-        if (s.equals("myManual") && myManual.isEmpty())
+        if (s.equals("myManual") && myManual.isEmpty()) {
+            Utilities.showProgressDialog(context, true);
             manualFactory.createMyManualList(myManual, loaded, new ManualFirebaseCallBack() {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
@@ -71,7 +72,7 @@ public class ManualFlyweight {
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
-        else if (!myManual.isEmpty()) {
+        } else if (!myManual.isEmpty()) {
             setContent(manualCards, myManual, false);
             ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener);
             recyclerView.setAdapter(tmp);

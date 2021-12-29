@@ -27,12 +27,12 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
         super(fragmentActivity);
         fragments = new LinkedHashMap<>();
         this.preferences = preferences;
-        fragments.put("news", NewsFragment.newInstance());
-        fragments.put("favourites", FavouritesFragment.newInstance());
+        fragments.put("Novità", NewsFragment.newInstance());
+        fragments.put("Preferiti", FavouritesFragment.newInstance());
         if (!preferences.getBoolean("advanced", false))
             NUM_PAGES = 2;
         else {
-            fragments.put("My Manual", MyManualFragment.newInstance());
+            fragments.put("I miei manuali", MyManualFragment.newInstance());
             NUM_PAGES = 3;
         }
         keys = new ArrayList(fragments.keySet());

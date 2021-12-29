@@ -1,24 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkg"
     tools:context=".view.menu.HomeContainer">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!--<com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#002060"
+        android:background="@drawable/bottom_menu_round"
         app:itemIconTint="@drawable/menu_color"
+        app:itemRippleColor="@color/teal_700"
         app:itemTextColor="@drawable/menu_color"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <com.etebarian.meowbottomnavigation.MeowBottomNavigation
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:elevation="20dp"
+            android:foregroundTint="@color/menu_bkg"
+            app:mbn_backgroundBottomColor="@color/menu_bkg"
+            app:mbn_circleColor="#ffffff"
+            app:mbn_countBackgroundColor="#ff6f00"
+            app:mbn_countTextColor="#0B0B0B"
+            app:mbn_defaultIconColor="#DCFFEE"
+            app:mbn_rippleColor="#2f424242"
+            app:mbn_selectedIconColor="#9FB3F3"
+            app:mbn_shadowColor="#1f212121" />
+    </FrameLayout>
+</RelativeLayout>

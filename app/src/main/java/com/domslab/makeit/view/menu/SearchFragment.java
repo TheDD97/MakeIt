@@ -75,7 +75,6 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        System.out.println("HEREEEEEEEEE");
         super.onViewCreated(view, savedInstanceState);
         recyclerView = getView().findViewById(R.id.manual_list_view);
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -133,7 +132,6 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
         System.out.print(position);
         Intent intent = new Intent(getContext(), HomeManual.class);
         intent.putExtra("manualId", filteredCard.get(position).getKey());
-        System.out.println("SEr " + filteredCard.get(position).getKey());
         startActivity(intent);
     }
 

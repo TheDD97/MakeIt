@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:iconifiedByDefault="false"
-        app:queryHint="search">
+        app:queryHint="Cerca...">
 
     </androidx.appcompat.widget.SearchView>
 
@@ -48,7 +48,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:singleLine="true"
-                    android:text="All" />
+                    android:text="Tutte" />
 
                 <RadioButton
                     android:id="@+id/food_filter"

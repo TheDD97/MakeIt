@@ -13,7 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,7 +28,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildFeatures {
-        viewBinding true
+        dataBinding true/*per mewonav bar*/
+        /*viewBinding true*/
     }
 }
 
@@ -54,10 +55,14 @@ dependencies {
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple for json
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     // bottom menu https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.4.0'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.11.0'
 //imageview for zoom in and out
     //implementation 'com.github.mikeOrtiz:touchImageView:1.4.1'
     implementation 'com.zolad:zoominimageview:1.0.0'
+/*
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0"*/
+    implementation "com.etebarian:meow-bottom-navigation-java:1.2.0"
+    implementation 'com.google.android.material:material:1.0.0-rc02'
 }

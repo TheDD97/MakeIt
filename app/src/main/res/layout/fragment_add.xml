@@ -20,12 +20,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
-            android:singleLine="false"
+            android:singleLine="true"
             android:text="@string/select_category" />
 
         <Spinner
             android:id="@+id/categories_spinner"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:spinnerMode="dropdown"

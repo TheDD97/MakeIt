@@ -51,7 +51,7 @@ public class ManualActivity extends AppCompatActivity {
     private LinearLayout body;
     private Timer timer;
     private ZoomInImageView img;
-    private TextView pageText;
+    private CustomTextView pageText;
     private float density;
 
     @Override
@@ -179,7 +179,7 @@ public class ManualActivity extends AppCompatActivity {
             if (currentPage == manual.size())
                 next.setVisibility(View.INVISIBLE);
             if (currentManualPage.hasItem("text")) {
-                pageText = new TextView(ManualActivity.this);
+                pageText = new CustomTextView(ManualActivity.this);
                 pageText.setText(currentManualPage.getItem("text"));
 
                 /*pageText.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
@@ -192,7 +192,6 @@ public class ManualActivity extends AppCompatActivity {
                 System.out.println(currentManualPage.getItem("image"));
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 density = getResources().getDisplayMetrics().density;
-                System.out.println("DENS" + density);
                 img = new ZoomInImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                 /*img.setMinimumWidth((int) (400 * density));
@@ -205,7 +204,6 @@ public class ManualActivity extends AppCompatActivity {
                 body.addView(img);
             }
             if (currentManualPage.hasItem("timer")) {
-                System.out.println("si timer");
                 timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
                 body.addView(timer);
             }
@@ -215,8 +213,6 @@ public class ManualActivity extends AppCompatActivity {
     private void reset() {
         previous.setVisibility(View.VISIBLE);
         next.setVisibility(View.VISIBLE);
-        //pageImage.setVisibility(View.INVISIBLE);
-        //pageText.setVisibility(View.INVISIBLE);
         if (timer != null) {
             timer.stop();
             body.removeView(timer);

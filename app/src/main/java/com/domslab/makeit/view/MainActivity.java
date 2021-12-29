@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.domslab.makeit.FirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.menu.HomeContainer;
@@ -38,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,11 +77,22 @@ public class MainActivity extends AppCompatActivity {
                                 editor.putString("currentEmail", email);
                                 editor.putString("currentPassword", psw);
                                 editor.apply();
-                                updateUI(user);
-                                finish();
-                                launchHome(getApplicationContext());
+                                updateUI(user, new FirebaseCallBack() {
+                                    @Override
+                                    public void onCallBack(List<String> list, boolean business, boolean wait) {
+                                        Utilities.closeProgressDialog();
+                                        finish();
+                                        launchHome(getApplicationContext());
+                                    }
+                                });
+
                             } else {
-                                updateUI(null);
+                                updateUI(null, new FirebaseCallBack() {
+                                    @Override
+                                    public void onCallBack(List<String> list, boolean business, boolean wait) {
+
+                                    }
+                                });
                             }
                         }
                     });
@@ -137,16 +150,27 @@ public class MainActivity extends AppCompatActivity {
                                             editor.putString("currentEmail", email);
                                             editor.putString("currentPassword", password);
                                             editor.apply();
-                                            updateUI(user);
-                                            finish();
-                                            launchHome(v.getContext());
+                                            updateUI(user, new FirebaseCallBack() {
+                                                @Override
+                                                public void onCallBack(List<String> list, boolean business, boolean wait) {
+                                                    Utilities.closeProgressDialog();
+                                                    finish();
+                                                    launchHome(getApplicationContext());
+                                                }
+                                            });
+
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Utilities.closeProgressDialog();
                                             Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                            Toast.makeText(v.getContext().getApplicationContext(), "Authentication failed.",
+                                            Toast.makeText(v.getContext().getApplicationContext(), "Accesso fallito.",
                                                     Toast.LENGTH_SHORT).show();
-                                            updateUI(null);
+                                            updateUI(null, new FirebaseCallBack() {
+                                                @Override
+                                                public void onCallBack(List<String> list, boolean business, boolean wait) {
+
+                                                }
+                                            });
                                         }
                                     }
                                 });
@@ -170,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showRecoverPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Recover Password");
+        builder.setTitle("Recupero Password");
         LinearLayout linearLayout = new LinearLayout(this);
         final EditText emailet = new EditText(this);
 
@@ -183,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(linearLayout);
 
         // Click on Recover and a email will be sent to your registered email id
-        builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Recupera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String email = emailet.getText().toString().trim();
@@ -191,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -202,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void beginRecovery(String email) {
         ProgressDialog loadingBar = new ProgressDialog(this);
-        loadingBar.setMessage("Sending Email....");
+        loadingBar.setMessage("Sto inviando....");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
 
@@ -216,16 +240,16 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // if isSuccessful then done message will be shown
                     // and you can change the password
-                    Toast.makeText(MainActivity.this, "Done sent", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Invio Completato", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Error Occured", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Qualcosa è andato storto", Toast.LENGTH_LONG).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 loadingBar.dismiss();
-                Toast.makeText(MainActivity.this, "Error Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Errore", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -247,15 +271,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to Exit?");
+        builder.setMessage("Vuoi chiudere l'applicazione?");
         builder.setCancelable(true);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Utilities.clear();
@@ -268,25 +292,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser user,FirebaseCallBack callBack) {
         user = Utilities.getAuthorisation().getCurrentUser();
         /*-------- Check if user is already logged in or not--------*/
         if (user != null) {
-            Toast.makeText(this.getApplicationContext(), "Login Success.",
+            Toast.makeText(this.getApplicationContext(), "Login Riuscito.",
                     Toast.LENGTH_SHORT).show();
             Utilities.setCurrentUsername(user.getUid());
-            readUserData(user.getUid());
+            Query checkUser = reference.orderByChild(user.getUid());
+            checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean business = false;
+                    if (dataSnapshot.exists()) {
+
+                        for (DataSnapshot o : dataSnapshot.getChildren())
+                            if (o.getKey().equals(Utilities.getCurrentUID())) {
+                                business = (boolean) o.child("advanced").getValue();
+                                editor.putBoolean("advanced", business);
+                                editor.apply();
+                                callBack.onCallBack(null,false,false);
+                            }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
-    private void readUserData(String user) {
+    /*private void readUserData(String user) {
         Query checkUser = reference.orderByChild(user);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean business = false;
                 if (dataSnapshot.exists()) {
-                    Utilities.closeProgressDialog();
+
                     for (DataSnapshot o : dataSnapshot.getChildren())
                         if (o.getKey().equals(Utilities.getCurrentUID())) {
                             business = (boolean) o.child("advanced").getValue();
@@ -302,5 +347,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 }

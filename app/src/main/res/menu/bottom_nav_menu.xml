@@ -3,11 +3,11 @@
     <item
         android:id="@+id/profile"
         android:icon="@drawable/icons8_user_100px"
-        android:title="Profile" />
+        android:title="Profilo" />
     <item
         android:id="@+id/search"
         android:icon="@drawable/icons8_search_100px"
-        android:title="Search" />
+        android:title="Cerca" />
     <item
         android:id="@+id/home"
         android:icon="@drawable/icons8_home_52px"
@@ -15,7 +15,7 @@
     <item
         android:id="@+id/add"
         android:icon="@drawable/icons8_add_60px"
-        android:title="Add Manual" />
+        android:title="Aggiungi" />
     <item
         android:id="@+id/logout"
         android:icon="@drawable/icons8_logout_rounded_left_64px"

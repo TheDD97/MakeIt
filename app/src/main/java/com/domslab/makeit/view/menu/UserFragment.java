@@ -92,7 +92,6 @@ public class UserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         scrollView = view.findViewById(R.id.user_fragment_scroll);
-        System.out.println("content height" + preferences.getInt("contentHeight", 0));
         //scrollView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, preferences.getInt("contentHeight", 0)));
 
         layouts = new ArrayList<>();
@@ -126,7 +125,7 @@ public class UserFragment extends Fragment {
                 if (!editing) {
                     enableAll();
                     editing = true;
-                    edit.setText("Confirm");
+                    edit.setText(getResources().getText(R.string.confirm));
                     cancel.setBackgroundColor(Color.RED);
                 } else {
                     checkUsername();
@@ -150,7 +149,7 @@ public class UserFragment extends Fragment {
                         updateUser(userUpdate, t);
                         editing = false;
                         cancel.setBackgroundColor(Color.BLUE);
-                        edit.setText("Edit");
+                        edit.setText(getResources().getText(R.string.modify));
                     }
                     check = true;
                 }
@@ -179,8 +178,8 @@ public class UserFragment extends Fragment {
         reference = rootNode.getReference("users");
         reference.child(Utilities.getAuthorisation().getUid()).setValue(userUpdate);
         user = userUpdate;
-        usernameLabel.setText("Hi, " + user.getUsername() + "!");
-        t.setText("Done");
+        usernameLabel.setText("Ciao, " + user.getUsername() + "!");
+        t.setText("Successo!");
         t.show();
         disableAll();
         editing = false;
@@ -189,7 +188,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("USRFRG", "ONPAUSE");
+
         setCurrentUser();
     }
 
@@ -202,7 +201,7 @@ public class UserFragment extends Fragment {
                 name.setText(list.get(0));
                 surname.setText(list.get(1));
                 username.setText(list.get(2));
-                usernameLabel.setText("Hi " + list.get(2) + "!");
+                usernameLabel.setText("Ciao " + list.get(2) + "!");
                 user = new UserHelperClass(list.get(0), list.get(1), preferences.getString("currentEmail", null), business, list.get(2), wait);
                 Utilities.closeProgressDialog();
             }

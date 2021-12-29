@@ -85,20 +85,18 @@ public class SignUp extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String id = Utilities.getAuthorisation().getCurrentUser().getUid();
                                 UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString().toLowerCase(Locale.ROOT), false, username.getText().toString(), yes.isChecked());
                                 reference.child(id).setValue(nUser);
                                 Utilities.closeProgressDialog();
-                                Toast.makeText(SignUp.this, "DONE",
+                                Toast.makeText(SignUp.this, "Registrazione effettuata con successo",
                                         Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(v.getContext(), "Authentication failed.",
+                                Toast.makeText(v.getContext(), "Registrazione fallita.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -196,23 +194,7 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    private void updateUI(FirebaseUser user) {
 
-
-        user = Utilities.getAuthorisation().getCurrentUser();
-        if (user == null) {
-            Toast.makeText(this.getApplicationContext(), "ERROR",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            String id = Utilities.getAuthorisation().getCurrentUser().getUid();
-            UserHelperClass nUser = new UserHelperClass(name.getText().toString(), surname.getText().toString(), email.getText().toString().toLowerCase(Locale.ROOT), false, username.getText().toString(), yes.isChecked());
-            reference.child(id).setValue(nUser);
-            Utilities.closeProgressDialog();
-            Toast.makeText(this.getApplicationContext(), "DONE",
-                    Toast.LENGTH_SHORT).show();
-        }
-        finish();
-    }
 }
 
 

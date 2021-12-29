@@ -67,14 +67,14 @@ public class Timer extends ConstraintLayout {
                                 } else {
                                     stop = true;
                                     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationChannel channel = new NotificationChannel("makeIt", "time", NotificationManager.IMPORTANCE_DEFAULT);
-                                    channel.setDescription("time is out");
+                                    NotificationChannel channel = new NotificationChannel("makeIt", "Tempo", NotificationManager.IMPORTANCE_DEFAULT);
+                                    channel.setDescription("Il tempo è scaduto");
                                     NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
                                     notificationManager.createNotificationChannel(channel);
                                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channel.getId())
                                             .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                                            .setContentTitle("Hurry up!")
-                                            .setContentText("Time is out!!")
+                                            .setContentTitle("Affrettati!")
+                                            .setContentText("Il tempo è scaduto!!")
                                             .setSound(alarmSound)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                                     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getContext());

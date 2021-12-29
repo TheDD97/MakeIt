@@ -104,16 +104,16 @@ public class AddFragment extends Fragment {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setMessage(Utilities.checkUpload);
                 alertDialog.setCancelable(false);
-                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         uploadManual(new FirebaseCallBack() {
                             @Override
                             public void onCallBack(List<String> list, boolean business, boolean wait) {
                                 if (noError) {
-                                    Toast.makeText(getContext(), "Done.",
+                                    Toast.makeText(getContext(), "Fatto.",
                                             Toast.LENGTH_SHORT).show();
-                                } else Toast.makeText(getContext(), "ERROR! TRY AGAIN.",
+                                } else Toast.makeText(getContext(), "Errore, riprova.",
                                         Toast.LENGTH_SHORT).show();
 
                             }
