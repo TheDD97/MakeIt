@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.domslab.makeit"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary true
@@ -65,4 +65,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0"*/
     implementation "com.etebarian:meow-bottom-navigation-java:1.2.0"
     implementation 'com.google.android.material:material:1.0.0-rc02'
+
+    //youtube video
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 }

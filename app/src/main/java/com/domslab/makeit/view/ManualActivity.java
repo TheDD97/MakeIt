@@ -3,6 +3,8 @@ package com.domslab.makeit.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.Utilities;
@@ -35,8 +39,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 /*import com.ortiz.touchview.TouchImageView;*/
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.zolad.zoominimageview.ZoomInImageView;
 
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class ManualActivity extends AppCompatActivity {
@@ -52,7 +61,9 @@ public class ManualActivity extends AppCompatActivity {
     private Timer timer;
     private ZoomInImageView img;
     private CustomTextView pageText;
+    private YoutubePlayer player;
     private float density;
+    private ArrayList<View> views;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +71,17 @@ public class ManualActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manual_page);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
-        //pageImage = findViewById(R.id.page_image);
-
-        //pageText = findViewById(R.id.page_text);
         pageNum = findViewById(R.id.current_page);
         manualName = findViewById(R.id.manual_name_label);
         body = findViewById(R.id.body);
+        exit = findViewById(R.id.exit);
         readManual();
+        views = new ArrayList<>();
+        views.add(exit);
+        views.add(manualName);
+        views.add(findViewById(R.id.bottom));
+
+
         next.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -81,7 +96,7 @@ public class ManualActivity extends AppCompatActivity {
                 setCurrentPage(--currentPage);
             }
         });
-        exit = findViewById(R.id.exit);
+
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +199,7 @@ public class ManualActivity extends AppCompatActivity {
 
                 /*pageText.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
                 pageText.setGravity(Gravity.CENTER_HORIZONTAL);*/
+                views.add(pageText);
                 body.addView(pageText);
 
             }
@@ -201,11 +217,15 @@ public class ManualActivity extends AppCompatActivity {
                 layoutParams.width = 800;
                 layoutParams.height = 800;
                 img.setLayoutParams(layoutParams);
+                views.add(img);
                 body.addView(img);
             }
             if (currentManualPage.hasItem("timer")) {
                 timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
                 body.addView(timer);
+                views.add(timer);
+                player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views);
+                body.addView(player);
             }
         }
     }
@@ -215,9 +235,12 @@ public class ManualActivity extends AppCompatActivity {
         next.setVisibility(View.VISIBLE);
         if (timer != null) {
             timer.stop();
+            views.remove(timer);
             body.removeView(timer);
             timer = null;
         }
+        views.remove(img);
+        views.remove(pageText);
         body.removeView(img);
         body.removeView(pageText);
     }
