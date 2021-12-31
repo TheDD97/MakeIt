@@ -62,12 +62,19 @@ public class ManualActivity extends AppCompatActivity {
     private ZoomInImageView img;
     private CustomTextView pageText;
     private YoutubePlayer player;
-    private float density;
+    private float time_elapsed = 0;
+    private boolean fullScreen = false;
+
     private ArrayList<View> views;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentPage = savedInstanceState.getInt("page");
+            time_elapsed = savedInstanceState.getFloat("timing");
+            fullScreen = savedInstanceState.getBoolean("full_screen");
+        }
         setContentView(R.layout.activity_manual_page);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
@@ -207,14 +214,13 @@ public class ManualActivity extends AppCompatActivity {
                 //pageImage.setVisibility(View.VISIBLE);
                 System.out.println(currentManualPage.getItem("image"));
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
-                density = getResources().getDisplayMetrics().density;
                 img = new ZoomInImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                 /*img.setMinimumWidth((int) (400 * density));
                 img.setMinimumHeight((int) (900 * density));
 */
                 ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
-                layoutParams.width = 800;
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 layoutParams.height = 800;
                 img.setLayoutParams(layoutParams);
                 views.add(img);
@@ -224,7 +230,10 @@ public class ManualActivity extends AppCompatActivity {
                 timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
                 body.addView(timer);
                 views.add(timer);
-                player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views);
+                if (time_elapsed == 0)
+                    player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views, 0, false, fullScreen);
+                else
+                    player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views, time_elapsed, true, fullScreen);
                 body.addView(player);
             }
         }
@@ -243,10 +252,21 @@ public class ManualActivity extends AppCompatActivity {
         views.remove(pageText);
         body.removeView(img);
         body.removeView(pageText);
+        body.removeView(player);
     }
 
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("page", currentPage);
+        if (player != null) {
+            outState.putFloat("timing", player.getTime());
+            outState.putBoolean("full_screen", player.isFullScreen());
+        }
     }
 }
