@@ -30,4 +30,5 @@
     <string name="upload_file">Conferma</string>
     <string name="filter_category_label">"Seleziona la categoria: "</string>
     <string name="modify">Modifica</string>
+    <string name="owner">"Pubblicato da: "</string>
 </resources>

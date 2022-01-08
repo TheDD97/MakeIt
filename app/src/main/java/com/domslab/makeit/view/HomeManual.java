@@ -1,13 +1,10 @@
 package com.domslab.makeit.view;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,12 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.domslab.makeit.R;
-import com.domslab.makeit.adapters.ManualAdapter;
-import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.menu.HomeContainer;
-import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
-import com.domslab.makeit.view.pagerFragment.MyManualFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 public class HomeManual extends AppCompatActivity {
     private TextView name;
     private TextView descriptionContent;
+    private TextView owner;
     private ImageView cover;
     private ImageButton exit;
     private TextView date;
@@ -56,6 +50,7 @@ public class HomeManual extends AppCompatActivity {
         start = findViewById(R.id.start);
         date = findViewById(R.id.date);
         exit = findViewById(R.id.home_exit);
+        owner = findViewById(R.id.owner);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +97,30 @@ public class HomeManual extends AppCompatActivity {
                                 descriptionContent.setText(o.child("description").getValue().toString());
                             if (o.hasChild("date"))
                                 date.setText(o.child("date").getValue().toString());
+                            if(o.hasChild("owner")){
+                                System.out.println("HO UN PROPRIETARIO: "+o.child("owner").getValue().toString());
+                                FirebaseDatabase node = FirebaseDatabase.getInstance(Utilities.path);
+                                DatabaseReference ref = node.getReference("users");
+                                Query checkOwner = ref;
+                                checkOwner.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()){
+                                            for (DataSnapshot own : snapshot.getChildren()){
+                                                System.out.println(own.child("username").getValue().toString());
+                                                if(own.getKey().equals(o.child("owner").getValue().toString())){
+                                                    owner.setText(own.child("username").getValue().toString());
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
                         }
                     }
                     Utilities.closeProgressDialog();
