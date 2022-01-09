@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/filter_category_label" />
 
             <RadioGroup
@@ -47,6 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:singleLine="true"
                     android:text="Tutte" />
 
@@ -55,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:singleLine="true"
                     android:text="Food"
                     android:textAllCaps="false" />
@@ -64,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:singleLine="true"
                     android:text="Toys" />
 
@@ -72,6 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:singleLine="true"
                     android:text="Home" />
             </RadioGroup>

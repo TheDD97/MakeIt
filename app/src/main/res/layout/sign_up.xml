@@ -25,6 +25,7 @@
                 android:id="@+id/sign_up_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -42,6 +43,7 @@
                 android:id="@+id/sign_up_surname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -58,6 +60,7 @@
                 android:id="@+id/sign_up_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -74,6 +77,7 @@
                 android:id="@+id/sign_up_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:inputType="textEmailAddress"
                 android:singleLine="true" />
 
@@ -92,6 +96,7 @@
                 android:id="@+id/sign_up_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:inputType="textPassword"
                 android:singleLine="true" />
 
@@ -110,6 +115,7 @@
                 android:id="@+id/sign_up_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:inputType="textPassword"
                 android:singleLine="true" />
 
@@ -118,6 +124,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/vollkorn_variablefont_wght"
             android:text="@string/is_business_account_question"
             android:textSize="18sp" />
 
@@ -131,6 +138,7 @@
                 android:id="@+id/yesRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/is_business"
                 android:textSize="18sp" />
 
@@ -138,6 +146,7 @@
                 android:id="@+id/noRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/is_not_business"
                 android:textSize="18sp" />
         </RadioGroup>
@@ -152,12 +161,14 @@
                 android:id="@+id/cancel_sing_up"
                 android:layout_width="157dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/confirm_sign_up"
                 android:layout_width="157dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/confirm" />
 
         </LinearLayout>

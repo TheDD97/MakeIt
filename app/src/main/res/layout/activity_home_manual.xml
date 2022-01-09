@@ -15,13 +15,14 @@
         android:layout_gravity="end"
         android:background="#00FFFFFF"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/exit_2" />
+        app:srcCompat="@drawable/red_exit" />
 
     <TextView
         android:id="@+id/home_manual_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/vollkorn_variablefont_wght"
         android:text="@string/no_name"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -44,41 +45,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/available_from" />
+            android:layout_weight="0"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/no_date" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
+                android:text="@string/owner" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
+                android:text="@string/no_date" />
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/owner" />
-
-        <TextView
-            android:id="@+id/owner"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/no_date" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
+                android:text="@string/available_from" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
+                android:text="@string/no_date" />
+        </LinearLayout>
     </LinearLayout>
 
     <ScrollView
@@ -89,23 +95,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/description_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
                 android:layout_marginTop="0dp"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:paddingTop="0dp"
-                android:text="@string/description_label" />
+                android:text="@string/description_label"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
+                android:fontFamily="@font/vollkorn_variablefont_wght"
                 android:text="@string/no_description" />
 
         </LinearLayout>
@@ -118,5 +127,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="50dp"
         android:layout_weight="0"
+        android:fontFamily="@font/vollkorn_variablefont_wght"
         android:text="@string/start" />
 </LinearLayout>
