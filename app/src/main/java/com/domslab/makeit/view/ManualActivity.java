@@ -2,6 +2,7 @@ package com.domslab.makeit.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.domslab.makeit.model.ManualPage;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.domslab.makeit.view.menu.HomeContainer;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -65,6 +67,7 @@ public class ManualActivity extends AppCompatActivity {
     private float time_elapsed = 0;
     private boolean fullScreen = false;
 
+    private ConstraintLayout screen;
     private ArrayList<View> views;
 
     @Override
@@ -82,6 +85,7 @@ public class ManualActivity extends AppCompatActivity {
         manualName = findViewById(R.id.manual_name_label);
         body = findViewById(R.id.body);
         exit = findViewById(R.id.exit);
+        //screen = findViewById(R.id.screen);
         readManual();
         views = new ArrayList<>();
         views.add(exit);
@@ -146,10 +150,11 @@ public class ManualActivity extends AppCompatActivity {
                                             if (snapshot.hasChild("text"))
                                                 manualPage.add("text", snapshot.child("text").getValue().toString());
                                             if (snapshot.hasChild("timer")) {
-                                                System.out.println("trovato");
                                                 manualPage.add("timer", snapshot.child("timer").getValue().toString());
                                                 System.out.println(snapshot.child("timer").getValue().toString());
                                             }
+                                            if (snapshot.hasChild("yt_video"))
+                                                manualPage.add("yt_video", snapshot.child("yt_video").getValue().toString());
                                             manual.addPage(Integer.toString(counter), manualPage);
                                             counter++;
                                         } else {
@@ -220,6 +225,7 @@ public class ManualActivity extends AppCompatActivity {
                 img.setMinimumHeight((int) (900 * density));
 */
                 ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
+
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 layoutParams.height = 800;
                 img.setLayoutParams(layoutParams);
@@ -230,10 +236,13 @@ public class ManualActivity extends AppCompatActivity {
                 timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
                 body.addView(timer);
                 views.add(timer);
+            }
+            if (currentManualPage.hasItem("yt_video")) {
+                ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
                 if (time_elapsed == 0)
-                    player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views, 0, false, fullScreen);
+                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), views, 0,  fullScreen, layoutParams);
                 else
-                    player = new YoutubePlayer(ManualActivity.this, "aE4LELSbqKo", getLifecycle(), views, time_elapsed, true, fullScreen);
+                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), views, time_elapsed,  fullScreen, layoutParams);
                 body.addView(player);
             }
         }
@@ -269,4 +278,6 @@ public class ManualActivity extends AppCompatActivity {
             outState.putBoolean("full_screen", player.isFullScreen());
         }
     }
+
+
 }

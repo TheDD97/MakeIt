@@ -226,6 +226,8 @@ public class AddFragment extends Fragment {
                             }
                             if (jsonObject.has("timer"))
                                 manualPage.add("timer", jsonObject.getString("timer"));
+                            if(jsonObject.has("yt_video"))
+                                manualPage.add("yt_video",jsonObject.getString("yt_video"));
                         }
                         if (manualPage.getPageContent().isEmpty()) {
                             Toast.makeText(getContext(), Utilities.PAGE_EMPTY + page,

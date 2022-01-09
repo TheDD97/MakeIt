@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -25,21 +27,21 @@ public class YoutubePlayer extends ConstraintLayout {
     private YouTubePlayerView player;
     private Activity activity;
     private float seconds;
+    private ArrayList<View> views;
 
-    public YoutubePlayer(@NonNull Context context, String id, Lifecycle lifecycle, ArrayList<View> views, float time, boolean autostart, boolean fullscreen) {
+    public YoutubePlayer(@NonNull Context context, String id, Lifecycle lifecycle, ArrayList<View> views, float time, boolean fullscreen, ViewGroup.LayoutParams layoutParams) {
         super(context);
         inflate(getContext(), R.layout.yt_player, this);
         this.activity = (Activity) context;
         player = findViewById(R.id.yt_player);
         lifecycle.addObserver(player);
-
+        this.views = views;
         player.setEnableAutomaticInitialization(false);
+
         player.initialize(new YouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                if (!autostart)
-                    youTubePlayer.cueVideo(id, time);
-                else youTubePlayer.loadVideo(id, time);
+                youTubePlayer.cueVideo(id, time);
             }
 
             @Override
@@ -90,33 +92,43 @@ public class YoutubePlayer extends ConstraintLayout {
         player.addFullScreenListener(new YouTubePlayerFullScreenListener() {
             @Override
             public void onYouTubePlayerEnterFullScreen() {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                hideSystemUi();
-                System.out.println(player.isFullScreen());
-                for (View v : views) {
-                    v.setVisibility(GONE);
-                    v.invalidate();
-                }
+
+
+                /*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 0);
+                layoutParams = params;
+                setLayoutParams(layoutParams);
+                *setRotation(90);
+                LinearLayout.LayoutParams playerParams = (LinearLayout.LayoutParams) getLayoutParams();
+                System.out.println(layoutParams.height + " : " + layoutParams.width);
+                playerParams.width = layoutParams.height;
+                playerParams.height = layoutParams.width;*/
                 //player.enterFullScreen();
 
             }
 
             @Override
             public void onYouTubePlayerExitFullScreen() {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+               /* //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 showSystemUi();
                 System.out.println(player.isFullScreen());
-                for (View v : views) {
-                    v.setVisibility(VISIBLE);
-                    v.invalidate();
-                }
 
-                //player.exitFullScreen();
 
+                setRotation(0);
+                LinearLayout.LayoutParams playerParams = (LinearLayout.LayoutParams) getLayoutParams();
+                playerParams.width = LayoutParams.WRAP_CONTENT;
+                playerParams.height = LayoutParams.WRAP_CONTENT;
+                //player.exitFullScreen();*/
+               /* if (activity.getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                    System.out.println("land");
+                    for (View v : views) {
+                        v.setVisibility(VISIBLE);
+                        v.invalidate();
+                    }
+                    showSystemUi();
+                }*/
             }
         });
-        if (fullscreen)
-            player.enterFullScreen();
 
 
     }
@@ -144,4 +156,5 @@ public class YoutubePlayer extends ConstraintLayout {
     public boolean isFullScreen() {
         return player.isFullScreen();
     }
+
 }
