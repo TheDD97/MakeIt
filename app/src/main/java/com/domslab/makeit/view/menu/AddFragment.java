@@ -262,7 +262,6 @@ public class AddFragment extends Fragment {
                 else {
                     lastId.append(Integer.toString(0));
                 }
-                System.out.println(lastId.toString());
                 Integer id = Integer.parseInt(lastId.toString()) + 1;
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

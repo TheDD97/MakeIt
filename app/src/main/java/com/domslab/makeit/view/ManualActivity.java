@@ -153,14 +153,12 @@ public class ManualActivity extends AppCompatActivity {
                                         ManualPage manualPage = new ManualPage();
                                         if (content.hasChild(Integer.toString(counter))) {
                                             DataSnapshot snapshot = content.child(Integer.toString(counter)).child("pageContent");
-                                            System.out.println(snapshot.getValue());
                                             if (snapshot.hasChild("image"))
                                                 loadImage(currentManual, Integer.toString(counter), manualPage);
                                             if (snapshot.hasChild("text"))
                                                 manualPage.add("text", snapshot.child("text").getValue().toString());
                                             if (snapshot.hasChild("timer")) {
                                                 manualPage.add("timer", snapshot.child("timer").getValue().toString());
-                                                System.out.println(snapshot.child("timer").getValue().toString());
                                             }
                                             if (snapshot.hasChild("yt_video"))
                                                 manualPage.add("yt_video", snapshot.child("yt_video").getValue().toString());
@@ -223,7 +221,6 @@ public class ManualActivity extends AppCompatActivity {
             }
             if (currentManualPage.hasItem("image")) {
                 //pageImage.setVisibility(View.VISIBLE);
-                System.out.println(currentManualPage.getItem("image"));
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 img = new ZoomInImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
@@ -285,26 +282,10 @@ public class ManualActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        System.out.println("pause");
-
-
-    }
-
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        System.out.println("START");
-
-    }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        System.out.println("resume");
         SharedPreferences preferences = getSharedPreferences("video", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         for (int i = 0; i < body.getChildCount(); ++i)

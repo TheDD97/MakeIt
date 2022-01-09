@@ -73,7 +73,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                             new FavouriteFirebaseCallBack() {
                                 @Override
                                 public void loadFavourite(ArrayList<String> ids) {
-                                    //System.out.println(ids.contains(manualCards.get(currentPosition).getKey()));
                                     if (ids.contains(manualCards.get(currentPosition).getKey())) {
                                         holder.favourite.setImageResource(R.drawable.ic_heart_on);
                                     } else {

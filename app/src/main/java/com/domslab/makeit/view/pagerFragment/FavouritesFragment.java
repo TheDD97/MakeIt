@@ -97,7 +97,6 @@ public class FavouritesFragment extends Fragment implements ManualAdapter.OnManu
     public void onManualClick(int position) {
         Intent intent = new Intent(getContext(), HomeManual.class);
         intent.putExtra("manualId", manualCards.get(position).getKey());
-        System.out.println(manualCards.get(position).getKey());
         startActivity(intent);
     }
 

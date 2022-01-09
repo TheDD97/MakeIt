@@ -48,7 +48,6 @@ public class YoutubePlayer extends ConstraintLayout {
             public void onYouTubePlayerEnterFullScreen() {
                 Intent intent = new Intent(activity, FullscreenActivity.class);
                 //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                System.out.println(id + ": " + getTime());
                 intent.putExtra("id", id);
                 intent.putExtra("time", getTime());
                 activity.startActivity(intent);

@@ -97,29 +97,31 @@ public class HomeManual extends AppCompatActivity {
                                 descriptionContent.setText(o.child("description").getValue().toString());
                             if (o.hasChild("date"))
                                 date.setText(o.child("date").getValue().toString());
-                            if(o.hasChild("owner")){
-                                System.out.println("HO UN PROPRIETARIO: "+o.child("owner").getValue().toString());
-                                FirebaseDatabase node = FirebaseDatabase.getInstance(Utilities.path);
-                                DatabaseReference ref = node.getReference("users");
-                                Query checkOwner = ref;
-                                checkOwner.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()){
-                                            for (DataSnapshot own : snapshot.getChildren()){
-                                                System.out.println(own.child("username").getValue().toString());
-                                                if(own.getKey().equals(o.child("owner").getValue().toString())){
-                                                    owner.setText(own.child("username").getValue().toString());
+                            if (o.hasChild("owner")) {
+                                if (o.child("owner").getValue().toString().equals(Utilities.getAuthorisation().getCurrentUser().getUid()))
+                                    owner.setText("Te");
+                                else {
+                                    FirebaseDatabase node = FirebaseDatabase.getInstance(Utilities.path);
+                                    DatabaseReference ref = node.getReference("users");
+                                    Query checkOwner = ref;
+                                    checkOwner.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                for (DataSnapshot own : snapshot.getChildren()) {
+                                                    if (own.getKey().equals(o.child("owner").getValue().toString())) {
+                                                        owner.setText(own.child("username").getValue().toString());
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             }
                         }
                     }

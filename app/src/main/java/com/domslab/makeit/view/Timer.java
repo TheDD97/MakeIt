@@ -41,7 +41,6 @@ public class Timer extends ConstraintLayout {
         inflate(getContext(), R.layout.timer, this);
 
         progressBar = findViewById(R.id.progress_bar);
-        System.out.println(progressBar);
         this.time = time;
         progressBar.setMax(time);
         currentTime = findViewById(R.id.timer);

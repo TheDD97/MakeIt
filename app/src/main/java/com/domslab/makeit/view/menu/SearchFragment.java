@@ -129,7 +129,6 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     @Override
     public void onManualClick(int position) {
-        System.out.print(position);
         Intent intent = new Intent(getContext(), HomeManual.class);
         intent.putExtra("manualId", filteredCard.get(position).getKey());
         startActivity(intent);

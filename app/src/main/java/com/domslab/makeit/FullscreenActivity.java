@@ -51,7 +51,6 @@ public class FullscreenActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            System.out.println(extras.getString("id") + '\n' + extras.getFloat("time"));
             YoutubePlayer player = new YoutubePlayer(FullscreenActivity.this, extras.getString("id"), getLifecycle(), extras.getFloat("time"));
             player.setFullScreen();
             container.addView(player);

@@ -96,7 +96,6 @@ public class NewsFragment extends Fragment implements ManualAdapter.OnManualList
         Intent intent = new Intent(getContext(), HomeManual.class);
         getActivity().finish();
         intent.putExtra("manualId", manualCards.get(position).getKey());
-        System.out.println(manualCards.get(position).getKey());
         startActivity(intent);
     }
 
