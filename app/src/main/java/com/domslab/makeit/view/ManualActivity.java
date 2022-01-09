@@ -25,6 +25,7 @@ import com.domslab.makeit.model.Manual;
 import com.domslab.makeit.model.ManualPage;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -65,7 +66,6 @@ public class ManualActivity extends AppCompatActivity {
     private CustomTextView pageText;
     private YoutubePlayer player;
     private float time_elapsed = 0;
-    private boolean fullScreen = false;
 
     private ConstraintLayout screen;
     private ArrayList<View> views;
@@ -75,9 +75,9 @@ public class ManualActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             currentPage = savedInstanceState.getInt("page");
-            time_elapsed = savedInstanceState.getFloat("timing");
-            fullScreen = savedInstanceState.getBoolean("full_screen");
+            time_elapsed = savedInstanceState.getFloat("time");
         }
+
         setContentView(R.layout.activity_manual_page);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
@@ -91,7 +91,16 @@ public class ManualActivity extends AppCompatActivity {
         views.add(exit);
         views.add(manualName);
         views.add(findViewById(R.id.bottom));
-
+        SharedPreferences preferences = getSharedPreferences("video", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        for (int i = 0; i < body.getChildCount(); ++i)
+            if (body.getChildAt(i).getClass().equals(YoutubePlayer.class)) {
+                body.removeView(body.getChildAt(i));
+                player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), preferences.getFloat("time", 0));
+                body.addView(player);
+                break;
+            }
+        editor.remove("time").apply();
 
         next.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -208,9 +217,6 @@ public class ManualActivity extends AppCompatActivity {
             if (currentManualPage.hasItem("text")) {
                 pageText = new CustomTextView(ManualActivity.this);
                 pageText.setText(currentManualPage.getItem("text"));
-
-                /*pageText.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
-                pageText.setGravity(Gravity.CENTER_HORIZONTAL);*/
                 views.add(pageText);
                 body.addView(pageText);
 
@@ -240,9 +246,9 @@ public class ManualActivity extends AppCompatActivity {
             if (currentManualPage.hasItem("yt_video")) {
                 ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
                 if (time_elapsed == 0)
-                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), views, 0,  fullScreen, layoutParams);
+                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), 0);
                 else
-                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), views, time_elapsed,  fullScreen, layoutParams);
+                    player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), time_elapsed);
                 body.addView(player);
             }
         }
@@ -274,10 +280,40 @@ public class ManualActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("page", currentPage);
         if (player != null) {
-            outState.putFloat("timing", player.getTime());
-            outState.putBoolean("full_screen", player.isFullScreen());
+            outState.putFloat("time", player.getTime());
+            //outState.putBoolean("full_screen", player.isFullScreen());
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("pause");
 
+
+    }
+
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        System.out.println("START");
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        System.out.println("resume");
+        SharedPreferences preferences = getSharedPreferences("video", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        for (int i = 0; i < body.getChildCount(); ++i)
+            if (body.getChildAt(i).getClass().equals(YoutubePlayer.class)) {
+                body.removeView(body.getChildAt(i));
+                player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), preferences.getFloat("time", 0));
+                body.addView(player);
+                break;
+            }
+        editor.remove("time").apply();
+    }
 }

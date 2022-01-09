@@ -36,7 +36,7 @@
         android:layout_width="0dp"
 
         android:layout_height="fill_parent"
-        android:paddingBottom="20dp"
+        android:paddingBottom="60dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/manual_name_label">
@@ -58,7 +58,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#00FFFFFF"
-        android:elevation="2dp"
         android:gravity="bottom"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
