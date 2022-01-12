@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class HomeContainer extends AppCompatActivity /*implements BottomNavigationView.OnNavigationItemSelectedListener*/ {
+public class HomeContainer extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private BottomNavigationView navigationView;
     private UserFragment userFragment;
     private HomeFragment homeFragment;
@@ -32,7 +32,7 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
     private SharedPreferences preferences;
     private DatabaseReference reference;
     private FirebaseDatabase rootNode;
-    private MeowBottomNavigation bottomNavigation;
+    //private MeowBottomNavigation bottomNavigation;
 
     @Override
     protected void onDestroy() {
@@ -49,7 +49,7 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
 
-        bottomNavigation = (MeowBottomNavigation) findViewById(R.id.bottomNavigationView);
+        /*bottomNavigation = (MeowBottomNavigation) findViewById(R.id.bottomNavigationView);
         bottomNavigation.setCountTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.vollkorn_variablefont_wght));
         bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.icons8_user_100px));
         bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.icons8_search_100px));
@@ -57,24 +57,24 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
         if (preferences.getBoolean("advanced", false))
             bottomNavigation.add(new MeowBottomNavigation.Model(4, R.drawable.icons8_add_60px));
         bottomNavigation.add(new MeowBottomNavigation.Model(5, R.drawable.icons8_logout_rounded_left_64px));
-        loadMenuFragment();
+       */ loadMenuFragment();
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        /*navigationView = findViewById(R.id.bottomNavigationView);
-       // navigationView.setOnNavigationItemSelectedListener(this);
+        navigationView = findViewById(R.id.bottomNavigationView);
+        navigationView.setOnNavigationItemSelectedListener(this);
         navigationView.setOnItemSelectedListener(this);
         navigationView.setSelectedItemId(R.id.home);
         navigationView.getMenu().findItem(R.id.add).setVisible(preferences.getBoolean("advanced", false));
-*/
+
 
         /*for (MeowBottomNavigation.Model model : bottomNavigation.getModels())
             System.out.println(model.getId());
         System.out.println(bottomNavigation.getChildCount());
        */
-        bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+        /*bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
             @Override
             public void onClickItem(MeowBottomNavigation.Model item) {
                 System.out.println(item.getId());
@@ -136,7 +136,7 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
 
             }
         });
-        bottomNavigation.show(3, false);
+        bottomNavigation.show(3, false);*/
     }
 
     private void loadMenuFragment() {
@@ -151,7 +151,7 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
 
     }
 
-   /* @Override
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
@@ -200,6 +200,6 @@ public class HomeContainer extends AppCompatActivity /*implements BottomNavigati
                 }
         }
         return false;
-    }*/
+    }
 
 }
