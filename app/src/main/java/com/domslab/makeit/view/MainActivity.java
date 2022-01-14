@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Process;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showRecoverPasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogTheme);
         builder.setTitle("Recupero Password");
         LinearLayout linearLayout = new LinearLayout(this);
         final EditText emailet = new EditText(this);
@@ -211,7 +212,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String email = emailet.getText().toString().trim();
-                beginRecovery(email);
+                if (email.isEmpty())
+                    Toast.makeText(MainActivity.this, "Inserisci l'email prima di procedere", Toast.LENGTH_LONG).show();
+                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                    Toast.makeText(MainActivity.this, "Formato email errato", Toast.LENGTH_LONG).show();
+                else
+                    beginRecovery(email);
+
             }
         });
 
@@ -221,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
         builder.create().show();
     }
 
@@ -292,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateUI(FirebaseUser user,FirebaseCallBack callBack) {
+    private void updateUI(FirebaseUser user, FirebaseCallBack callBack) {
         user = Utilities.getAuthorisation().getCurrentUser();
         /*-------- Check if user is already logged in or not--------*/
         if (user != null) {
@@ -311,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                                 business = (boolean) o.child("advanced").getValue();
                                 editor.putBoolean("advanced", business);
                                 editor.apply();
-                                callBack.onCallBack(null,false,false);
+                                callBack.onCallBack(null, false, false);
                             }
                     }
                 }
