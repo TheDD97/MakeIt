@@ -13,6 +13,10 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/btn_secondary_style.xml" value="0.240625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/btn_style.xml" value="0.240625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/btn_success_background.xml" value="0.16296296296296298" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_focus.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_press.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_primary_style.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_unfocused.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/card_style.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/circle.xml" value="0.1787037037037037" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/dialog_background.xml" value="0.1" />
@@ -28,8 +32,8 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout-land/yt_player.xml" value="0.26927083333333335" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_fullscreen.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_home.xml" value="0.2" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_home_manual.xml" value="0.33" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_home_manual.xml" value="0.34035383319292334" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/custom_layout.xml" value="0.10625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.22447916666666667" />

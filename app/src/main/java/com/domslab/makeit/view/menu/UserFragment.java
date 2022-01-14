@@ -149,7 +149,7 @@ public class UserFragment extends Fragment {
                         updateUser(userUpdate, t);
                         editing = false;
                         cancel.setBackgroundColor(Color.BLUE);
-                        edit.setText(getResources().getText(R.string.modify));
+                        edit.setText(getResources().getText(R.string.edit));
                     }
                     check = true;
                 }
@@ -161,9 +161,9 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 if (editing) {
                     disableAll();
-                    cancel.setBackgroundColor(Color.BLUE);
+                    cancel.setBackgroundColor(Color.TRANSPARENT);
                     editing = false;
-                    edit.setText("edit");
+                    edit.setText(getString(getResources().getIdentifier("edit","string",getContext().getPackageName())));
                     clearError(layouts.size());
                     fillField();
                 }

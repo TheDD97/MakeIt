@@ -29,10 +29,8 @@
     <string name="location_hint">la posizione del file verrà mostrata qui</string>
     <string name="upload_file">Conferma</string>
     <string name="filter_category_label">"Seleziona la categoria: "</string>
-    <string name="modify">Modifica</string>
+    <string name="edit">Modifica</string>
     <string name="owner">"Pubblicato da: "</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="loading">Loading...</string>
 </resources>

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bkg"
     android:orientation="vertical"
+    android:paddingTop="15dp"
     tools:context=".view.HomeManual">
 
     <ImageButton
@@ -120,13 +120,14 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/start"
+        style="@style/CustomButtonSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="50dp"
         android:layout_weight="0"
-        android:fontFamily="@font/vollkorn_variablefont_wght"
         android:text="@string/start" />
+
 </LinearLayout>

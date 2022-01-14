@@ -178,22 +178,19 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/cancel"
-                    android:layout_width="157dp"
+                    style="@style/CustomButtonSecondary"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="?colorSecondary"
-                    android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:text="@string/cancel" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/edit"
-                    android:layout_width="157dp"
+                    style="@style/CustomButtonPrimary"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/vollkorn_variablefont_wght"
-                    android:text="@string/modify" />
+                    android:text="@string/edit" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

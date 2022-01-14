@@ -46,21 +46,18 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/search_file"
+            style="@style/CustomButtonPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/vollkorn_variablefont_wght"
             android:text="@string/select_file" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/upload_file"
+            style="@style/CustomButtonSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0"
-            android:fontFamily="@font/vollkorn_variablefont_wght"
             android:text="@string/upload_file" />
     </LinearLayout>
 

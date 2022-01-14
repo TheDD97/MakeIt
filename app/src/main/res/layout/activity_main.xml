@@ -91,18 +91,19 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/sign_up_login_page"
-            android:layout_width="133dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/vollkorn_variablefont_wght"
+           style="@style/CustomButtonSecondary"
             android:text="@string/signUp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login"
-            android:layout_width="133dp"
+            style="@style/CustomButtonPrimary"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/vollkorn_variablefont_wght"
+
             android:text="@string/login" />
     </LinearLayout>
 
