@@ -167,7 +167,8 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                 return true;
             case R.id.logout:
                 try {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this,R.style.MyAlertDialogTheme);
+                    builder.setTitle("Attenzione!");
                     builder.setMessage("Vuoi disconnetterti?");
                     builder.setCancelable(true);
                     builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
