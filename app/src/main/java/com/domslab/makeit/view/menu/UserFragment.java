@@ -148,7 +148,7 @@ public class UserFragment extends Fragment {
                             userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), user.getWaiting());
                         updateUser(userUpdate, t);
                         editing = false;
-                        cancel.setBackgroundColor(Color.BLUE);
+                        cancel.setBackgroundColor(Color.TRANSPARENT);
                         edit.setText(getResources().getText(R.string.edit));
                     }
                     check = true;
