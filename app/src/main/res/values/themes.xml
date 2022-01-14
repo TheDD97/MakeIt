@@ -50,6 +50,13 @@
         <item name="buttonBarNegativeButtonStyle">@style/buttonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/buttonStyle</item>
 
+    </style>  <style name="MyLoadingDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="fontFamily">@font/vollkorn_variablefont_wght</item>
+        <item name="android:windowBackground">@drawable/progress_dialog_style</item>
+
     </style>
 
     <style name="buttonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                                 updateUI(user, new FirebaseCallBack() {
                                     @Override
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
-                                        Utilities.closeProgressDialog();
+
                                         finish();
                                         launchHome(getApplicationContext());
                                     }
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                                             updateUI(user, new FirebaseCallBack() {
                                                 @Override
                                                 public void onCallBack(List<String> list, boolean business, boolean wait) {
-                                                    Utilities.closeProgressDialog();
+
                                                     finish();
                                                     launchHome(getApplicationContext());
                                                 }
@@ -356,4 +356,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }*/
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utilities.closeProgressDialog();
+    }
 }

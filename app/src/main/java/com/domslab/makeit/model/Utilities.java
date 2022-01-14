@@ -1,11 +1,15 @@
 package com.domslab.makeit.model;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
 import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,29 +55,30 @@ public class Utilities {
     private static FirebaseDatabase rootNode;
     private static DatabaseReference reference;
     private static FirebaseAuth auth = null;
-    private static ProgressDialog progressDialog;
-
+    private static AlertDialog.Builder progressDialog;
+    private static Dialog dialog;
     private Utilities() {
     }
 
     public static void showProgressDialog(Context context, boolean loading) {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(context);
-            if (loading)
+            progressDialog = new AlertDialog.Builder(context,R.style.MyLoadingDialogTheme);
+            /*if (loading)
                 progressDialog.setMessage(Utilities.loading);
             else
-                progressDialog.setMessage(Utilities.verifying);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setIndeterminate(true);
+                progressDialog.setMessage(Utilities.verifying);*/
+            progressDialog.setView(R.layout.progess);
             progressDialog.setCancelable(false);
-            progressDialog.show();
+            dialog = progressDialog.create();
+            dialog.show();
         }
     }
 
     public static void closeProgressDialog() {
         if (progressDialog != null) {
-            progressDialog.dismiss();
+            dialog.dismiss();
             progressDialog = null;
+
         }
     }
 
