@@ -16,6 +16,7 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/dialog_background.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on.xml" value="0.240625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on2.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.240625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/menu_color.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/nav_icon.xml" value="0.16203703703703703" />
@@ -34,12 +35,13 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_news.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_search.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_user.xml" value="0.21" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/row_item.xml" value="0.1816123188405797" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/row_item.xml" value="0.5" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/sign_up.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/timer.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/warning_dialog.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/yt_player.xml" value="0.1015625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/menu/bottom_nav_menu.xml" value="0.16458333333333333" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/xml/resources.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/baseline_star_20.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_off.xml" value="0.12037037037037036" />

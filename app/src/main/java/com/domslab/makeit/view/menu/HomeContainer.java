@@ -15,8 +15,6 @@ import androidx.core.content.res.ResourcesCompat;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.MainActivity;
-
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

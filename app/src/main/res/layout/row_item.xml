@@ -54,11 +54,11 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/fav_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:backgroundTint="#00FFFFFF"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:scaleType="fitEnd"
+        android:src="@drawable/heart_on"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:ignore="SpeakableTextPresentCheck"
