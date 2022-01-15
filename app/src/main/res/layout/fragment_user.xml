@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bkg"
     android:orientation="vertical"
+    android:paddingTop="15dp"
     tools:context=".view.menu.UserFragment">
 
     <TextView
