@@ -71,7 +71,6 @@ public class ManualActivity extends AppCompatActivity {
         manualName = findViewById(R.id.manual_name_label);
         body = findViewById(R.id.body);
         exit = findViewById(R.id.exit);
-        //screen = findViewById(R.id.screen);
         readManual();
         views = new ArrayList<>();
         views.add(exit);
