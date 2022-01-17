@@ -86,7 +86,6 @@ public class ManualActivity extends AppCompatActivity {
                 break;
             }
         editor.remove("time").apply();
-
         next.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -101,7 +100,6 @@ public class ManualActivity extends AppCompatActivity {
                 setCurrentPage(--currentPage);
             }
         });
-
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +116,6 @@ public class ManualActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentManual = extras.getString("manualId");
-
             FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
             DatabaseReference reference = rootNode.getReference("manual");
             Query checkUser = reference.orderByChild(currentManual);
@@ -203,18 +200,12 @@ public class ManualActivity extends AppCompatActivity {
                 pageText.setText(currentManualPage.getItem("text"));
                 views.add(pageText);
                 body.addView(pageText);
-
             }
             if (currentManualPage.hasItem("image")) {
-                //pageImage.setVisibility(View.VISIBLE);
                 byte[] decodedString = Base64.getDecoder().decode(currentManualPage.getItem("image"));
                 img = new ZoomInImageView(ManualActivity.this);
                 img.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
-                /*img.setMinimumWidth((int) (400 * density));
-                img.setMinimumHeight((int) (900 * density));
-*/
                 ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
-
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 layoutParams.height = 800;
                 img.setLayoutParams(layoutParams);
@@ -264,7 +255,6 @@ public class ManualActivity extends AppCompatActivity {
         outState.putInt("page", currentPage);
         if (player != null) {
             outState.putFloat("time", player.getTime());
-            //outState.putBoolean("full_screen", player.isFullScreen());
         }
     }
 
