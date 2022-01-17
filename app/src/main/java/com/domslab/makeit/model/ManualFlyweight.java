@@ -110,14 +110,15 @@ public class ManualFlyweight {
         if (this.context != context)
             this.context = context;
         //favourite.clear();
-        if (s.equals("favourite") && favourite.isEmpty())
+        if (s.equals("favourite") && favourite.isEmpty()){
             manualFactory.createFavouriteList(favourite, new ManualFirebaseCallBack() {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, favourite, true);
-
+                    Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
+        }
         else if (!favourite.isEmpty()) {
             setContent(manualCards, favourite, true);
             ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, false);

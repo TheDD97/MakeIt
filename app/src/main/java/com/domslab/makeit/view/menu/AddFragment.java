@@ -101,7 +101,7 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(),R.style.MyAlertDialogTheme);
                 alertDialog.setMessage(Utilities.checkUpload);
                 alertDialog.setCancelable(false);
                 alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
