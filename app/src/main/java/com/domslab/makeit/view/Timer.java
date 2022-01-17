@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,16 +20,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Constraints;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.domslab.makeit.R;
 
 public class Timer extends ConstraintLayout {
     private ProgressBar progressBar;
     private TextView currentTime;
-    private Button start;
+    private ImageButton start;
     private int currentTimeVal;
     private int time;
-    private Button reset;
+    private ImageButton reset;
     private String minute, second;
     private android.os.Handler handler;
     private Runnable r;
@@ -52,7 +54,7 @@ public class Timer extends ConstraintLayout {
             public void onClick(View v) {
                 if (!countdownStarted) {
                     countdownStarted = true;
-                    start.setText("Stop");
+                    start.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_pause));
                     handler = new Handler();
                     stop = false;
                     r = new Runnable() {
@@ -83,9 +85,9 @@ public class Timer extends ConstraintLayout {
                         }
                     };
                     handler.post(r);
-                }else{
+                } else {
                     countdownStarted = false;
-                    start.setText("start");
+                    start.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_play));
                     stop = true;
                 }
             }
@@ -96,6 +98,7 @@ public class Timer extends ConstraintLayout {
                 currentTimeVal = time;
                 update();
                 stop = true;
+                start.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_play));
                 countdownStarted = false;
             }
         });
