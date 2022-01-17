@@ -1,23 +1,17 @@
 package com.domslab.makeit.view;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
-import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.Utilities;
@@ -25,12 +19,9 @@ import com.domslab.makeit.model.Manual;
 import com.domslab.makeit.model.ManualPage;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.domslab.makeit.view.menu.HomeContainer;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,10 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 /*import com.ortiz.touchview.TouchImageView;*/
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.zolad.zoominimageview.ZoomInImageView;
 
 import java.util.ArrayList;
@@ -66,8 +53,8 @@ public class ManualActivity extends AppCompatActivity {
     private CustomTextView pageText;
     private YoutubePlayer player;
     private float time_elapsed = 0;
-
-    private ConstraintLayout screen;
+    private SwipeListener swipeListener;
+    private ScrollView content;
     private ArrayList<View> views;
 
     @Override
@@ -77,7 +64,6 @@ public class ManualActivity extends AppCompatActivity {
             currentPage = savedInstanceState.getInt("page");
             time_elapsed = savedInstanceState.getFloat("time");
         }
-
         setContentView(R.layout.activity_manual_page);
         next = findViewById(R.id.next);
         previous = findViewById(R.id.previous);
@@ -123,7 +109,8 @@ public class ManualActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        content = findViewById(R.id.content);
+        swipeListener = new SwipeListener(content);
     }
 
     private void readManual() {
@@ -296,5 +283,54 @@ public class ManualActivity extends AppCompatActivity {
                 break;
             }
         editor.remove("time").apply();
+    }
+
+    private class SwipeListener implements View.OnTouchListener {
+        GestureDetector gestureDetector;
+
+        public SwipeListener(View view) {
+            int threshold = 100;
+            int velocity_threshold = 100;
+            GestureDetector.SimpleOnGestureListener listener = new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    float xDiff = e2.getX() - e1.getX();
+                    float yDiff = e2.getY() - e2.getY();
+                    try {
+                        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                            if (Math.abs(xDiff) > threshold && Math.abs(velocityX) > velocity_threshold) {
+                                if (xDiff > 0) {
+                                    //swipe right
+                                    if (currentPage > 1) {
+                                        setCurrentPage(--currentPage);
+                                    }
+                                } else {
+                                    //swipe left
+                                    if (currentPage < manual.size()) {
+                                        setCurrentPage(++currentPage);
+                                    }
+                                }
+                                return true;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                }
+            };
+            gestureDetector = new GestureDetector(listener);
+            view.setOnTouchListener(this);
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            return gestureDetector.onTouchEvent(motionEvent);
+        }
     }
 }
