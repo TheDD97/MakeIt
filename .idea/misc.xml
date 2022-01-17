@@ -24,9 +24,17 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on.xml" value="0.240625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on2.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.240625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_left_arrow.xml" value="0.18796296296296297" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_media_pause.xml" value="0.10208333333333333" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_media_playback_pause__1_.xml" value="0.10208333333333333" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_pause.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_play.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_right_arrow.xml" value="0.18796296296296297" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_stop.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/menu_color.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/nav_icon.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/progess_dialog_style.xml" value="0.10625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/round_corner.xml" value="0.18205128205128204" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/warning_background.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout-land/activity_manual_page.xml" value="0.26927083333333335" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout-land/yt_player.xml" value="0.26927083333333335" />
@@ -46,7 +54,7 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/progess.xml" value="0.33" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/row_item.xml" value="0.5" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/sign_up.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/timer.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/timer.xml" value="0.5076071922544951" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/warning_dialog.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/yt_player.xml" value="0.1015625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/menu/bottom_nav_menu.xml" value="0.16458333333333333" />

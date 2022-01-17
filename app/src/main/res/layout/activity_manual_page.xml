@@ -71,7 +71,7 @@
             android:layout_weight="0"
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/previous_page"
+            app:srcCompat="@drawable/ic_left_arrow"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
@@ -90,7 +90,7 @@
             android:layout_weight="0"
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/next_page"
+            app:srcCompat="@drawable/ic_right_arrow"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
