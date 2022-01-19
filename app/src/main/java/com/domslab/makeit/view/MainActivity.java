@@ -81,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
                                 updateUI(user, new FirebaseCallBack() {
                                     @Override
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
-
+                                        Toast.makeText(MainActivity.this, "Login Riuscito.",
+                                                Toast.LENGTH_SHORT).show();
                                         finish();
                                         launchHome(getApplicationContext());
                                     }
@@ -154,7 +155,8 @@ public class MainActivity extends AppCompatActivity {
                                             updateUI(user, new FirebaseCallBack() {
                                                 @Override
                                                 public void onCallBack(List<String> list, boolean business, boolean wait) {
-
+                                                    Toast.makeText(MainActivity.this, "Login Riuscito.",
+                                                            Toast.LENGTH_SHORT).show();
                                                     finish();
                                                     launchHome(getApplicationContext());
                                                 }
@@ -304,8 +306,6 @@ public class MainActivity extends AppCompatActivity {
         user = Utilities.getAuthorisation().getCurrentUser();
         /*-------- Check if user is already logged in or not--------*/
         if (user != null) {
-            Toast.makeText(this.getApplicationContext(), "Login Riuscito.",
-                    Toast.LENGTH_SHORT).show();
             Utilities.setCurrentUsername(user.getUid());
             Query checkUser = reference.orderByChild(user.getUid());
             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
