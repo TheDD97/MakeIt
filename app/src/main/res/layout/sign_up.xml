@@ -16,7 +16,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_name"
@@ -34,7 +34,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/surname_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_surname"
@@ -51,7 +51,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_username"
@@ -68,7 +68,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_email"
@@ -86,7 +86,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_password"
@@ -105,7 +105,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/confirm_password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_confirm_password"

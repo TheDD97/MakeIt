@@ -29,7 +29,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_email"
@@ -44,13 +44,14 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:fontFamily="@font/vollkorn_variablefont_wght"
-                android:singleLine="true" />
+                android:singleLine="true"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/CustomTextFieldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_password"
@@ -93,9 +94,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sign_up_login_page"
+            style="@style/CustomButtonSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           style="@style/CustomButtonSecondary"
             android:text="@string/signUp" />
 
         <com.google.android.material.button.MaterialButton
