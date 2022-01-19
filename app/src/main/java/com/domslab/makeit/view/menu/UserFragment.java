@@ -46,7 +46,6 @@ public class UserFragment extends Fragment {
     private boolean editing = false, check = true;
     private ArrayList<TextInputLayout> layouts;
     private ArrayList<EditText> texts;
-    private boolean noPassword;
     private boolean noEmail;
     private ScrollView scrollView;
     private SharedPreferences preferences;
@@ -92,8 +91,6 @@ public class UserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         scrollView = view.findViewById(R.id.user_fragment_scroll);
-        //scrollView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, preferences.getInt("contentHeight", 0)));
-
         layouts = new ArrayList<>();
         texts = new ArrayList<>();
         usernameLabel = view.findViewById(R.id.username_label);
@@ -107,11 +104,6 @@ public class UserFragment extends Fragment {
         username = view.findViewById(R.id.username);
         usernameLayout = view.findViewById(R.id.username_layout);
         nEmaiLayout = view.findViewById(R.id.new_email_layout);
-        /*passwordLayout = view.findViewById(R.id.password_layout);
-        password = view.findViewById(R.id.password);
-        confirmPasswordLayout = view.findViewById(R.id.confirm_password_layout);
-        confirmPassword = view.findViewById(R.id.confirm_password);
-        */
         layouts.addAll(Arrays.asList(usernameLayout, nameLayout, surnameLayout, emailLayout, nEmaiLayout));
         texts.addAll(Arrays.asList(username, name, surname, email, nEmail));
         disableAll();
@@ -178,7 +170,7 @@ public class UserFragment extends Fragment {
         reference = rootNode.getReference("users");
         reference.child(Utilities.getAuthorisation().getUid()).setValue(userUpdate);
         user = userUpdate;
-        usernameLabel.setText("Ciao, " + user.getUsername() + "!");
+        usernameLabel.setText("Ciao " + user.getUsername() + "!");
         t.setText("Successo!");
         t.show();
         disableAll();
