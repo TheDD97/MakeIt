@@ -125,7 +125,7 @@ public class ManualFactory {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
-        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(1);
+        Query checkUser = reference.child("manual").orderByChild("date").limitToLast(5);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
