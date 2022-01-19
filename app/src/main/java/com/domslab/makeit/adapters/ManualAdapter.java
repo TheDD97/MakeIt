@@ -56,9 +56,9 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         holder.textView.setText(manualCards.get(position).getName());
         if (visible) {
             if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
-                holder.favourite.setImageResource(R.drawable.heart_off);
+                holder.favourite.setImageResource(R.drawable.ic_heart_off);
             } else {
-                holder.favourite.setImageResource(R.drawable.heart_on);
+                holder.favourite.setImageResource(R.drawable.ic_heart_on);
             }
             holder.favourite.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,9 +70,9 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                                 @Override
                                 public void loadFavourite(ArrayList<String> ids) {
                                     if (ids.contains(manualCards.get(currentPosition).getKey())) {
-                                        holder.favourite.setImageResource(R.drawable.heart_on);
+                                        holder.favourite.setImageResource(R.drawable.ic_heart_on);
                                     } else {
-                                        holder.favourite.setImageResource(R.drawable.heart_off);
+                                        holder.favourite.setImageResource(R.drawable.ic_heart_off);
                                     }
                                     //ManualFlyweight.getInstance().reloadContent(context);
                                     Utilities.closeProgressDialog();

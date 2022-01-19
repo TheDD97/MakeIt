@@ -17,10 +17,11 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_press.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_primary_style.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/button_unfocused.xml" value="0.1515625" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/card_style.xml" value="0.16203703703703703" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/card_style.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/circle.xml" value="0.1787037037037037" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/dialog_background.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.12447916666666667" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_off.xml" value="0.18796296296296297" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on.xml" value="0.240625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_heart_on2.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.240625" />
@@ -31,6 +32,7 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_play.xml" value="0.1515625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_right_arrow.xml" value="0.18796296296296297" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/ic_stop.xml" value="0.1515625" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/image_bkg.xml" value="0.10625" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/menu_color.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/nav_icon.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/drawable/progess_dialog_style.xml" value="0.10625" />
