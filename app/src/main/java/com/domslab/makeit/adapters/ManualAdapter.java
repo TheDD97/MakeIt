@@ -1,6 +1,8 @@
 package com.domslab.makeit.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.domslab.makeit.ReloadFirebaseCallBack;
@@ -19,6 +22,8 @@ import com.domslab.makeit.R;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.ManualFlyweight;
 import com.domslab.makeit.model.Utilities;
+import com.domslab.makeit.view.MainActivity;
+import com.domslab.makeit.view.menu.HomeContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +68,27 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ManualFlyweight.getInstance().deleteManual(manualCards.get(currentPosition).getKey(),view.getContext());
-            }
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.MyAlertDialogTheme);
+                    builder.setTitle("Attenzione!");
+                    builder.setMessage("Vuoi Eliminare il seguente manuale?\n"+holder.textView.getText().toString());
+                    builder.setCancelable(true);
+                    builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ManualFlyweight.getInstance().deleteManual(manualCards.get(currentPosition).getKey(),view.getContext());
+
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
         });
         if (visible) {
             if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
