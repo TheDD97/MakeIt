@@ -10,11 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.domslab.makeit.FavouriteFirebaseCallBack;
+import com.domslab.makeit.ReloadFirebaseCallBack;
 import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.adapters.ManualAdapter;
-import com.domslab.makeit.view.pagerFragment.MyManualFragment;
-import com.domslab.makeit.view.pagerFragment.NewsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -210,9 +207,9 @@ public class ManualFactory {
         DatabaseReference reference = rootNode.getReference();
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
         // Utilities.showProgressDialog(context, true);
-        loadFavourite(new FavouriteFirebaseCallBack() {
+        loadFavourite(new ReloadFirebaseCallBack() {
             @Override
-            public void loadFavourite(ArrayList<String> favouriteIds) {
+            public void reload(ArrayList<String> favouriteIds) {
                 if (!favouriteIds.isEmpty()) {
                     Utilities.showProgressDialog(context, true);
                     ArrayList<String> ids = favouriteIds;
@@ -281,7 +278,7 @@ public class ManualFactory {
         });
     }
 
-    private void loadFavourite(FavouriteFirebaseCallBack callBack) {
+    private void loadFavourite(ReloadFirebaseCallBack callBack) {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
         ArrayList<String> favouriteIds = new ArrayList<>();
@@ -295,7 +292,7 @@ public class ManualFactory {
                             favouriteIds.add(o.child("idManual").getValue().toString());
                         }
                     }
-                    callBack.loadFavourite(favouriteIds);
+                    callBack.reload(favouriteIds);
                 }
             }
 
@@ -306,7 +303,7 @@ public class ManualFactory {
         });
     }
 
-    public void updateFavourite(String id, boolean exist, Context context, ArrayList<String> ids, FavouriteFirebaseCallBack callBack) {
+    public void updateFavourite(String id, boolean exist, Context context, ArrayList<String> ids, ReloadFirebaseCallBack callBack) {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
 
@@ -325,7 +322,7 @@ public class ManualFactory {
                                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                             ids.remove(o.child("idManual").getValue().toString());
                                             Utilities.closeProgressDialog();
-                                            callBack.loadFavourite(ids);
+                                            callBack.reload(ids);
                                         }
                                     });
                                 }
@@ -348,7 +345,7 @@ public class ManualFactory {
             ids.add(uidManualPair.getIdManual());
             reference.child("favourites").child(key).setValue(uidManualPair);
             Utilities.closeProgressDialog();
-            callBack.loadFavourite(ids);
+            callBack.reload(ids);
 
 
         }
@@ -386,17 +383,6 @@ public class ManualFactory {
                                         ArrayList<ManualCard> tmpcards = new ArrayList<>();
                                         for (String k : loaded.keySet())
                                             tmpcards.add(loaded.get(k));
-                                        /*Collections.sort(tmpcards, new Comparator<ManualCard>() {
-                                            @Override
-                                            public int compare(ManualCard o1, ManualCard o2) {
-                                                if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                                    return -1;
-                                                else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
-                                                    return 1;
-                                                return 0;
-                                            }
-                                        });*/
-
                                         ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener);
                                         recyclerView.setAdapter(tmp);
                                     }
@@ -420,4 +406,36 @@ public class ManualFactory {
             }
         });
     }
+
+    public void deleteManual(String id, Context context, ReloadFirebaseCallBack reloadFirebaseCallBack) {
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
+        DatabaseReference reference = rootNode.getReference();
+        Query checkUser = reference.child("manual");
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Utilities.showProgressDialog(context, true);
+                    for (DataSnapshot o : snapshot.getChildren()) {
+                        if (o.getKey().equals(id))
+                            if (o.child("owner").getValue().toString().equals(Utilities.getAuthorisation().getCurrentUser().getUid())) {
+                                o.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                        reloadFirebaseCallBack.reload(null);
+                                    }
+                                });
+                            }
+                    }
+                    // Utilities.closeProgressDialog();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

@@ -2,33 +2,18 @@ package com.domslab.makeit.model;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.domslab.makeit.FavouriteFirebaseCallBack;
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.ReloadFirebaseCallBack;
 import com.domslab.makeit.ManualFirebaseCallBack;
 import com.domslab.makeit.adapters.ManualAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 public class ManualFlyweight {
     private static ManualFlyweight instance = null;
@@ -67,14 +52,14 @@ public class ManualFlyweight {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, myManual, false);
-                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener,true,true);
+                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, true, true);
                     recyclerView.setAdapter(tmp);
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
         } else if (!myManual.isEmpty()) {
             setContent(manualCards, myManual, false);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener,true,true);
+            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, true, true);
             recyclerView.setAdapter(tmp);
             Utilities.closeProgressDialog();
         }
@@ -110,7 +95,7 @@ public class ManualFlyweight {
         if (this.context != context)
             this.context = context;
         //favourite.clear();
-        if (s.equals("favourite") && favourite.isEmpty()){
+        if (s.equals("favourite") && favourite.isEmpty()) {
             manualFactory.createFavouriteList(favourite, new ManualFirebaseCallBack() {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
@@ -118,8 +103,7 @@ public class ManualFlyweight {
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
-        }
-        else if (!favourite.isEmpty()) {
+        } else if (!favourite.isEmpty()) {
             setContent(manualCards, favourite, true);
             ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, false, false);
             recyclerView.setAdapter(tmp);
@@ -169,7 +153,7 @@ public class ManualFlyweight {
             ArrayList<ManualCard> manualCards = new ArrayList<>();
             setContent(manualCards, myManual, false);
             if (recyclerListener.containsKey("myManual")) {
-                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener(),true,true);
+                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener(), true, true);
                 recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
             }
 
@@ -188,16 +172,16 @@ public class ManualFlyweight {
         }
     }
 
-    public void updateManual(String id, Context context, FavouriteFirebaseCallBack callBack) {
+    public void updateManual(String id, Context context, ReloadFirebaseCallBack callBack) {
         ArrayList<String> tmpId = new ArrayList<>();
         ArrayList<ManualCard> cd = new ArrayList<>();
         setContent(cd, favourite, true);
         for (ManualCard c : cd)
             tmpId.add(c.getKey());
         if (!favourite.containsKey(id)) {
-            manualFactory.updateFavourite(id, false, context, tmpId, new FavouriteFirebaseCallBack() {
+            manualFactory.updateFavourite(id, false, context, tmpId, new ReloadFirebaseCallBack() {
                 @Override
-                public void loadFavourite(ArrayList<String> ids) {
+                public void reload(ArrayList<String> ids) {
                     for (String k : ids) {
                         if (!favourite.containsKey(k)) {
                             if (myManual.containsKey(k))
@@ -213,11 +197,11 @@ public class ManualFlyweight {
                     setContent(manualCardsFavourite, favourite, true);
 
                     if (recyclerListener.containsKey("favourite")) {
-                        ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false,false);
+                        ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false, false);
                         recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
                     }
 
-                    callBack.loadFavourite(ids);
+                    callBack.reload(ids);
                 }
 
             });
@@ -231,10 +215,10 @@ public class ManualFlyweight {
                 recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
             }
 
-            manualFactory.updateFavourite(id, true, context, tmpId, new FavouriteFirebaseCallBack() {
+            manualFactory.updateFavourite(id, true, context, tmpId, new ReloadFirebaseCallBack() {
                 @Override
-                public void loadFavourite(ArrayList<String> ids) {
-                    callBack.loadFavourite(ids);
+                public void reload(ArrayList<String> ids) {
+                    callBack.reload(ids);
                 }
             });
         }
@@ -255,7 +239,7 @@ public class ManualFlyweight {
                 myManual.get(card.getKey()).setFavourite(card.getFavourite());
                 // myTmp.clear();
                 setContent(myTmp, myManual, false);
-                ManualAdapter tmp = new ManualAdapter(context, myTmp, recyclerListener.get("myManual").getListener(),true,true);
+                ManualAdapter tmp = new ManualAdapter(context, myTmp, recyclerListener.get("myManual").getListener(), true, true);
                 recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
             }
 
@@ -285,6 +269,37 @@ public class ManualFlyweight {
             public void onCallBack(HashMap<String, ManualCard> manual) {
                 callBack.onCallBack(loaded);
                 Utilities.closeProgressDialog();
+
+            }
+        });
+    }
+
+    public void deleteManual(String key, Context context) {
+        // Utilities.showProgressDialog(context, true);
+        manualFactory.deleteManual(key, context, new ReloadFirebaseCallBack() {
+            @Override
+            public void reload(ArrayList<String> ids) {
+                myManual.remove(key);
+                ArrayList<ManualCard> myTmp = new ArrayList<>();
+                setContent(myTmp, myManual, false);
+                ManualAdapter tmp = new ManualAdapter(context, myTmp, recyclerListener.get("myManual").getListener(), true, true);
+                recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
+                if (recyclerListener.containsKey("newest"))
+                    if (newest.containsKey(key)) {
+                        newest.remove(key);
+                        ArrayList<ManualCard> newTmp = new ArrayList<>();
+                        setContent(newTmp, newest, true);
+                        tmp = new ManualAdapter(context, newTmp, recyclerListener.get("newest").getListener());
+                        recyclerListener.get("newest").getRecyclerView().setAdapter(tmp);
+                    }
+                if (favourite.containsKey(key)) {
+                    updateManual(key, context, new ReloadFirebaseCallBack() {
+                        @Override
+                        public void reload(ArrayList<String> ids) {
+                            Utilities.closeProgressDialog();
+                        }
+                    });
+                } else Utilities.closeProgressDialog();
 
             }
         });

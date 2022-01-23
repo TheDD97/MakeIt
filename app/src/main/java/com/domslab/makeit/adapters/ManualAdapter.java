@@ -13,13 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.domslab.makeit.FavouriteFirebaseCallBack;
+import com.domslab.makeit.ReloadFirebaseCallBack;
+import com.domslab.makeit.FirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.ManualFlyweight;
 import com.domslab.makeit.model.Utilities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder> {
     ArrayList<ManualCard> manualCards;
@@ -58,6 +60,12 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         holder.textView.setText(manualCards.get(position).getName());
         if(!deletable)
             holder.delete.setVisibility(View.GONE);
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ManualFlyweight.getInstance().deleteManual(manualCards.get(currentPosition).getKey(),view.getContext());
+            }
+        });
         if (visible) {
             if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
                 holder.favourite.setImageResource(R.drawable.ic_heart_off);
@@ -70,9 +78,9 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                     Utilities.showProgressDialog(v.getContext(), false);
 
                     ManualFlyweight.getInstance().updateManual(manualCards.get(currentPosition).getKey(), v.getContext(),
-                            new FavouriteFirebaseCallBack() {
+                            new ReloadFirebaseCallBack() {
                                 @Override
-                                public void loadFavourite(ArrayList<String> ids) {
+                                public void reload(ArrayList<String> ids) {
                                     if (ids.contains(manualCards.get(currentPosition).getKey())) {
                                         holder.favourite.setImageResource(R.drawable.ic_heart_on);
                                     } else {
