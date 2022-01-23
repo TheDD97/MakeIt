@@ -62,7 +62,7 @@ public class ManualFactory {
                                     return -1;
                                 }
                             });
-                            ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
+                            ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener, true, true);
                             recyclerView.setAdapter(tmp);
 
                         } else {
@@ -96,7 +96,7 @@ public class ManualFactory {
                                                 return -1;
                                             }
                                         });
-                                        ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
+                                        ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener, true, true);
                                         recyclerView.setAdapter(tmp);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -221,7 +221,7 @@ public class ManualFactory {
                         @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                             if (dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) {
                                 for (DataSnapshot o : dataSnapshot.getChildren()) {
                                     if (ids.contains(o.getKey())) {
                                         ManualCard card = new ManualCard();
@@ -252,7 +252,7 @@ public class ManualFactory {
                                                         }
                                                     });
 
-                                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener, false);
+                                                    ManualAdapter tmp = new ManualAdapter(context, tmpcards, onManualListener, false, false);
                                                     recyclerView.setAdapter(tmp);
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {

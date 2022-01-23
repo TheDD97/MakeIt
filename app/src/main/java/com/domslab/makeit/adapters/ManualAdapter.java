@@ -26,6 +26,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     Context context;
     private OnManualListener mOnManualListener;
     private boolean visible = true;
+    private boolean deletable = false;
 
     public ManualAdapter(Context context, ArrayList<ManualCard> manualCards, OnManualListener onManualListener) {
         this.manualCards = manualCards;
@@ -33,11 +34,12 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         mOnManualListener = onManualListener;
     }
 
-    public ManualAdapter(Context context, ArrayList<ManualCard> manualCards, OnManualListener onManualListener, boolean visible) {
+    public ManualAdapter(Context context, ArrayList<ManualCard> manualCards, OnManualListener onManualListener, boolean visible, boolean deletable) {
         this.manualCards = manualCards;
         this.context = context;
         mOnManualListener = onManualListener;
         this.visible = visible;
+        this.deletable = deletable;
     }
 
 
@@ -54,6 +56,8 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         int currentPosition = position;
         holder.imageView.setImageBitmap(manualCards.get(position).getCover());
         holder.textView.setText(manualCards.get(position).getName());
+        if(!deletable)
+            holder.delete.setVisibility(View.GONE);
         if (visible) {
             if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
                 holder.favourite.setImageResource(R.drawable.ic_heart_off);
@@ -80,7 +84,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                             });
                 }
             });
-        }else holder.favourite.setVisibility(View.INVISIBLE);
+        } else holder.favourite.setVisibility(View.INVISIBLE);
     }
 
 
@@ -93,6 +97,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         private ImageView imageView;
         private TextView textView;
         private ImageButton favourite;
+        private ImageButton delete;
         private OnManualListener onManualListener;
 
         public ViewHolder(@NonNull View itemView, OnManualListener onSongListener) {
@@ -100,7 +105,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
             imageView = itemView.findViewById(R.id.image);
             textView = itemView.findViewById(R.id.manual_name);
             favourite = itemView.findViewById(R.id.fav_btn);
-
+            delete = itemView.findViewById(R.id.delete_manual);
             this.onManualListener = onSongListener;
             itemView.setOnClickListener(this);
         }

@@ -67,14 +67,14 @@ public class ManualFlyweight {
                 @Override
                 public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
                     setContent(manualCards, myManual, false);
-                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener);
+                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener,true,true);
                     recyclerView.setAdapter(tmp);
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
         } else if (!myManual.isEmpty()) {
             setContent(manualCards, myManual, false);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener);
+            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener,true,true);
             recyclerView.setAdapter(tmp);
             Utilities.closeProgressDialog();
         }
@@ -121,7 +121,7 @@ public class ManualFlyweight {
         }
         else if (!favourite.isEmpty()) {
             setContent(manualCards, favourite, true);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, false);
+            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, false, false);
             recyclerView.setAdapter(tmp);
             RecyclerListener recyclerListener = new RecyclerListener(recyclerView, onManualListener);
             this.recyclerListener.put("favourite", recyclerListener);
@@ -169,7 +169,7 @@ public class ManualFlyweight {
             ArrayList<ManualCard> manualCards = new ArrayList<>();
             setContent(manualCards, myManual, false);
             if (recyclerListener.containsKey("myManual")) {
-                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener());
+                ManualAdapter tmp = new ManualAdapter(context, manualCards, recyclerListener.get("myManual").getListener(),true,true);
                 recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
             }
 
@@ -185,8 +185,6 @@ public class ManualFlyweight {
         }
         if (!loaded.containsKey(id)) {
             loaded.put(id, card);
-
-
         }
     }
 
@@ -215,7 +213,7 @@ public class ManualFlyweight {
                     setContent(manualCardsFavourite, favourite, true);
 
                     if (recyclerListener.containsKey("favourite")) {
-                        ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false);
+                        ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false,false);
                         recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
                     }
 
@@ -229,7 +227,7 @@ public class ManualFlyweight {
             setContent(manualCardsFavourite, favourite, true);
 
             if (recyclerListener.containsKey("favourite")) {
-                ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false);
+                ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false, false);
                 recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
             }
 
@@ -257,7 +255,7 @@ public class ManualFlyweight {
                 myManual.get(card.getKey()).setFavourite(card.getFavourite());
                 // myTmp.clear();
                 setContent(myTmp, myManual, false);
-                ManualAdapter tmp = new ManualAdapter(context, myTmp, recyclerListener.get("myManual").getListener());
+                ManualAdapter tmp = new ManualAdapter(context, myTmp, recyclerListener.get("myManual").getListener(),true,true);
                 recyclerListener.get("myManual").getRecyclerView().setAdapter(tmp);
             }
 
