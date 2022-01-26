@@ -25,11 +25,16 @@ import java.util.List;
 public class Utilities {
     public static final long MAX_FILE_SIZE = 1024 * 1024;
     public static final long MAX_IMAGE_SIZE = 1024 * 30;
-    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a 30KB";
-    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione dell'immagine è troppo elevata, dev'essere pari o inferiore a 30KB";
+    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a "+(MAX_IMAGE_SIZE)/1024+"KB";
+    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione di una immagine è troppo elevata, dev'essere pari o inferiore a "+(MAX_IMAGE_SIZE)/1024+"KB";
     public static final String NO_COVER = "Non è stata trovata la cover, controlla il file";
+    public static final String NO_IMAGE = "Hai dichiarato di voler inserire un'immagine ma non è stata trovata, controlla il file";
     public static final String NO_DESCRIPTION = "Descrizione non trovata, controlla il file";
     public static final String PAGE_EMPTY = "Contenuto della pagina non trovato, controlla pagina: ";
+    public static final String INVALID_TIMER_VALUE = "Timer impostato in maniera errata, controlla la durata";
+    public static final String INVALID_VIDEO_ID = "Codice video non valido, controlla che sia scritto correttamente";
+    public static final String NO_NUMPAGE = "Numero di pagine non indicato, controlla il file";
+    public static final String INVALID_NUMPAGE_VALUE = "Dev'essere presente almeno una pagina all'interno di un manuale, controlla il file";
     public static CharSequence noOldEmail = "Devi inserire l'attuale email se desideri cambiarla";
     public static String locationLabel = "Posizione: ";
     public static String checkUpload = "Confermi la tua scelta?";
