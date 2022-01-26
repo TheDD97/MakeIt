@@ -98,6 +98,7 @@ public class SignUp extends AppCompatActivity {
                                 Log.w("TAG", "createUserWithEmail:failure", task.getException());
                                 Toast.makeText(v.getContext(), "Registrazione fallita.",
                                         Toast.LENGTH_SHORT).show();
+                                Utilities.closeProgressDialog();
                             }
                         }
                     });
@@ -138,6 +139,7 @@ public class SignUp extends AppCompatActivity {
                     password.getText())) {
                 check = false;
                 passwordLayout.setError(Utilities.passwordFormat);
+                confirmPasswordLayout.setError(Utilities.passwordFormat);
             }
         }
 
