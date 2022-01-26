@@ -25,8 +25,8 @@ import java.util.List;
 public class Utilities {
     public static final long MAX_FILE_SIZE = 1024 * 1024;
     public static final long MAX_IMAGE_SIZE = 1024 * 30;
-    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a "+(MAX_IMAGE_SIZE)/1024+"KB";
-    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione di una immagine è troppo elevata, dev'essere pari o inferiore a "+(MAX_IMAGE_SIZE)/1024+"KB";
+    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "KB";
+    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione di una immagine è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "KB";
     public static final String NO_COVER = "Non è stata trovata la cover, controlla il file";
     public static final String NO_IMAGE = "Hai dichiarato di voler inserire un'immagine ma non è stata trovata, controlla il file";
     public static final String NO_DESCRIPTION = "Descrizione non trovata, controlla il file";
@@ -35,6 +35,8 @@ public class Utilities {
     public static final String INVALID_VIDEO_ID = "Codice video non valido, controlla che sia scritto correttamente";
     public static final String NO_NUMPAGE = "Numero di pagine non indicato, controlla il file";
     public static final String INVALID_NUMPAGE_VALUE = "Dev'essere presente almeno una pagina all'interno di un manuale, controlla il file";
+    public static final String INVALID_NAME = "Il nome non può essere vuoto, controlla il file";
+    public static final String NO_NAME = "Nome del manuale non presente, controlla il file";
     public static CharSequence noOldEmail = "Devi inserire l'attuale email se desideri cambiarla";
     public static String locationLabel = "Posizione: ";
     public static String checkUpload = "Confermi la tua scelta?";
@@ -62,12 +64,13 @@ public class Utilities {
     private static FirebaseAuth auth = null;
     private static AlertDialog.Builder progressDialog;
     private static Dialog dialog;
+
     private Utilities() {
     }
 
     public static void showProgressDialog(Context context, boolean loading) {
         if (progressDialog == null) {
-            progressDialog = new AlertDialog.Builder(context,R.style.MyLoadingDialogTheme);
+            progressDialog = new AlertDialog.Builder(context, R.style.MyLoadingDialogTheme);
             /*if (loading)
                 progressDialog.setMessage(Utilities.loading);
             else

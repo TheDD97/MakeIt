@@ -183,7 +183,18 @@ public class AddFragment extends Fragment {
                     JSONObject object = new JSONObject(fileContent);
                     manual.setOwner(Utilities.getAuthorisation().getCurrentUser().getUid());
                     if (object.has("name"))
+                        if(!object.getString("name").equals(""))
                         manual.setName(object.getString("name"));
+                        else {
+                            Toast.makeText(getContext(), Utilities.INVALID_NAME,
+                                    Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    else{
+                        Toast.makeText(getContext(), Utilities.NO_NAME,
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     if (object.has("cover")) {
                         if (object.getString("cover").getBytes().length < Utilities.MAX_IMAGE_SIZE) {
                             images.put("cover", object.getString("cover"));
