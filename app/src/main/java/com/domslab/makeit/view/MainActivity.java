@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyAlertDialogTheme);
         builder.setMessage("Vuoi chiudere l'applicazione?");
         builder.setCancelable(true);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
