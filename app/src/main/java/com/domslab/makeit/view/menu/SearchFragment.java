@@ -75,6 +75,12 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        noFilter();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = getView().findViewById(R.id.manual_list_view);
@@ -217,7 +223,7 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
+        //super.setMenuVisibility(menuVisible);
         if (menuVisible) {
             ManualFlyweight.getInstance().getLoaded(getContext(), SearchFragment.this::onManualClick, recyclerView, new ManualFirebaseCallBack() {
                 @Override

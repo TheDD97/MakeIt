@@ -68,6 +68,7 @@ public class AddFragment extends Fragment {
     private Manual manual;
     private Spinner spinner;
     private HashMap<String, String> images = new HashMap<>();
+    private HashMap<String, String> categoryLabel = new HashMap<>();
     boolean noError = true;
 
     public AddFragment() {
@@ -153,7 +154,16 @@ public class AddFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot o : snapshot.getChildren()) {
-                        categories.add(o.getValue().toString());
+                        String value = o.getValue().toString();
+                        String key = "";
+                        if (value.equals("Food"))
+                            key = Utilities.FoodLabel;
+                        if (value.equals("Toy"))
+                            key = Utilities.ToyLabel;
+                        if (value.equals("Home"))
+                            key = Utilities.HomeLabel;
+                        categoryLabel.put(key,value);
+                        categories.add(key);
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_activated_1, categories);
@@ -183,14 +193,14 @@ public class AddFragment extends Fragment {
                     JSONObject object = new JSONObject(fileContent);
                     manual.setOwner(Utilities.getAuthorisation().getCurrentUser().getUid());
                     if (object.has("name"))
-                        if(!object.getString("name").equals(""))
-                        manual.setName(object.getString("name"));
+                        if (!object.getString("name").equals(""))
+                            manual.setName(object.getString("name"));
                         else {
                             Toast.makeText(getContext(), Utilities.INVALID_NAME,
                                     Toast.LENGTH_LONG).show();
                             return;
                         }
-                    else{
+                    else {
                         Toast.makeText(getContext(), Utilities.NO_NAME,
                                 Toast.LENGTH_LONG).show();
                         return;
@@ -327,7 +337,7 @@ public class AddFragment extends Fragment {
                     });
                 }
                 manual.setTime(new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()));
-                manual.setCategory(spinner.getSelectedItem().toString());
+                manual.setCategory(categoryLabel.get(spinner.getSelectedItem().toString()));
                 reference.child(id.toString()).setValue(manual);
                 Utilities.closeProgressDialog();
 

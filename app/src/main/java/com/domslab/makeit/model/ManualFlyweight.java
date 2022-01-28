@@ -148,6 +148,7 @@ public class ManualFlyweight {
         byte[] coded = Base64.getDecoder().decode(manual.getCover());
         card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
         card.setKey(id);
+        card.setCategory(manual.getCategory());
         if (!myManual.containsKey(id)) {
             myManual.put(id, card);
             ArrayList<ManualCard> manualCards = new ArrayList<>();
