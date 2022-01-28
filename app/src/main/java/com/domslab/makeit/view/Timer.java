@@ -74,7 +74,7 @@ public class Timer extends ConstraintLayout {
                                     NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
                                     notificationManager.createNotificationChannel(channel);
                                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channel.getId())
-                                            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                                            .setSmallIcon(R.drawable.ic_time)
                                             .setContentTitle("Affrettati!")
                                             .setContentText("Il tempo è scaduto!!")
                                             .setSound(alarmSound)
