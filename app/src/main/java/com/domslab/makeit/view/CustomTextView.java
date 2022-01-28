@@ -13,7 +13,7 @@ public class CustomTextView extends androidx.appcompat.widget.AppCompatTextView 
         super(context);
         this.setTextSize(15);
         this.setTypeface(getResources().getFont(R.font.vollkorn_variablefont_wght));
-        setPadding(20,0,20,0);
+        setPadding(50,0,50,0);
     }
 
 
