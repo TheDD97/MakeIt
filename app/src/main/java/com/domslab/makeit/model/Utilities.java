@@ -59,6 +59,9 @@ public class Utilities {
     public static final String passwordFormat = "La password deve contenere almeno 8 caratteri, un carattere maiuscolo, un carattere speciale ed un numero";
     public static String emailNoMatch = "Questa email non corrisponde a quella attuale";
     public static String currentPage = "Pagina: ";
+    public static String FoodLabel = "Alimenti";
+    public static String ToyLabel = "Giochi";
+    public static String HomeLabel = "Casa";
     private static FirebaseDatabase rootNode;
     private static DatabaseReference reference;
     private static FirebaseAuth auth = null;

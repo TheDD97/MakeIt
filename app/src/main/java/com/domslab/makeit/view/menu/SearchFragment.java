@@ -24,6 +24,7 @@ import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.ManualFlyweight;
+import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.HomeManual;
 
 import java.util.ArrayList;
@@ -86,6 +87,9 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
         toyFilter = getView().findViewById(R.id.toys_filter);
         foodFilter = getView().findViewById(R.id.food_filter);
         homeFilter = getView().findViewById(R.id.home_filter);
+        toyFilter.setText(Utilities.ToyLabel);
+        foodFilter.setText(Utilities.FoodLabel);
+        homeFilter.setText(Utilities.HomeLabel);
         group = getView().findViewById(R.id.group);
         allFilter.setOnClickListener(new View.OnClickListener() {
             @Override

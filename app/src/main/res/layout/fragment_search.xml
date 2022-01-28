@@ -50,7 +50,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/vollkorn_variablefont_wght"
                     android:singleLine="true"
-                    android:text="Tutte" />
+                    android:text="Tutto" />
 
                 <RadioButton
                     android:id="@+id/food_filter"
