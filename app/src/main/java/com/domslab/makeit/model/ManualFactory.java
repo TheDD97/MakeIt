@@ -140,10 +140,10 @@ public class ManualFactory {
                                 @Override
                                 public int compare(ManualCard o1, ManualCard o2) {
                                     if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                        return 0;
+                                        return -1;
                                     else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
                                         return 1;
-                                    return -1;
+                                    return 0;
                                 }
                             });
                             ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
@@ -172,10 +172,10 @@ public class ManualFactory {
                                             @Override
                                             public int compare(ManualCard o1, ManualCard o2) {
                                                 if (Integer.parseInt(o1.getKey()) > Integer.parseInt(o2.getKey()))
-                                                    return 0;
+                                                    return -1;
                                                 else if (Integer.parseInt(o1.getKey()) < Integer.parseInt(o2.getKey()))
                                                     return 1;
-                                                return -1;
+                                                return 0;
                                             }
                                         });
                                         ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener);
