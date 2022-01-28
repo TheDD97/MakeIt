@@ -213,36 +213,8 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
             } else if (c.getName().toLowerCase().contains(search.toLowerCase()))
                 filtered.add(c);
         }
-
         filteredCard = filtered;
         ManualAdapter manualAdapter = new ManualAdapter(getContext(), filtered, SearchFragment.this::onManualClick);
         recyclerView.setAdapter(manualAdapter);
-
-
-    }
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        //super.setMenuVisibility(menuVisible);
-        if (menuVisible) {
-            ManualFlyweight.getInstance().getLoaded(getContext(), SearchFragment.this::onManualClick, recyclerView, new ManualFirebaseCallBack() {
-                @Override
-                public void onCallBack(HashMap<String, ManualCard> manual) {
-                    for (String key : manual.keySet())
-                        allCard.add(manual.get(key));
-                    Collections.sort(allCard, new Comparator<ManualCard>() {
-                        @Override
-                        public int compare(ManualCard o1, ManualCard o2) {
-                            return o1.getName().compareTo(o2.getName());
-                        }
-                    });
-                    group.check(R.id.no_filter);
-                    ManualAdapter adapter = new ManualAdapter(getContext(), allCard, SearchFragment.this::onManualClick);
-                    recyclerView.setAdapter(adapter);
-                    initSearch();
-                    filter();
-                }
-            });
-        }
     }
 }

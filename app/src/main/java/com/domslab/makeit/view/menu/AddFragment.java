@@ -162,7 +162,7 @@ public class AddFragment extends Fragment {
                             key = Utilities.ToyLabel;
                         if (value.equals("Home"))
                             key = Utilities.HomeLabel;
-                        categoryLabel.put(key,value);
+                        categoryLabel.put(key, value);
                         categories.add(key);
                     }
 
@@ -302,17 +302,24 @@ public class AddFragment extends Fragment {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference("manual");
         StringBuilder lastId = new StringBuilder();
-        Query query = reference.orderByKey();
+        Query query = reference;
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Utilities.showProgressDialog(getContext(), false);
-                if (snapshot.exists())
-                    lastId.append(snapshot.getChildrenCount());
-                else {
-                    lastId.append(Integer.toString(0));
-                }
-                Integer id = Integer.parseInt(lastId.toString()) + 1;
+                if (snapshot.exists()) {
+                    int id = 0;
+                    for (DataSnapshot o : snapshot.getChildren()) {
+                        System.out.println(o.getKey());
+                        if (id<Integer.parseInt(o.getKey()))
+                            id = Integer.parseInt(o.getKey());
+                    }
+                    lastId.append(id);
+
+                } else
+                    lastId.append(0);
+
+                Integer id = Integer.parseInt(String.valueOf(lastId)) + 1;
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 manual.setDate(sdf.format(calendar.getTime()));
@@ -340,8 +347,6 @@ public class AddFragment extends Fragment {
                 manual.setCategory(categoryLabel.get(spinner.getSelectedItem().toString()));
                 reference.child(id.toString()).setValue(manual);
                 Utilities.closeProgressDialog();
-
-
                 callBack.onCallBack(null, false, false);
 
             }

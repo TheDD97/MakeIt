@@ -46,7 +46,7 @@ public class ManualFlyweight {
             this.context = context;
         RecyclerListener recyclerListener = new RecyclerListener(recyclerView, onManualListener);
         this.recyclerListener.put("myManual", recyclerListener);
-        if (s.equals("myManual") && myManual.isEmpty()) {
+
             Utilities.showProgressDialog(context, true);
             manualFactory.createMyManualList(myManual, loaded, new ManualFirebaseCallBack() {
                 @Override
@@ -57,12 +57,7 @@ public class ManualFlyweight {
                     Utilities.closeProgressDialog();
                 }
             }, recyclerView, context, onManualListener);
-        } else if (!myManual.isEmpty()) {
-            setContent(manualCards, myManual, false);
-            ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, true, true);
-            recyclerView.setAdapter(tmp);
-            Utilities.closeProgressDialog();
-        }
+
 
     }
 
