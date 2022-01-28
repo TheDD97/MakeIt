@@ -49,6 +49,7 @@ public class Timer extends ConstraintLayout {
         start = findViewById(R.id.start);
         reset = findViewById(R.id.reset);
         currentTimeVal = time;
+        update();
         start.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,12 +103,18 @@ public class Timer extends ConstraintLayout {
                 countdownStarted = false;
             }
         });
-        update();
+
     }
 
     private void update() {
+
         minute = Integer.toString(currentTimeVal / 60);
         second = Integer.toString(currentTimeVal - (currentTimeVal / 60) * 60);
+        System.out.println(second.length() +" -- "+minute.length());
+        if (second.length() == 1)
+            second = '0'+second;
+        if (minute.length() == 1)
+            minute = '0' + minute;
         currentTime.setText(minute + ":" + second);
         progressBar.setProgress(time - currentTimeVal);
     }
