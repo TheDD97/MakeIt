@@ -1,4 +1,4 @@
-package com.domslab.makeit;
+package com.domslab.makeit.callback;
 
 
 import java.util.List;

@@ -2,13 +2,11 @@ package com.domslab.makeit.model;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.callback.FirebaseCallBack;
 import com.domslab.makeit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

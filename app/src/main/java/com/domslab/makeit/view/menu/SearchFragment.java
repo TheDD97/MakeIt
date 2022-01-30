@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.domslab.makeit.ManualFirebaseCallBack;
+import com.domslab.makeit.callback.ManualFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.adapters.ManualAdapter;
 import com.domslab.makeit.model.ManualCard;
@@ -28,8 +27,6 @@ import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.HomeManual;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 /**

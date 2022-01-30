@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.callback.FirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.menu.HomeContainer;

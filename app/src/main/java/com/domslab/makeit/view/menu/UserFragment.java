@@ -20,7 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.callback.FirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.UserHelperClass;
 import com.domslab.makeit.model.Utilities;

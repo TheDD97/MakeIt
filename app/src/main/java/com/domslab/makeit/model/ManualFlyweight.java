@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.domslab.makeit.ReloadFirebaseCallBack;
-import com.domslab.makeit.ManualFirebaseCallBack;
+import com.domslab.makeit.callback.ReloadFirebaseCallBack;
+import com.domslab.makeit.callback.ManualFirebaseCallBack;
 import com.domslab.makeit.adapters.ManualAdapter;
 
 import java.util.ArrayList;

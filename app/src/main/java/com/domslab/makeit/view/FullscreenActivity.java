@@ -1,14 +1,13 @@
-package com.domslab.makeit;
+package com.domslab.makeit.view;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.domslab.makeit.view.YoutubePlayer;
+import com.domslab.makeit.R;
 
 
 /**

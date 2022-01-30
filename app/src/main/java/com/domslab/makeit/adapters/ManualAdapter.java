@@ -2,7 +2,6 @@ package com.domslab.makeit.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.domslab.makeit.ReloadFirebaseCallBack;
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.callback.ReloadFirebaseCallBack;
 import com.domslab.makeit.R;
 import com.domslab.makeit.model.ManualCard;
 import com.domslab.makeit.model.ManualFlyweight;
 import com.domslab.makeit.model.Utilities;
-import com.domslab.makeit.view.MainActivity;
-import com.domslab.makeit.view.menu.HomeContainer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder> {
     ArrayList<ManualCard> manualCards;

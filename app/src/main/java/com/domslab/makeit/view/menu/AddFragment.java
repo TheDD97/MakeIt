@@ -1,11 +1,8 @@
 package com.domslab.makeit.view.menu;
 
 import static android.app.Activity.RESULT_OK;
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 import android.app.AlertDialog;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -27,7 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.domslab.makeit.FirebaseCallBack;
+import com.domslab.makeit.callback.FirebaseCallBack;
 import com.domslab.makeit.model.Manual;
 import com.domslab.makeit.model.ManualFlyweight;
 import com.domslab.makeit.model.ManualPage;
@@ -42,8 +39,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
