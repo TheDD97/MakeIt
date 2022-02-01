@@ -79,7 +79,7 @@ public class HomeManual extends AppCompatActivity {
 
     private void loadInfo(String manualId) {
         id = manualId;
-        Utilities.showProgressDialog(HomeManual.this, true);
+        Utilities.showProgressDialog(HomeManual.this);
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference("manual");
         Query checkUser = reference;
@@ -140,7 +140,7 @@ public class HomeManual extends AppCompatActivity {
     }
 
     private void loadCover(String id) {
-        Utilities.showProgressDialog(HomeManual.this, true);
+        Utilities.showProgressDialog(HomeManual.this);
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
         gsReference.child(id + "/cover").getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

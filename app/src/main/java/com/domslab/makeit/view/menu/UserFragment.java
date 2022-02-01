@@ -76,7 +76,7 @@ public class UserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
         editor = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE).edit();
-        Utilities.showProgressDialog(getContext(), true);
+        Utilities.showProgressDialog(getContext());
 
     }
 
@@ -112,7 +112,7 @@ public class UserFragment extends Fragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.showProgressDialog(v.getContext(), false);
+                Utilities.showProgressDialog(v.getContext());
                 clearError(layouts.size());
                 if (!editing) {
                     enableAll();

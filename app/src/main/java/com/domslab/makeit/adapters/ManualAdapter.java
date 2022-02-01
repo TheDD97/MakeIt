@@ -94,7 +94,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
             holder.favourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utilities.showProgressDialog(v.getContext(), false);
+                    Utilities.showProgressDialog(v.getContext());
 
                     ManualFlyweight.getInstance().updateManual(manualCards.get(currentPosition).getKey(), v.getContext(),
                             new ReloadFirebaseCallBack() {

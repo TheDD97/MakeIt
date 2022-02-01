@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class ManualFactory {
+public class DBManualManager {
 
     public void createMyManualList(HashMap<String, ManualCard> manualCards, HashMap<String, ManualCard> loaded, ManualFirebaseCallBack callBack, RecyclerView recyclerView, Context context, ManualAdapter.OnManualListener onManualListener) {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
@@ -211,7 +211,7 @@ public class ManualFactory {
             @Override
             public void reload(ArrayList<String> favouriteIds) {
                 if (!favouriteIds.isEmpty()) {
-                    Utilities.showProgressDialog(context, true);
+                    Utilities.showProgressDialog(context);
                     ArrayList<String> ids = favouriteIds;
                     Query checkUser = reference.child("manual");
                     checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -313,7 +313,7 @@ public class ManualFactory {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        Utilities.showProgressDialog(context, true);
+                        Utilities.showProgressDialog(context);
                         for (DataSnapshot o : snapshot.getChildren()) {
                             if (o.child("uid").getValue().toString().equals(Utilities.getAuthorisation().getUid()))
                                 if (o.child("idManual").getValue().toString().equals(id)) {
@@ -339,7 +339,7 @@ public class ManualFactory {
                 }
             });
         } else {
-            Utilities.showProgressDialog(context, true);
+            Utilities.showProgressDialog(context);
             UidManualPair uidManualPair = new UidManualPair(Utilities.getAuthorisation().getUid(), id);
             String key = reference.child("favourites").push().getKey();
             ids.add(uidManualPair.getIdManual());
@@ -415,7 +415,7 @@ public class ManualFactory {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Utilities.showProgressDialog(context, true);
+                    Utilities.showProgressDialog(context);
                     for (DataSnapshot o : snapshot.getChildren()) {
                         if (o.getKey().equals(id))
                             if (o.child("owner").getValue().toString().equals(Utilities.getAuthorisation().getCurrentUser().getUid())) {

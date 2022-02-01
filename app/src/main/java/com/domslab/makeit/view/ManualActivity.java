@@ -111,7 +111,7 @@ public class ManualActivity extends AppCompatActivity {
     }
 
     private void readManual() {
-        Utilities.showProgressDialog(ManualActivity.this, true);
+        Utilities.showProgressDialog(ManualActivity.this);
         String currentManual;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -167,7 +167,7 @@ public class ManualActivity extends AppCompatActivity {
     }
 
     private void loadImage(String currentManual, String id, ManualPage manualPage) {
-        Utilities.showProgressDialog(ManualActivity.this, true);
+        Utilities.showProgressDialog(ManualActivity.this);
         StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://makeit-27047.appspot.com/");
         gsReference.child(currentManual + "/image" + id).getBytes(Utilities.MAX_FILE_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

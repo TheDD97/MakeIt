@@ -139,7 +139,7 @@ public class AddFragment extends Fragment {
     }
 
     private void loadCategories() {
-        Utilities.showProgressDialog(getContext(), true);
+        Utilities.showProgressDialog(getContext());
         ArrayList<String> categories = new ArrayList<>();
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
@@ -301,7 +301,7 @@ public class AddFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Utilities.showProgressDialog(getContext(), false);
+                Utilities.showProgressDialog(getContext());
                 if (snapshot.exists()) {
                     int id = 0;
                     for (DataSnapshot o : snapshot.getChildren()) {

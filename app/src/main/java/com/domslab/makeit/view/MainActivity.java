@@ -65,19 +65,13 @@ public class MainActivity extends AppCompatActivity {
         String psw = preferences.getString("currentPassword", null);
         if (user != null && psw != null && email != null) {
             Utilities.setCurrentUsername(user);
-            Utilities.showProgressDialog(this, false);
+            Utilities.showProgressDialog(this);
             auth.signInWithEmailAndPassword(email, psw)
                     .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("TAG", "signInWithEmail:success");
                                 FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
-                                editor.putString("currentUser", user.getUid());
-                                editor.putString("currentEmail", email);
-                                editor.putString("currentPassword", psw);
-                                editor.apply();
                                 updateUI(user, new FirebaseCallBack() {
                                     @Override
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
@@ -87,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                                         launchHome(getApplicationContext());
                                     }
                                 });
-
                             } else {
                                 updateUI(null, new FirebaseCallBack() {
                                     @Override
@@ -118,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.showProgressDialog(v.getContext(), false);
+                Utilities.showProgressDialog(v.getContext());
                 passwordLayout.setError(null);
                 emailLayout.setError(null);
                 String email = emailField.getText().toString();
@@ -141,10 +134,8 @@ public class MainActivity extends AppCompatActivity {
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        Utilities.showProgressDialog(getApplicationContext(), false);
-
+                                        Utilities.showProgressDialog(getApplicationContext());
                                         if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
                                             Log.d("TAG", "signInWithEmail:success");
                                             FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
 
@@ -280,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyAlertDialogTheme);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogTheme);
         builder.setMessage("Vuoi chiudere l'applicazione?");
         builder.setCancelable(true);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

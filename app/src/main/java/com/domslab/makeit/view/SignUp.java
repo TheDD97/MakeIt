@@ -78,7 +78,7 @@ public class SignUp extends AppCompatActivity {
                 checkEmail();
                 checkPassword();
                 if (check) {
-                    Utilities.showProgressDialog(v.getContext(), false);
+                    Utilities.showProgressDialog(v.getContext());
                     clearAllError();
                     FirebaseAuth mAuth = Utilities.getAuthorisation();
                     mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString()).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {

@@ -69,13 +69,9 @@ public class Utilities {
     private Utilities() {
     }
 
-    public static void showProgressDialog(Context context, boolean loading) {
+    public static void showProgressDialog(Context context) {
         if (progressDialog == null) {
             progressDialog = new AlertDialog.Builder(context, R.style.MyLoadingDialogTheme);
-            /*if (loading)
-                progressDialog.setMessage(Utilities.loading);
-            else
-                progressDialog.setMessage(Utilities.verifying);*/
             progressDialog.setView(R.layout.progess);
             progressDialog.setCancelable(false);
             dialog = progressDialog.create();
