@@ -258,7 +258,6 @@ public class ManualActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onPostResume() {
         super.onPostResume();

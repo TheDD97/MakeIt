@@ -136,9 +136,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         Utilities.showProgressDialog(getApplicationContext());
                                         if (task.isSuccessful()) {
-                                            Log.d("TAG", "signInWithEmail:success");
                                             FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
-
                                             editor.putString("currentUser", user.getUid());
                                             editor.putString("currentEmail", email);
                                             editor.putString("currentPassword", password);
@@ -152,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                                                     launchHome(getApplicationContext());
                                                 }
                                             });
-
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Utilities.closeProgressDialog();
@@ -188,20 +185,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void showRecoverPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogTheme);
-        builder.setTitle("Recupero Password");
+        builder.setTitle("Reimposta Password");
         LinearLayout linearLayout = new LinearLayout(this);
         final EditText emailet = new EditText(this);
-
-        // write the email using which you registered
         emailet.setHint("Email");
         emailet.setMinEms(16);
         emailet.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         linearLayout.addView(emailet);
         linearLayout.setPadding(10, 10, 10, 10);
         builder.setView(linearLayout);
-
-        // Click on Recover and a email will be sent to your registered email id
-        builder.setPositiveButton("Recupera", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Reimposta", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String email = emailet.getText().toString().trim();
@@ -211,17 +204,14 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Formato email errato", Toast.LENGTH_LONG).show();
                 else
                     beginRecovery(email);
-
             }
         });
-
         builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         builder.create().show();
     }
 
@@ -230,17 +220,11 @@ public class MainActivity extends AppCompatActivity {
         loadingBar.setMessage("Sto inviando....");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
-
-        // calling sendPasswordResetEmail
-        // open your email and write the new
-        // password and then you can login
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 loadingBar.dismiss();
                 if (task.isSuccessful()) {
-                    // if isSuccessful then done message will be shown
-                    // and you can change the password
                     Toast.makeText(MainActivity.this, "Invio Completato", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(MainActivity.this, "Qualcosa è andato storto", Toast.LENGTH_LONG).show();
@@ -295,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user, FirebaseCallBack callBack) {
         user = Utilities.getAuthorisation().getCurrentUser();
-        /*-------- Check if user is already logged in or not--------*/
         if (user != null) {
             Utilities.setCurrentUsername(user.getUid());
             Query checkUser = reference.orderByChild(user.getUid());
@@ -304,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean business = false;
                     if (dataSnapshot.exists()) {
-
                         for (DataSnapshot o : dataSnapshot.getChildren())
                             if (o.getKey().equals(Utilities.getCurrentUID())) {
                                 business = (boolean) o.child("advanced").getValue();
@@ -322,31 +304,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-
-    /*private void readUserData(String user) {
-        Query checkUser = reference.orderByChild(user);
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean business = false;
-                if (dataSnapshot.exists()) {
-
-                    for (DataSnapshot o : dataSnapshot.getChildren())
-                        if (o.getKey().equals(Utilities.getCurrentUID())) {
-                            business = (boolean) o.child("advanced").getValue();
-                            editor.putBoolean("advanced", business);
-                            editor.apply();
-
-                        }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }*/
 
     @Override
     protected void onPause() {
