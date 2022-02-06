@@ -124,9 +124,7 @@ public class UserFragment extends Fragment {
                     checkName();
                     checkSurname();
                     checkEmail();
-                    //checkPassword();
                     if (check) {
-                        //user = utilities.currentUser;
                         Toast t = new Toast(v.getContext());
                         t.setDuration(Toast.LENGTH_LONG);
                         FirebaseUser firebaseUser = Utilities.getAuthorisation().getCurrentUser();
