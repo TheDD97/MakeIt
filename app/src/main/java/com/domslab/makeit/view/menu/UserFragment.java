@@ -40,8 +40,8 @@ import java.util.List;
 public class UserFragment extends Fragment {
 
     private TextView usernameLabel;
-    private EditText name, surname, email, nEmail, username, password, confirmPassword;
-    private TextInputLayout nameLayout, surnameLayout, emailLayout, nEmaiLayout, usernameLayout, passwordLayout, confirmPasswordLayout;
+    private EditText name, surname, email, nEmail, username;
+    private TextInputLayout nameLayout, surnameLayout, emailLayout, nEmaiLayout, usernameLayout;
     private static UserHelperClass user = null;
     private boolean editing = false, check = true;
     private ArrayList<TextInputLayout> layouts;
@@ -155,24 +155,24 @@ public class UserFragment extends Fragment {
                     disableAll();
                     cancel.setBackgroundColor(Color.TRANSPARENT);
                     editing = false;
-                    edit.setText(getString(getResources().getIdentifier("edit","string",getContext().getPackageName())));
+                    edit.setText(getString(getResources().getIdentifier("edit", "string", getContext().getPackageName())));
                     clearError(layouts.size());
                     fillField();
                 }
             }
         });
-
-        Log.d("USER", "CREATED");
     }
 
     private void updateUser(UserHelperClass userUpdate, Toast t) {
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
-        reference.child(Utilities.getAuthorisation().getUid()).setValue(userUpdate);
-        user = userUpdate;
-        usernameLabel.setText("Ciao " + user.getUsername() + "!");
-        t.setText("Successo!");
-        t.show();
+        if (!(user.getName().equals(userUpdate.getName()) && (user.getUsername().equals(userUpdate.getUsername())) && user.getEmail().equals(userUpdate.getEmail()) && user.getSurname().equals(userUpdate.getSurname()))) {
+            reference.child(Utilities.getAuthorisation().getUid()).setValue(userUpdate);
+            user = userUpdate;
+            usernameLabel.setText("Ciao " + user.getUsername() + "!");
+            t.setText("Successo!");
+            t.show();
+        }
         disableAll();
         editing = false;
     }
