@@ -173,6 +173,7 @@ public class UserFragment extends Fragment {
             t.setText("Successo!");
             t.show();
         }
+        fillField();
         disableAll();
         editing = false;
     }
@@ -234,6 +235,8 @@ public class UserFragment extends Fragment {
         name.setText(user.getName());
         surname.setText(user.getSurname());
         username.setText(user.getUsername());
+        email.setText("");
+        nEmail.setText("");
     }
 
     private void checkUsername() {
