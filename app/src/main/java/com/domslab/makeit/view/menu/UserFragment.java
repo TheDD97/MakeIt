@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +46,7 @@ public class UserFragment extends Fragment {
     private ArrayList<TextInputLayout> layouts;
     private ArrayList<EditText> texts;
     private boolean noEmail;
+    private boolean updatedEmail;
     private ScrollView scrollView;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -133,6 +133,8 @@ public class UserFragment extends Fragment {
                             if (firebaseUser.getEmail().equals(email.getText().toString().trim())) {
                                 firebaseUser.updateEmail(nEmail.getText().toString().trim());
                                 userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(), user.getWaiting());
+                                editor.putString("currentEmail",nEmail.getText().toString().trim());
+                                editor.apply();
                             }
                         } else
                             userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), user.getWaiting());
@@ -267,20 +269,28 @@ public class UserFragment extends Fragment {
         if (check) {
             clearError(3);
             noEmail = false;
-            if (email.getText().toString().isEmpty() || email.getText() == null) {
+            updatedEmail = false;
+            if (email.getText().toString().isEmpty() || email.getText() == null)
                 noEmail = true;
-            } else if (!email.getText().toString().equals(preferences.getString("currentEmail", null))) {
+            if (!(nEmail.getText().toString().isEmpty() || nEmail.getText() == null))
+                updatedEmail = true;
+            if (!updatedEmail && noEmail)
+                return;
+            if (!email.getText().toString().equals(preferences.getString("currentEmail", null))) {
                 emailLayout.setError(Utilities.emailNoMatch);
                 check = false;
             } else if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
                 check = false;
                 emailLayout.setError(Utilities.signUpWrongEmailFormat);
+            } else if (noEmail && updatedEmail) {
+                check = false;
+                nEmaiLayout.setError(Utilities.noOldEmail);
+            } else if (!noEmail && !updatedEmail) {
+                check = false;
+                nEmaiLayout.setError(Utilities.signUpEmptyEmail);
             } else if (!Patterns.EMAIL_ADDRESS.matcher(nEmail.getText().toString()).matches()) {
                 check = false;
                 nEmaiLayout.setError(Utilities.signUpWrongEmailFormat);
-            } else if ((email.getText().toString().isEmpty() || email.getText() == null) && (!nEmail.getText().toString().isEmpty() || nEmail.getText() != null)) {
-                check = false;
-                nEmaiLayout.setError(Utilities.noOldEmail);
             }
         }
     }
