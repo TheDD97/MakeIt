@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,29 +15,79 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.domslab.makeit.R;
+import com.domslab.makeit.callback.FirebaseCallBack;
 import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 
 public class HomeContainer extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private BottomNavigationView navigationView;
     private UserFragment userFragment;
-    private HomeFragment homeFragment;
     private SearchFragment searchFragment;
     private AddFragment addFragment;
+    private HomeFragment homeFragment;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
     private DatabaseReference reference;
     private FirebaseDatabase rootNode;
-    //private MeowBottomNavigation bottomNavigation;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        updateUI();
+    }
+
+    private void updateUI() {
+        if (navigationView.getSelectedItemId() != R.id.logout) {
+            FirebaseUser user = Utilities.getAuthorisation().getCurrentUser();
+            if (user != null) {
+                Utilities.setCurrentUsername(user.getUid());
+                Query checkUser = reference.orderByChild(user.getUid());
+                checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean business = false;
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot o : dataSnapshot.getChildren())
+                                if (o.getKey().equals(Utilities.getCurrentUID())) {
+                                    business = (boolean) o.child("advanced").getValue();
+                                    if (preferences.getBoolean("advanced", false) != business) {
+                                        editor.putBoolean("advanced", business);
+                                        editor.apply();
+                                    }
+                                }
+                            navigationView.getMenu().findItem(R.id.add).setVisible(business);
+                            if (navigationView.getSelectedItemId() != R.id.home)
+                                navigationView.setSelectedItemId(navigationView.getSelectedItemId());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -46,16 +98,7 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         preferences = getSharedPreferences(Utilities.sharedPreferencesName, MODE_PRIVATE);
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
-
-        /*bottomNavigation = (MeowBottomNavigation) findViewById(R.id.bottomNavigationView);
-        bottomNavigation.setCountTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.vollkorn_variablefont_wght));
-        bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.icons8_user_100px));
-        bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.icons8_search_100px));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.icons8_home_52px));
-        if (preferences.getBoolean("advanced", false))
-            bottomNavigation.add(new MeowBottomNavigation.Model(4, R.drawable.icons8_add_60px));
-        bottomNavigation.add(new MeowBottomNavigation.Model(5, R.drawable.icons8_logout_rounded_left_64px));
-       */ loadMenuFragment();
+        loadMenuFragment();
     }
 
     @Override
@@ -65,83 +108,18 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
         navigationView.setOnNavigationItemSelectedListener(this);
         navigationView.setOnItemSelectedListener(this);
         navigationView.setSelectedItemId(R.id.home);
-        navigationView.getMenu().findItem(R.id.add).setVisible(preferences.getBoolean("advanced", false));
-
-
-        /*for (MeowBottomNavigation.Model model : bottomNavigation.getModels())
-            System.out.println(model.getId());
-        System.out.println(bottomNavigation.getChildCount());
-       */
-        /*bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+        navigationView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-                System.out.println(item.getId());
+            public void onClick(View view) {
+                updateUI();
             }
         });
-        bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
-            @Override
-            public void onShowItem(MeowBottomNavigation.Model item) {
-                System.out.println(item.getId());
-                switch (item.getId()) {
-                    case 1:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, userFragment).commit();
-                        return;
-
-                    case 2:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment).commit();
-                        return;
-                    case 3:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-                        return;
-                    case 4:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, addFragment).commit();
-                        return;
-                    case 5:
-
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this);
-                        builder.setMessage("Vuoi disconnetterti?");
-                        builder.setCancelable(true);
-                        builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                editor.putString("currentUser", null);
-                                editor.putString("advanced", null);
-                                editor.putString("currentEMail", null);
-                                editor.putString("currentPassword", null);
-                                editor.apply();
-                                Utilities.getAuthorisation().signOut();
-                                Utilities.clear();
-                                finish();
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                        return;
-                }
-            }
-        });
-        bottomNavigation.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
-            @Override
-            public void onReselectItem(MeowBottomNavigation.Model item) {
-
-            }
-        });
-        bottomNavigation.show(3, false);*/
     }
 
     private void loadMenuFragment() {
-        userFragment = new UserFragment();
-        homeFragment = new HomeFragment();
-        searchFragment = new SearchFragment();
-        addFragment = new AddFragment();
+        userFragment = UserFragment.newInstance();
+        searchFragment = SearchFragment.newInstance();
+        addFragment = AddFragment.newInstance();
     }
 
     @Override
@@ -151,23 +129,23 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, userFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, userFragment).commitNow();
                 return true;
             case R.id.home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, HomeFragment.newInstance()).commitNow();
                 return true;
             case R.id.search:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, searchFragment).commitNow();
                 return true;
             case R.id.add:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, addFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, addFragment).commitNow();
                 return true;
             case R.id.logout:
                 try {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this,R.style.MyAlertDialogTheme);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(HomeContainer.this, R.style.MyAlertDialogTheme);
                     builder.setTitle("Attenzione!");
                     builder.setMessage("Vuoi disconnetterti?");
                     builder.setCancelable(true);
