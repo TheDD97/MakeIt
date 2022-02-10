@@ -40,7 +40,7 @@ public class Utilities {
     public static String checkUpload = "Confermi la tua scelta?";
     private static String currentUID;
     public static UserHelperClass currentUser;
-    public static final String sharedPreferencesName = "logv3";
+    public static final String sharedPreferencesName = "lsaas";
     public static final String verifying = "Verifica in corso...";
     public static final String loading = "Caricamento in corso...";
     public static final String path = "https://makeit-27047-default-rtdb.europe-west1.firebasedatabase.app/";

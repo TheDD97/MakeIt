@@ -1,10 +1,14 @@
 package com.domslab.makeit.view;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Process;
 import android.text.InputType;
 import android.util.Log;
@@ -15,6 +19,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -77,11 +83,19 @@ public class MainActivity extends AppCompatActivity {
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
                                         Toast.makeText(MainActivity.this, "Login Riuscito.",
                                                 Toast.LENGTH_SHORT).show();
+                                        editor.putString("currentUser", user.getUid());
+                                        editor.putString("currentEmail", email);
+                                        editor.putString("currentPassword", psw);
+                                        editor.apply();
                                         finish();
                                         launchHome(getApplicationContext());
                                     }
                                 });
                             } else {
+                                Utilities.closeProgressDialog();
+                                Toast.makeText(MainActivity.this, "Accesso fallito.",
+                                        Toast.LENGTH_SHORT).show();
+
                                 updateUI(null, new FirebaseCallBack() {
                                     @Override
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
@@ -114,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 Utilities.showProgressDialog(v.getContext());
                 passwordLayout.setError(null);
                 emailLayout.setError(null);
-                String email = emailField.getText().toString();
+                String email = emailField.getText().toString().trim().toLowerCase();
                 String password = passwordField.getText().toString();
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -153,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Utilities.closeProgressDialog();
-                                            Log.w("TAG", "signInWithEmail:failure", task.getException());
                                             Toast.makeText(v.getContext().getApplicationContext(), "Accesso fallito.",
                                                     Toast.LENGTH_SHORT).show();
                                             updateUI(null, new FirebaseCallBack() {
@@ -291,6 +304,15 @@ public class MainActivity extends AppCompatActivity {
                             if (o.getKey().equals(Utilities.getCurrentUID())) {
                                 business = (boolean) o.child("advanced").getValue();
                                 editor.putBoolean("advanced", business);
+                                boolean previousState = preferences.getBoolean(o.getKey() + "wait", false);
+                                boolean currentState = (boolean) o.child("waiting").getValue();
+                                boolean previousBusinessState = preferences.getBoolean(o.getKey() + "business", false);
+                                if ((previousState && !currentState && business)||(!previousBusinessState && business && !currentState))
+                                    notifyUpdate(true);
+                                else if ((previousState != currentState && !currentState && !business)||(previousBusinessState && !business && !currentState))
+                                    notifyUpdate(false);
+                                editor.putBoolean(o.getKey() + "wait", currentState);
+                                editor.putBoolean(o.getKey() + "business", business);
                                 editor.apply();
                                 callBack.onCallBack(null, false, false);
                             }
@@ -303,6 +325,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void notifyUpdate(boolean advanced) {
+        String contentTitle;
+        String contentText;
+        String description = "Account Upgrade";
+        if (advanced) {
+            contentTitle = "Congratulazioni!";
+            contentText = "Hai ottenuto un account Aziendale!";
+        } else {
+            contentTitle = "Brutte notizie";
+            contentText = "Il tuo account è stato degradato!";
+        }
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationChannel channel = new NotificationChannel("makeIt", "Upgrade", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setDescription(description);
+        NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel.getId())
+                .setSmallIcon(R.drawable.ic_news)
+                .setContentTitle(contentTitle)
+                .setContentText(contentText)
+                .setSound(alarmSound)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(100, builder.build());
     }
 
     @Override

@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -62,6 +63,7 @@ public class AddFragment extends Fragment {
     private TextView info;
     private Manual manual;
     private Spinner spinner;
+    private SharedPreferences preferences;
     private HashMap<String, String> images = new HashMap<>();
     private HashMap<String, String> categoryLabel = new HashMap<>();
     boolean noError = true;
@@ -88,6 +90,7 @@ public class AddFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName,getActivity().MODE_PRIVATE);
         spinner = getView().findViewById(R.id.categories_spinner);
         load = this.getView().findViewById(R.id.search_file);
         info = this.getView().findViewById(R.id.info);

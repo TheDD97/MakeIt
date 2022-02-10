@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
@@ -23,8 +24,8 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
     private LinkedHashMap<String, Fragment> fragments;
     private ArrayList<String> keys;
 
-    public PagerAdapter(@NonNull FragmentActivity fragmentActivity, SharedPreferences preferences) {
-        super(fragmentActivity);
+    public PagerAdapter(@NonNull FragmentManager manager, @NonNull Lifecycle lifecycle, SharedPreferences preferences) {
+        super(manager, lifecycle);
         fragments = new LinkedHashMap<>();
         this.preferences = preferences;
         fragments.put("Novità", NewsFragment.newInstance());

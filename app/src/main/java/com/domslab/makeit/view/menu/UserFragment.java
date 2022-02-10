@@ -24,6 +24,7 @@ import com.domslab.makeit.R;
 import com.domslab.makeit.model.UserHelperClass;
 import com.domslab.makeit.model.Utilities;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +42,7 @@ public class UserFragment extends Fragment {
     private TextView usernameLabel;
     private EditText name, surname, email, nEmail, username;
     private TextInputLayout nameLayout, surnameLayout, emailLayout, nEmaiLayout, usernameLayout;
-    private static UserHelperClass user = null;
+    private UserHelperClass user = null;
     private boolean editing = false, check = true;
     private ArrayList<TextInputLayout> layouts;
     private ArrayList<EditText> texts;
@@ -52,6 +53,7 @@ public class UserFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private DatabaseReference reference;
     private FirebaseDatabase rootNode;
+    private FirebaseUser firebaseUser;
 
     public UserFragment() {
         // Required empty public constructor
@@ -74,8 +76,6 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
-        editor = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE).edit();
         Utilities.showProgressDialog(getContext());
 
     }
@@ -89,6 +89,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         scrollView = view.findViewById(R.id.user_fragment_scroll);
         layouts = new ArrayList<>();
@@ -109,6 +110,10 @@ public class UserFragment extends Fragment {
         disableAll();
         Button edit = view.findViewById(R.id.edit);
         Button cancel = view.findViewById(R.id.cancel);
+        preferences = getActivity().getApplicationContext().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
+        editor = getActivity().getApplicationContext().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE).edit();
+        System.out.println(preferences.getString("currentEmail", null));
+
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,18 +132,15 @@ public class UserFragment extends Fragment {
                     if (check) {
                         Toast t = new Toast(v.getContext());
                         t.setDuration(Toast.LENGTH_LONG);
-                        FirebaseUser firebaseUser = Utilities.getAuthorisation().getCurrentUser();
-                        UserHelperClass userUpdate = null;
                         if (!noEmail) {
-                            if (firebaseUser.getEmail().equals(email.getText().toString().trim())) {
-                                firebaseUser.updateEmail(nEmail.getText().toString().trim());
-                                userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), nEmail.getText().toString(), user.getAdvanced(), username.getText().toString(), user.getWaiting());
-                                editor.putString("currentEmail",nEmail.getText().toString().trim());
+                            if (firebaseUser.getEmail().equalsIgnoreCase(email.getText().toString().trim())) {
+                                firebaseUser.updateEmail(nEmail.getText().toString().trim().toLowerCase());
+                                editor.putString("currentEmail", nEmail.getText().toString().trim().toLowerCase());
                                 editor.apply();
                             }
-                        } else
-                            userUpdate = new UserHelperClass(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null), user.getAdvanced(), username.getText().toString(), user.getWaiting());
-                        updateUser(userUpdate, t);
+                        }
+                        updateUser(name.getText().toString(), surname.getText().toString(), preferences.getString("currentEmail", null).toLowerCase(), user.getAdvanced(), username.getText().toString(), user.getWaiting(), t);
+                        editor.apply();
                         editing = false;
                         cancel.setBackgroundColor(Color.TRANSPARENT);
                         edit.setText(getResources().getText(R.string.edit));
@@ -163,12 +165,16 @@ public class UserFragment extends Fragment {
         });
     }
 
-    private void updateUser(UserHelperClass userUpdate, Toast t) {
+    private void updateUser(String name, String surname, String email, boolean advanced, String username, boolean wait, Toast t) {
         rootNode = FirebaseDatabase.getInstance(Utilities.path);
         reference = rootNode.getReference("users");
-        if (!(user.getName().equals(userUpdate.getName()) && (user.getUsername().equals(userUpdate.getUsername())) && user.getEmail().equals(userUpdate.getEmail()) && user.getSurname().equals(userUpdate.getSurname()))) {
-            reference.child(Utilities.getAuthorisation().getUid()).setValue(userUpdate);
-            user = userUpdate;
+        if (!(user.getName().equals(name)
+                && (user.getUsername().equals(username))
+                && user.getSurname().equals(surname)
+                && user.getEmail().equalsIgnoreCase(email))
+        ) {
+            user = new UserHelperClass(name, surname, email, advanced, username, wait);
+            reference.child(Utilities.getAuthorisation().getUid()).setValue(user);
             usernameLabel.setText("Ciao " + user.getUsername() + "!");
             t.setText("Successo!");
             t.show();
@@ -181,7 +187,6 @@ public class UserFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         setCurrentUser();
     }
 
@@ -279,7 +284,7 @@ public class UserFragment extends Fragment {
                 updatedEmail = true;
             if (!updatedEmail && noEmail)
                 return;
-            if (!email.getText().toString().equals(preferences.getString("currentEmail", null))) {
+            if (!email.getText().toString().trim().toLowerCase().equalsIgnoreCase(firebaseUser.getEmail())) {
                 emailLayout.setError(Utilities.emailNoMatch);
                 check = false;
             } else if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {

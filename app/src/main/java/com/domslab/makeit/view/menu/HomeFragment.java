@@ -29,10 +29,14 @@ import java.util.ArrayList;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArrayList<ManualCard> manualCards;
-
+    private PagerAdapter pagerAdapter;
+    private ViewPager2 viewPager;
+    private SharedPreferences preferences;
+    private  boolean initialize = false;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -60,26 +64,21 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewPager2 viewPager = view.findViewById(R.id.vPager);
-        SharedPreferences preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
-        PagerAdapter pagerAdapter = new PagerAdapter(getActivity(), preferences);
+        viewPager = view.findViewById(R.id.vPager);
+        preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
+        pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle(), preferences);
         if (!preferences.getBoolean("advanced", false))
             viewPager.setOffscreenPageLimit(2);
         else viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(1);
-        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = getView().findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setText(pagerAdapter.getTitle(position));
             }
         }).attach();
+        viewPager.setCurrentItem(0);
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 }
