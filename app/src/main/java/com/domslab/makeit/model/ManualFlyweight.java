@@ -188,29 +188,23 @@ public class ManualFlyweight {
                                 favourite.put(k, loaded.get(k));
                         }
                     }
-
                     ArrayList<ManualCard> manualCardsFavourite = new ArrayList<>();
                     setContent(manualCardsFavourite, favourite, true);
-
                     if (recyclerListener.containsKey("favourite")) {
                         ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false, false);
                         recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
                     }
-
                     callBack.reload(ids);
                 }
-
             });
         } else {
             favourite.remove(id);
             ArrayList<ManualCard> manualCardsFavourite = new ArrayList<>();
             setContent(manualCardsFavourite, favourite, true);
-
             if (recyclerListener.containsKey("favourite")) {
                 ManualAdapter tmp = new ManualAdapter(context, manualCardsFavourite, recyclerListener.get("favourite").getListener(), false, false);
                 recyclerListener.get("favourite").getRecyclerView().setAdapter(tmp);
             }
-
             DBManualManager.updateFavourite(id, true, context, tmpId, new ReloadFirebaseCallBack() {
                 @Override
                 public void reload(ArrayList<String> ids) {
@@ -218,7 +212,6 @@ public class ManualFlyweight {
                 }
             });
         }
-
     }
 
     public boolean isFavourite(String key) {
@@ -265,13 +258,11 @@ public class ManualFlyweight {
             public void onCallBack(HashMap<String, ManualCard> manual) {
                 callBack.onCallBack(loaded);
                 Utilities.closeProgressDialog();
-
             }
         });
     }
 
     public void deleteManual(String key, Context context) {
-        // Utilities.showProgressDialog(context, true);
         DBManualManager.deleteManual(key, context, new ReloadFirebaseCallBack() {
             @Override
             public void reload(ArrayList<String> ids) {

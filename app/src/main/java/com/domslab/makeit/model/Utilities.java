@@ -23,8 +23,8 @@ import java.util.List;
 public class Utilities {
     public static final long MAX_FILE_SIZE = 1024 * 1024;
     public static final long MAX_IMAGE_SIZE = 1024 * 30;
-    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "KB";
-    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione di una immagine è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "KB";
+    public static final String COVER_SIZE_EXCEEDED = "La dimensione della cover è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "Kb";
+    public static final String IMAGE_SIZE_EXCEEDED = "La dimensione di una immagine è troppo elevata, dev'essere pari o inferiore a " + (MAX_IMAGE_SIZE) / 1024 + "Kb";
     public static final String NO_COVER = "Non è stata trovata la cover, controlla il file";
     public static final String NO_IMAGE = "Hai dichiarato di voler inserire un'immagine ma non è stata trovata, controlla il file";
     public static final String NO_DESCRIPTION = "Descrizione non trovata, controlla il file";

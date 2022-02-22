@@ -125,12 +125,10 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
                 for (String key : manual.keySet())
                     allCard.add(manual.get(key));
                 group.check(R.id.no_filter);
-
                 initSearch();
                 filter();
             }
         });
-
     }
 
 
@@ -144,27 +142,15 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
     private void initSearch() {
         ManualAdapter adapter = new ManualAdapter(getContext(), allCard, SearchFragment.this::onManualClick);
         recyclerView.setAdapter(adapter);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 search = newText;
                 filter();
-
-                /*if (filter == null) {
-                    ArrayList<ManualCard> tmp = new ArrayList<>();
-                    for (ManualCard c : ManualFlyweight.getInstance().getLoaded())
-                        if (c.getName().toLowerCase().contains(newText.toLowerCase()))
-                            tmp.add(c);
-                    filteredCard = tmp;
-                    ManualAdapter adapter = new ManualAdapter(getContext(), tmp, SearchFragment.this::onManualClick);
-                    recyclerView.setAdapter(adapter);
-                }*/
                 return false;
             }
         });
@@ -172,30 +158,23 @@ public class SearchFragment extends Fragment implements ManualAdapter.OnManualLi
 
     public void noFilter() {
         filter = null;
-        //initSearch();
         filter();
-        //filteredCard.clear();
     }
 
     private void foodFilter() {
         filter = "Food";
         filter();
-
     }
 
 
     private void homeFilter() {
         filter = "Home";
         filter();
-
-        //   filteredCard.clear();
     }
 
     private void toysFilter() {
         filter = "Toy";
         filter();
-
-        //filteredCard.clear();
     }
 
     private void filter() {

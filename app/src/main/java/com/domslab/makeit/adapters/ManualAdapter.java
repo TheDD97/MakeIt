@@ -44,7 +44,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         this.deletable = deletable;
     }
 
-
     @NonNull
     @Override
     public ManualAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,32 +57,30 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         int currentPosition = position;
         holder.imageView.setImageBitmap(manualCards.get(position).getCover());
         holder.textView.setText(manualCards.get(position).getName());
-        if(!deletable)
+        if (!deletable)
             holder.delete.setVisibility(View.GONE);
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.MyAlertDialogTheme);
-                    builder.setTitle("Attenzione!");
-                    builder.setMessage("Vuoi Eliminare il seguente manuale?\n"+holder.textView.getText().toString());
-                    builder.setCancelable(true);
-                    builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    builder.setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ManualFlyweight.getInstance().deleteManual(manualCards.get(currentPosition).getKey(),view.getContext());
-
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogTheme);
+                builder.setTitle("Attenzione!");
+                builder.setMessage("Vuoi Eliminare il seguente manuale?\n" + holder.textView.getText().toString());
+                builder.setCancelable(true);
+                builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ManualFlyweight.getInstance().deleteManual(manualCards.get(currentPosition).getKey(), view.getContext());
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
         });
         if (visible) {
             if (!ManualFlyweight.getInstance().isFavourite(manualCards.get(currentPosition).getKey())) {
@@ -95,7 +92,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Utilities.showProgressDialog(v.getContext());
-
                     ManualFlyweight.getInstance().updateManual(manualCards.get(currentPosition).getKey(), v.getContext(),
                             new ReloadFirebaseCallBack() {
                                 @Override
@@ -105,7 +101,6 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
                                     } else {
                                         holder.favourite.setImageResource(R.drawable.ic_heart_off);
                                     }
-                                    //ManualFlyweight.getInstance().reloadContent(context);
                                     Utilities.closeProgressDialog();
                                 }
                             });
@@ -127,13 +122,13 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         private ImageButton delete;
         private OnManualListener onManualListener;
 
-        public ViewHolder(@NonNull View itemView, OnManualListener onSongListener) {
+        public ViewHolder(@NonNull View itemView, OnManualListener onManualListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
             textView = itemView.findViewById(R.id.manual_name);
             favourite = itemView.findViewById(R.id.fav_btn);
             delete = itemView.findViewById(R.id.delete_manual);
-            this.onManualListener = onSongListener;
+            this.onManualListener = onManualListener;
             itemView.setOnClickListener(this);
         }
 
