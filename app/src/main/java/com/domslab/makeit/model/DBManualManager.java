@@ -306,7 +306,6 @@ public class DBManualManager {
     public void updateFavourite(String id, boolean exist, Context context, ArrayList<String> ids, ReloadFirebaseCallBack callBack) {
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();
-
         if (exist) {
             Query checkUser = reference.child("favourites");
             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -327,9 +326,6 @@ public class DBManualManager {
                                     });
                                 }
                         }
-                        // Utilities.closeProgressDialog();
-
-
                     }
                 }
 
@@ -346,8 +342,6 @@ public class DBManualManager {
             reference.child("favourites").child(key).setValue(uidManualPair);
             Utilities.closeProgressDialog();
             callBack.reload(ids);
-
-
         }
     }
 
@@ -397,12 +391,10 @@ public class DBManualManager {
                     }
                 }
                 manualFirebaseCallBack.onCallBack(loaded);
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
