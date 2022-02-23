@@ -71,12 +71,13 @@ public class HomeContainer extends AppCompatActivity implements BottomNavigation
                             for (DataSnapshot o : dataSnapshot.getChildren())
                                 if (o.getKey().equals(Utilities.getCurrentUID())) {
                                     business = (boolean) o.child("advanced").getValue();
+                                    editor.putBoolean(o.getKey() + "wait", (Boolean) o.child("waiting").getValue());
                                     if (preferences.getBoolean("advanced", false) != business) {
                                         editor.putBoolean("advanced", business);
-                                        editor.apply();
                                     }
+                                    editor.apply();
                                 }
-                            navigationView.getMenu().findItem(R.id.add).setVisible(business);
+                            navigationView.getMenu().findItem(R.id.add).setVisible(business && !preferences.getBoolean(Utilities.getCurrentUID() + "wait", false));
                             if (navigationView.getSelectedItemId() != R.id.home)
                                 navigationView.setSelectedItemId(navigationView.getSelectedItemId());
                         }

@@ -31,12 +31,9 @@ import java.util.ArrayList;
  */
 
 public class HomeFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private ArrayList<ManualCard> manualCards;
     private PagerAdapter pagerAdapter;
     private ViewPager2 viewPager;
     private SharedPreferences preferences;
-    private  boolean initialize = false;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -67,7 +64,7 @@ public class HomeFragment extends Fragment {
         viewPager = view.findViewById(R.id.vPager);
         preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, Context.MODE_PRIVATE);
         pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle(), preferences);
-        if (!preferences.getBoolean("advanced", false))
+        if (!preferences.getBoolean("advanced", false) && !preferences.getBoolean(Utilities.getCurrentUID() + "wait", false))
             viewPager.setOffscreenPageLimit(2);
         else viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);

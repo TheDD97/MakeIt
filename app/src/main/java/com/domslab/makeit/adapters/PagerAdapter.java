@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.domslab.makeit.model.Utilities;
 import com.domslab.makeit.view.pagerFragment.FavouritesFragment;
 import com.domslab.makeit.view.pagerFragment.MyManualFragment;
 import com.domslab.makeit.view.pagerFragment.NewsFragment;
@@ -30,7 +31,7 @@ public class PagerAdapter /*extends FragmentPagerAdapter*/ extends FragmentState
         this.preferences = preferences;
         fragments.put("Novità", NewsFragment.newInstance());
         fragments.put("Preferiti", FavouritesFragment.newInstance());
-        if (!preferences.getBoolean("advanced", false))
+        if (!preferences.getBoolean("advanced", false) || this.preferences.getBoolean(Utilities.getCurrentUID() + "wait", false))
             NUM_PAGES = 2;
         else {
             fragments.put("I miei manuali", MyManualFragment.newInstance());
