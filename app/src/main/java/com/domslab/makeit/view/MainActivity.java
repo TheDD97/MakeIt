@@ -83,12 +83,8 @@ public class MainActivity extends AppCompatActivity {
                                     public void onCallBack(List<String> list, boolean business, boolean wait) {
                                         Toast.makeText(MainActivity.this, "Login Riuscito.",
                                                 Toast.LENGTH_SHORT).show();
-                                        editor.putString("currentUser", user.getUid());
-                                        editor.putString("currentEmail", email);
-                                        editor.putString("currentPassword", psw);
-                                        editor.apply();
-                                        finish();
                                         launchHome(getApplicationContext());
+                                        finish();
                                     }
                                 });
                             } else {
@@ -160,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
                                                 public void onCallBack(List<String> list, boolean business, boolean wait) {
                                                     Toast.makeText(MainActivity.this, "Login Riuscito.",
                                                             Toast.LENGTH_SHORT).show();
-                                                    finish();
                                                     launchHome(getApplicationContext());
+                                                    finish();
                                                 }
                                             });
                                         } else {
@@ -307,9 +303,9 @@ public class MainActivity extends AppCompatActivity {
                                 boolean previousState = preferences.getBoolean(o.getKey() + "wait", false);
                                 boolean currentState = (boolean) o.child("waiting").getValue();
                                 boolean previousBusinessState = preferences.getBoolean(o.getKey() + "business", false);
-                                if ((previousState && !currentState && business)||(!previousBusinessState && business && !currentState))
+                                if ((previousState && !currentState && business) || (!previousBusinessState && business && !currentState))
                                     notifyUpdate(true);
-                                else if ((previousState != currentState && !currentState && !business)||(previousBusinessState && !business && !currentState))
+                                else if ((previousState != currentState && !currentState && !business) || (previousBusinessState && !business && !currentState))
                                     notifyUpdate(false);
                                 editor.putBoolean(o.getKey() + "wait", currentState);
                                 editor.putBoolean(o.getKey() + "business", business);

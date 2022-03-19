@@ -39,9 +39,7 @@ public class Timer extends ConstraintLayout {
 
     public Timer(Context context, int time) {
         super(context);
-
         inflate(getContext(), R.layout.timer, this);
-
         progressBar = findViewById(R.id.progress_bar);
         this.time = time;
         progressBar.setMax(time);
@@ -107,12 +105,10 @@ public class Timer extends ConstraintLayout {
     }
 
     private void update() {
-
         minute = Integer.toString(currentTimeVal / 60);
         second = Integer.toString(currentTimeVal - (currentTimeVal / 60) * 60);
-        System.out.println(second.length() +" -- "+minute.length());
         if (second.length() == 1)
-            second = '0'+second;
+            second = '0' + second;
         if (minute.length() == 1)
             minute = '0' + minute;
         currentTime.setText(minute + ":" + second);

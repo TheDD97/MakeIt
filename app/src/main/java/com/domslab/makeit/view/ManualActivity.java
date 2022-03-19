@@ -198,7 +198,6 @@ public class ManualActivity extends AppCompatActivity {
             if (currentManualPage.hasItem("text")) {
                 pageText = new CustomTextView(ManualActivity.this);
                 pageText.setText(currentManualPage.getItem("text"));
-                views.add(pageText);
                 body.addView(pageText);
             }
             if (currentManualPage.hasItem("image")) {
@@ -209,16 +208,13 @@ public class ManualActivity extends AppCompatActivity {
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 layoutParams.height = 800;
                 img.setLayoutParams(layoutParams);
-                views.add(img);
                 body.addView(img);
             }
             if (currentManualPage.hasItem("timer")) {
                 timer = new Timer(ManualActivity.this, Integer.parseInt(currentManualPage.getItem("timer")));
                 body.addView(timer);
-                views.add(timer);
             }
             if (currentManualPage.hasItem("yt_video")) {
-                ViewGroup.LayoutParams layoutParams = body.getLayoutParams();
                 if (time_elapsed == 0)
                     player = new YoutubePlayer(ManualActivity.this, currentManualPage.getItem("yt_video"), getLifecycle(), 0);
                 else
@@ -233,12 +229,9 @@ public class ManualActivity extends AppCompatActivity {
         next.setVisibility(View.VISIBLE);
         if (timer != null) {
             timer.stop();
-            views.remove(timer);
             body.removeView(timer);
             timer = null;
         }
-        views.remove(img);
-        views.remove(pageText);
         body.removeView(img);
         body.removeView(pageText);
         body.removeView(player);

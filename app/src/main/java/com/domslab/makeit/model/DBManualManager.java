@@ -61,7 +61,6 @@ public class DBManualManager {
                             });
                             ManualAdapter tmp = new ManualAdapter(context, tmpCard, onManualListener, true, true);
                             recyclerView.setAdapter(tmp);
-
                         } else {
                             ManualCard card = new ManualCard();
                             card.setKey(o.getKey());
@@ -79,7 +78,6 @@ public class DBManualManager {
                                         String decodedString = new String(bytes);
                                         byte[] coded = Base64.decode(decodedString, Base64.DEFAULT);
                                         card.setCover(BitmapFactory.decodeByteArray(coded, 0, coded.length));
-
                                         for (String k : manualCards.keySet())
                                             if (!tmpCard.contains(manualCards.get(k)))
                                                 tmpCard.add(manualCards.get(k));
@@ -345,7 +343,8 @@ public class DBManualManager {
         }
     }
 
-    public void loadAllManual(HashMap<String, ManualCard> loaded, Context context, ManualAdapter.OnManualListener onManualListener, RecyclerView recyclerView, ManualFirebaseCallBack manualFirebaseCallBack) {
+    public void loadAllManual(HashMap<String, ManualCard> loaded, Context context, ManualAdapter.OnManualListener onManualListener,
+                              RecyclerView recyclerView, ManualFirebaseCallBack manualFirebaseCallBack) {
         ManualFlyweight manualFlyweight = ManualFlyweight.getInstance();
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance(Utilities.path);
         DatabaseReference reference = rootNode.getReference();

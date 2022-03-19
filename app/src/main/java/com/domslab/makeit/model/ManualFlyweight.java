@@ -41,24 +41,20 @@ public class ManualFlyweight {
     }
 
     public void setMyManualContent(String s, ArrayList<ManualCard> manualCards, RecyclerView recyclerView, ManualAdapter.OnManualListener onManualListener, Context context) {
-
         if (this.context != context)
             this.context = context;
         RecyclerListener recyclerListener = new RecyclerListener(recyclerView, onManualListener);
         this.recyclerListener.put("myManual", recyclerListener);
-
-            Utilities.showProgressDialog(context);
-            DBManualManager.createMyManualList(myManual, loaded, new ManualFirebaseCallBack() {
-                @Override
-                public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
-                    setContent(manualCards, myManual, false);
-                    ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, true, true);
-                    recyclerView.setAdapter(tmp);
-                    Utilities.closeProgressDialog();
-                }
-            }, recyclerView, context, onManualListener);
-
-
+        Utilities.showProgressDialog(context);
+        DBManualManager.createMyManualList(myManual, loaded, new ManualFirebaseCallBack() {
+            @Override
+            public void onCallBack(HashMap<String, ManualCard> manualCardHashMap) {
+                setContent(manualCards, myManual, false);
+                ManualAdapter tmp = new ManualAdapter(context, manualCards, onManualListener, true, true);
+                recyclerView.setAdapter(tmp);
+                Utilities.closeProgressDialog();
+            }
+        }, recyclerView, context, onManualListener);
     }
 
 
