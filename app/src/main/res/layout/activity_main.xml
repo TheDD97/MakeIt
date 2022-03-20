@@ -18,6 +18,17 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/logo_home" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="0"
+        android:fontFamily="@font/vollkorn_variablefont_wght"
+        android:text="Progetto di laurea A.A 2021/2022 \n di \n Panetta Domenico Nicodemo"
+        android:textAlignment="center" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
