@@ -38,6 +38,8 @@ public class Utilities {
     public static CharSequence noOldEmail = "Devi inserire l'attuale email se desideri cambiarla";
     public static String locationLabel = "Posizione: ";
     public static String checkUpload = "Confermi la tua scelta?";
+    public static String manualHelp = "Per realizzare un manuale assicurati di utilizzare i seguenti attributi nel file JSON da realizzare:\n-name: per indicarne il nome\n-description: per indicarne la descrizione\n-cover: per indicare la copertina\n-numpage: per indicare il numero di pagine che ha il manuale.\n\n\nPer indicare il contenuto di una pagina bisogna indicare il numero della pagina ed attribuire i contenuti mediate i tag:\n-text: per inserire del testo\n-image: per inserire un'immagine\n-timer: per inserire un timer indicando il tempo in millisecondi\n-yt_video: per inserire l'id di un video proveniente da Youtube";
+    public static final String helpTitle = "Come si crea un manuale?";
     private static String currentUID;
     public static UserHelperClass currentUser;
     public static final String sharedPreferencesName = "lsaas";

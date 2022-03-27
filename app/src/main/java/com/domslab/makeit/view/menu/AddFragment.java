@@ -59,7 +59,7 @@ import java.util.Locale;
 
 public class AddFragment extends Fragment {
 
-    private Button load, upload;
+    private Button load, upload, help;
     private TextView info;
     private Manual manual;
     private Spinner spinner;
@@ -90,12 +90,30 @@ public class AddFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName,getActivity().MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(Utilities.sharedPreferencesName, getActivity().MODE_PRIVATE);
         spinner = getView().findViewById(R.id.categories_spinner);
         load = this.getView().findViewById(R.id.search_file);
         info = this.getView().findViewById(R.id.info);
         upload = getView().findViewById(R.id.upload_file);
         upload.setVisibility(View.INVISIBLE);
+        help = getView().findViewById(R.id.help);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogTheme);
+                alertDialog.setTitle(Utilities.helpTitle);
+                alertDialog.setMessage(Utilities.manualHelp);
+                alertDialog.setCancelable(false);
+                alertDialog.setPositiveButton("Ok, ho capito!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                alertDialog.create().show();
+            }
+        });
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,7 +327,7 @@ public class AddFragment extends Fragment {
                     int id = 0;
                     for (DataSnapshot o : snapshot.getChildren()) {
                         System.out.println(o.getKey());
-                        if (id<Integer.parseInt(o.getKey()))
+                        if (id < Integer.parseInt(o.getKey()))
                             id = Integer.parseInt(o.getKey());
                     }
                     lastId.append(id);
