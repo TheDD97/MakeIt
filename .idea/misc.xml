@@ -53,7 +53,7 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/custom_layout.xml" value="0.10625" />
-        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.5" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_favourites.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_home.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/layout/fragment_my_manual.xml" value="0.11041666666666666" />
@@ -70,16 +70,14 @@
         <entry key="..\:/Users/panet/Documents/MakeIt/app/src/main/res/xml/resources.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/baseline_star_20.xml" value="0.1" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_off.xml" value="0.22" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_off.xml" value="0.12037037037037036" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_off2.xml" value="0.12037037037037036" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_on.xml" value="0.22" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_heart_on.xml" value="0.12037037037037036" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/drawable/twotone_star_24.xml" value="0.240625" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout-land/activity_home_manual.xml" value="0.18333333333333332" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout-land/activity_manual_page.xml" value="0.1" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_home.xml" value="0.17527173913043478" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_home_manual.xml" value="0.22" />
-        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/activity_manual_page.xml" value="0.12" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_add.xml" value="0.25" />
         <entry key="..\:/Users/panet/Documents/tesi/MakeIt/app/src/main/res/layout/fragment_dashboard.xml" value="0.17255434782608695" />
